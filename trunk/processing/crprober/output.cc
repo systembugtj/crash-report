@@ -19,7 +19,7 @@ void AbstractOutputter::Init(FILE* f) {
 }
 
 void PlainTextOutputter::BeginDocument(const char* pszTitle) {
-  fprintf(fout_, "= %s = \n\n", pszTitle);
+  fprintf(fout_, "==== %s ==== \n\n", pszTitle);
 }
 
 void PlainTextOutputter::EndDocument() {
@@ -27,7 +27,7 @@ void PlainTextOutputter::EndDocument() {
 }
 
 void PlainTextOutputter::BeginSection(const char* pszTitle) {
-  fprintf(fout_, "== %s ==\n\n", pszTitle);
+  fprintf(fout_, "=====================     %s     =====================\n\n", pszTitle);
 }
 
 void PlainTextOutputter::EndSection() {
@@ -52,31 +52,39 @@ PlainTextOutputter::~PlainTextOutputter() {
 void HtmlOutputter::BeginDocument(const char* pszTitle) {
   fprintf(fout_, "<!doctype html><html><head><meta http-equiv=\"content-type\""
                   "content=\"text/html; charset=UTF-8\"><title>%s</title></head>"
-                  "<body><pre>\n", pszTitle);
+                  "<body>", pszTitle);
 }
 
 void HtmlOutputter::EndDocument() {
-  fprintf(fout_, "</pre></body></html>");
+  fprintf(fout_, "</body></html>");
   }
 
 void HtmlOutputter::BeginSection(const char* pszTitle) {
-  fprintf(fout_, "== %s ==\n\n", pszTitle);
+  fprintf(fout_, "<hr><h1><center>%s</center></h1>", pszTitle);
+  fprintf(fout_, "<table border=\"1\">", pszTitle);
   }
 
 void HtmlOutputter::EndSection() {
-  fprintf(fout_, "\n\n");
+  fprintf(fout_, "</table>");
   }
 
 void HtmlOutputter::PutRecord(const char* pszName, const char* pszValue) {
-  fprintf(fout_, "%s = %s\n", pszName, pszValue);
+  fprintf(fout_, "<tr><td>%s</td><td>%s</td></tr>", pszName, pszValue);
   }
 
 void HtmlOutputter::PutTableCell(const char* pszValue, int width, bool bLastInRow) {
-  char szFormat[32];
-  _snprintf_s(szFormat, 32, "%%-%ds%s", width, bLastInRow ? "\n" :" ");
-  fprintf(fout_, szFormat, pszValue);
+  fprintf(fout_, "<td>%s</td>", pszValue);
   }
 
 HtmlOutputter::~HtmlOutputter() {
-  //  do nothing now
-  }
+	//  do nothing now
+}
+void HtmlOutputter::PutTableColumnName(const char* pszValue, int width, bool bLastInRow) {
+	fprintf(fout_, "<th>%s</th>", pszValue);
+}
+void HtmlOutputter::BeginTableCell(int border) {
+	fprintf(fout_, "<tr>");
+}
+void HtmlOutputter::EndTableCell() {
+	fprintf(fout_, "</tr>");
+}

@@ -239,163 +239,171 @@ bool DocumentExporter::ExportSummary(int& result) {
 }
 
 bool DocumentExporter::ExportUserDefineInfo(int& result) {
-  outputer_->BeginSection(_T("Application-defined properties"));
+	outputer_->BeginSection(_T("Application-defined properties"));
 
-  int nPropCount = get_table_row_count(hReport_, CRP_TBL_XMLDESC_CUSTOM_PROPS);
-  if (nPropCount > 0) {
-    // Print custom property list
-    outputer_->PutTableCell(_T("#"), 2, false);
-    outputer_->PutTableCell(_T("Name"), 16, false);
-    outputer_->PutTableCell(_T("Value"), 32, true);
+	int nPropCount =
+			get_table_row_count(hReport_, CRP_TBL_XMLDESC_CUSTOM_PROPS);
+	if (nPropCount > 0) {
+		// Print custom property list
+		outputer_->BeginTableCell(1);
+		outputer_->PutTableColumnName(_T("id"), 2, false);
+		outputer_->PutTableColumnName(_T("Name"), 16, false);
+		outputer_->PutTableColumnName(_T("Value"), 32, true);
+		outputer_->EndTableCell();
 
-    int i;
-    for (i = 0; i < nPropCount; i++) {
-      char szBuffer[10];
-      _snprintf_s(szBuffer, 10, _T("%d"), i + 1);
-      outputer_->PutTableCell(szBuffer, 2, false);
-      string sPropName;
-      get_prop(hReport_, CRP_TBL_XMLDESC_CUSTOM_PROPS, CRP_COL_PROPERTY_NAME,
-          sPropName, i);
-      outputer_->PutTableCell(sPropName.c_str(), 16, false);
-      string sPropValue;
-      get_prop(hReport_, CRP_TBL_XMLDESC_CUSTOM_PROPS, CRP_COL_PROPERTY_VALUE,
-          sPropValue, i);
-      outputer_->PutTableCell(sPropValue.c_str(), 32, true);
-    }
-
-    outputer_->EndSection();
-  }
-  return true;
+		int i;
+		for (i = 0; i < nPropCount; i++) {
+			outputer_->BeginTableCell(1);
+			char szBuffer[10];
+			_snprintf_s(szBuffer, 10, _T("%d"), i + 1);
+			outputer_->PutTableCell(szBuffer, 2, false);
+			string sPropName;
+			get_prop(hReport_, CRP_TBL_XMLDESC_CUSTOM_PROPS,
+					CRP_COL_PROPERTY_NAME, sPropName, i);
+			outputer_->PutTableCell(sPropName.c_str(), 16, false);
+			string sPropValue;
+			get_prop(hReport_, CRP_TBL_XMLDESC_CUSTOM_PROPS,
+					CRP_COL_PROPERTY_VALUE, sPropValue, i);
+			outputer_->PutTableCell(sPropValue.c_str(), 32, true);
+			outputer_->EndTableCell();
+		}
+	}
+	outputer_->EndSection();
+	return true;
 }
 
 bool DocumentExporter::ExportThreadStack(int& result) {
+	int nThreadCount = get_table_row_count(hReport_, CRP_TBL_MDMP_THREADS);
+	for (int i = 0; i < nThreadCount; i++) {
+		string sThreadId;
+		result = get_prop(hReport_, CRP_TBL_MDMP_THREADS, CRP_COL_THREAD_ID,
+				sThreadId, i);
+		if (result != 0) {
+			continue;
+		}
+		string str = _T("Stack trace for thread ");
+		str += sThreadId;
+		outputer_->BeginSection(str.c_str());
+		outputer_->BeginTableCell(1);
+		outputer_->PutTableCell(_T("Frame"), 32, true);
+		outputer_->EndTableCell();
 
-  int nThreadCount = get_table_row_count(hReport_, CRP_TBL_MDMP_THREADS);
-  for (int i = 0; i < nThreadCount; i++) {
-    string sThreadId;
-    result = get_prop(hReport_, CRP_TBL_MDMP_THREADS, CRP_COL_THREAD_ID,
-        sThreadId, i);
-    if (result == 0) {
-      string str = _T("Stack trace for thread ");
-      str += sThreadId;
-      outputer_->BeginSection(str.c_str());
+		string sStackTableId;
+		get_prop(hReport_, CRP_TBL_MDMP_THREADS, CRP_COL_THREAD_STACK_TABLEID,
+				sStackTableId, i);
 
-      outputer_->PutTableCell(_T("Frame"), 32, true);
+		BOOL bMissingFrames = FALSE;
+		int nFrameCount = get_table_row_count(hReport_, sStackTableId.c_str());
+		int j;
+		for (j = 0; j < nFrameCount; j++) {
+			outputer_->BeginTableCell(1);
+			string sModuleName;
+			string sAddrPCOffset;
+			string sSymbolName;
+			string sOffsInSymbol;
+			string sSourceFile;
+			string sSourceLine;
+			string sModuleRowId;
+			result = get_prop(hReport_, sStackTableId.c_str(),
+					CRP_COL_STACK_MODULE_ROWID, sModuleRowId, j);
+			if (result == 0) {
+				int nModuleRowId = _ttoi(sModuleRowId.c_str());
+				if (nModuleRowId == -1) {
+					if (!bMissingFrames) {
+						outputer_->BeginTableCell(1);
+						outputer_->PutTableCell(_T("[Frames below may be incorrect and/or missing]"),
+												32, true);
+						outputer_->EndTableCell();
+					}
+					bMissingFrames = TRUE;
+				}
+				get_prop(hReport_, CRP_TBL_MDMP_MODULES, CRP_COL_MODULE_NAME,
+						sModuleName, nModuleRowId);
+			}
 
-      string sStackTableId;
-      get_prop(hReport_, CRP_TBL_MDMP_THREADS, CRP_COL_THREAD_STACK_TABLEID,
-          sStackTableId, i);
+			get_prop(hReport_, sStackTableId.c_str(),
+					CRP_COL_STACK_ADDR_PC_OFFSET, sAddrPCOffset, j);
+			get_prop(hReport_, sStackTableId.c_str(),
+					CRP_COL_STACK_SYMBOL_NAME, sSymbolName, j);
+			get_prop(hReport_, sStackTableId.c_str(),
+					CRP_COL_STACK_OFFSET_IN_SYMBOL, sOffsInSymbol, j);
+			get_prop(hReport_, sStackTableId.c_str(),
+					CRP_COL_STACK_SOURCE_FILE, sSourceFile, j);
+			get_prop(hReport_, sStackTableId.c_str(),
+					CRP_COL_STACK_SOURCE_LINE, sSourceLine, j);
 
-      BOOL bMissingFrames = FALSE;
-      int nFrameCount = get_table_row_count(hReport_, sStackTableId.c_str());
-      int j;
-      for (j = 0; j < nFrameCount; j++) {
-        string sModuleName;
-        string sAddrPCOffset;
-        string sSymbolName;
-        string sOffsInSymbol;
-        string sSourceFile;
-        string sSourceLine;
+			string str;
+			str = sModuleName;
+			if (!str.empty())
+				str += _T("!");
 
-        string sModuleRowId;
-        result = get_prop(hReport_, sStackTableId.c_str(),
-            CRP_COL_STACK_MODULE_ROWID, sModuleRowId, j);
-        if (result == 0) {
-          int nModuleRowId = _ttoi(sModuleRowId.c_str());
-          if (nModuleRowId == -1) {
-            if (!bMissingFrames)
-              outputer_->PutTableCell(_T(
-                  "[Frames below may be incorrect and/or missing]"), 32, true);
-            bMissingFrames = TRUE;
-          }
-          get_prop(hReport_, CRP_TBL_MDMP_MODULES, CRP_COL_MODULE_NAME,
-              sModuleName, nModuleRowId);
-        }
+			if (sSymbolName.empty())
+				str += sAddrPCOffset;
+			else {
+				str += sSymbolName + _T("+") + sOffsInSymbol;
+			}
 
-        get_prop(hReport_, sStackTableId.c_str(), CRP_COL_STACK_ADDR_PC_OFFSET,
-            sAddrPCOffset, j);
-        get_prop(hReport_, sStackTableId.c_str(), CRP_COL_STACK_SYMBOL_NAME,
-            sSymbolName, j);
-        get_prop(hReport_, sStackTableId.c_str(),
-            CRP_COL_STACK_OFFSET_IN_SYMBOL, sOffsInSymbol, j);
-        get_prop(hReport_, sStackTableId.c_str(), CRP_COL_STACK_SOURCE_FILE,
-            sSourceFile, j);
-        get_prop(hReport_, sStackTableId.c_str(), CRP_COL_STACK_SOURCE_LINE,
-            sSourceLine, j);
-
-        string str;
-        str = sModuleName;
-        if (!str.empty())
-          str += _T("!");
-
-        if (sSymbolName.empty())
-          str += sAddrPCOffset;
-        else {
-          str += sSymbolName;
-          str += _T("+");
-          str += sOffsInSymbol;
-        }
-
-        if (!sSourceFile.empty()) {
-          size_t pos = sSourceFile.rfind('\\');
-          if (pos >= 0)
-            sSourceFile = sSourceFile.substr(pos + 1);
-          str += _T(" [ ");
-          str += sSourceFile;
-          str += _T(": ");
-          str += sSourceLine;
-          str += _T(" ] ");
-        }
-
-        outputer_->PutTableCell(str.c_str(), 32, true);
-      }
-
-      outputer_->EndSection();
-    }
-  }
-  return true;
+			if (!sSourceFile.empty()) {
+				size_t pos = sSourceFile.rfind('\\');
+				if (pos >= 0)
+					sSourceFile = sSourceFile.substr(pos + 1);
+				str += _T(" [ ") + sSourceFile +  _T(": ") + sSourceLine + _T(" ] ");
+			}
+			outputer_->PutTableCell(str.c_str(), 32, true);
+			outputer_->EndTableCell();
+		}
+		outputer_->EndSection();
+	}
+	return true;
 }
 
 bool DocumentExporter::ExportFileList(int& result) {
-  outputer_->BeginSection(_T("File list"));
+	outputer_->BeginSection(_T("File list"));
 
-  // Print file list
-  outputer_->PutTableCell(_T("#"), 2, false);
-  outputer_->PutTableCell(_T("Name"), 16, false);
-  outputer_->PutTableCell(_T("Description"), 32, true);
+	// Print file list
+	outputer_->BeginTableCell(1);
+	outputer_->PutTableColumnName(_T("id"), 2, false);
+	outputer_->PutTableColumnName(_T("Name"), 16, false);
+	outputer_->PutTableColumnName(_T("Description"), 32, true);
+	outputer_->EndTableCell();
 
-  int nItemCount = get_table_row_count(hReport_, CRP_TBL_XMLDESC_FILE_ITEMS);
-  int i;
-  for (i = 0; i < nItemCount; i++) {
-    char szBuffer[10];
-    _snprintf_s(szBuffer, 10, _T("%d"), i + 1);
-    outputer_->PutTableCell(szBuffer, 2, false);
-    string sFileName;
-    get_prop(hReport_, CRP_TBL_XMLDESC_FILE_ITEMS, CRP_COL_FILE_ITEM_NAME,
-        sFileName, i);
-    outputer_->PutTableCell(sFileName.c_str(), 16, false);
-    string sDesc;
-    get_prop(hReport_, CRP_TBL_XMLDESC_FILE_ITEMS,
-        CRP_COL_FILE_ITEM_DESCRIPTION, sDesc, i);
-    outputer_->PutTableCell(sDesc.c_str(), 32, true);
-  }
+	int nItemCount = get_table_row_count(hReport_, CRP_TBL_XMLDESC_FILE_ITEMS);
+	int i;
+	for (i = 0; i < nItemCount; i++) {
+		outputer_->BeginTableCell(1);
+		char szBuffer[10];
+		_snprintf_s(szBuffer, 10, _T("%d"), i + 1);
+		outputer_->PutTableCell(szBuffer, 2, false);
+		string sFileName;
+		get_prop(hReport_, CRP_TBL_XMLDESC_FILE_ITEMS, CRP_COL_FILE_ITEM_NAME,
+				sFileName, i);
+		outputer_->PutTableCell(sFileName.c_str(), 16, false);
+		string sDesc;
+		get_prop(hReport_, CRP_TBL_XMLDESC_FILE_ITEMS,
+				CRP_COL_FILE_ITEM_DESCRIPTION, sDesc, i);
+		outputer_->PutTableCell(sDesc.c_str(), 32, true);
+		outputer_->EndTableCell();
+	}
 
-  outputer_->EndSection();
-  return true;
+	outputer_->EndSection();
+	return true;
 }
 bool DocumentExporter::ExportModuleList(int& result) {
   // Print module list
   outputer_->BeginSection(_T("Module List"));
 
-  outputer_->PutTableCell(_T("#"), 2, false);
-  outputer_->PutTableCell(_T("Name"), 32, false);
-  outputer_->PutTableCell(_T("SymLoadStatus"), 32, false);
-  outputer_->PutTableCell(_T("LoadedPDBName"), 48, false);
-  outputer_->PutTableCell(_T("LoadedImageName"), 48, true);
+  outputer_->BeginTableCell(1);
+  outputer_->PutTableColumnName(_T("id"), 2, false);
+  outputer_->PutTableColumnName(_T("Name"), 32, false);
+  outputer_->PutTableColumnName(_T("SymLoadStatus"), 32, false);
+  outputer_->PutTableColumnName(_T("LoadedPDBName"), 48, false);
+  outputer_->PutTableColumnName(_T("LoadedImageName"), 48, true);
+  outputer_->EndTableCell();
 
   // Get module count
   int nItemCount = get_table_row_count(hReport_, CRP_TBL_MDMP_MODULES);
   for (int i = 0; i < nItemCount; i++) {
+	  outputer_->BeginTableCell(1);
     char szBuffer[10];
     _snprintf_s(szBuffer, 10, _T("%d"), i + 1);
     outputer_->PutTableCell(szBuffer, 2, false);
@@ -419,6 +427,7 @@ bool DocumentExporter::ExportModuleList(int& result) {
     result = get_prop(hReport_, CRP_TBL_MDMP_MODULES,
         CRP_COL_MODULE_LOADED_IMAGE_NAME, sLoadedImageName, i);
     outputer_->PutTableCell(sLoadedImageName.c_str(), 48, true);
+    outputer_->EndTableCell();
   }
   outputer_->EndSection();
   return true;
@@ -428,6 +437,7 @@ bool DocumentExporter::ExportMinidumpLoadLog(int& result) {
   outputer_->BeginSection(_T("Minidump Load Log"));
   int nItemCount = get_table_row_count(hReport_, CRP_TBL_MDMP_LOAD_LOG);
   for (int i = 0; i < nItemCount; i++) {
+	  outputer_->BeginTableCell(1);
     char szBuffer[10];
     _snprintf_s(szBuffer, 10, _T("%d"), i + 1);
     outputer_->PutTableCell(szBuffer, 2, false);
@@ -436,6 +446,7 @@ bool DocumentExporter::ExportMinidumpLoadLog(int& result) {
     result = get_prop(hReport_, CRP_TBL_MDMP_LOAD_LOG, CRP_COL_LOAD_LOG_ENTRY,
         sEntry, i);
     outputer_->PutTableCell(sEntry.c_str(), 64, true);
+    outputer_->EndTableCell();
   }
   outputer_->EndSection();
   return true;

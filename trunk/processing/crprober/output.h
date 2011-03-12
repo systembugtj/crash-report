@@ -15,6 +15,9 @@ public:
   virtual void EndSection() = 0 ;
   virtual void PutRecord(const char* pszName, const char* pszValue) = 0 ;
   virtual void PutTableCell(const char* pszValue, int width, bool bLastInRow) = 0 ;
+  virtual void PutTableColumnName(const char* pszValue, int width, bool bLastInRow) = 0 ;
+  virtual void BeginTableCell( int border) = 0 ;
+  virtual void EndTableCell() = 0 ;
 protected:
   FILE* fout_;
   };
@@ -29,6 +32,11 @@ public:
   virtual void EndSection();
   virtual void PutRecord(const char* pszName, const char* pszValue);
   virtual void PutTableCell(const char* pszValue, int width, bool bLastInRow);
+  virtual void PutTableColumnName(const char* pszValue, int width, bool bLastInRow){
+	  PutTableCell(pszValue, width, bLastInRow);
+  }
+  virtual void BeginTableCell(int border){}
+  virtual void EndTableCell(){}
 };
 
 class HtmlOutputter : public AbstractOutputter {
@@ -41,6 +49,9 @@ public:
   virtual void EndSection();
   virtual void PutRecord(const char* pszName, const char* pszValue);
   virtual void PutTableCell(const char* pszValue, int width, bool bLastInRow);
+  virtual void PutTableColumnName(const char* pszValue, int width, bool bLastInRow);
+  virtual void BeginTableCell(int border);
+  virtual void EndTableCell();
   };
 #endif // OUTPUT_H_
 
