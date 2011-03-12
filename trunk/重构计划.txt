@@ -27,3 +27,8 @@
 3,重构了有关Coutputer的类，并设计为一个抽象类和两个具体类，方便之后扩展，支持更多的格式。
 4,重构了output_document的代码，设计为一个类，并将各个section的代码独立为一个函数，
 	这样之后如果要导出更多的section信息，可以更为灵活地扩充。
+	
+03-12
+1,CrashRptTest部分重构完毕。
+2,crashcon部分重构完毕。
+3，实现了比较友好的html format导出类。
