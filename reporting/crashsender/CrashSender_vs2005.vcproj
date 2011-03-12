@@ -589,7 +589,7 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
-				RelativePath=".\AssyncNotification.cpp"
+				RelativePath=".\assync_notification.cpp"
 				>
 			</File>
 			<File
@@ -645,39 +645,35 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\BlackBox.cpp"
+				RelativePath=".\black_box.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CrashInfoReader.cpp"
+				RelativePath=".\crash_info_reader.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CrashSender.cpp"
+				RelativePath=".\crash_sender.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\DetailDlg.cpp"
+				RelativePath=".\detail_dlg.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\ErrorReportDlg.cpp"
+				RelativePath=".\error_report_dlg.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\ErrorReportSender.cpp"
+				RelativePath=".\error_report_sender.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\FilePreviewCtrl.cpp"
+				RelativePath=".\file_preview_ctrl.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\HttpRequestSender.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MailMsg.cpp"
+				RelativePath=".\http_request_sender.cpp"
 				>
 			</File>
 			<File
@@ -733,56 +729,20 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\ProgressDlg.cpp"
+				RelativePath=".\progress_dlg.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\ResendDlg.cpp"
+				RelativePath=".\resend_dlg.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\ScreenCap.cpp"
+				RelativePath=".\screen_capure.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\crashrpt\SharedMem.cpp"
+				RelativePath="..\crashrpt\shared_memory.cpp"
 				>
-			</File>
-			<File
-				RelativePath=".\smtpclient.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release LIB|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release LIB|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\stdafx.cpp"
@@ -837,7 +797,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\crashrpt\Utility.cpp"
+				RelativePath="..\crashrpt\utility.cpp"
 				>
 			</File>
 		</Filter>
@@ -846,7 +806,7 @@
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
-				RelativePath=".\AssyncNotification.h"
+				RelativePath=".\assync_notification.h"
 				>
 			</File>
 			<File
@@ -854,35 +814,31 @@
 				>
 			</File>
 			<File
-				RelativePath=".\BlackBox.h"
+				RelativePath=".\black_box.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CrashInfoReader.h"
+				RelativePath=".\crash_info_reader.h"
 				>
 			</File>
 			<File
-				RelativePath=".\DetailDlg.h"
+				RelativePath=".\detail_dlg.h"
 				>
 			</File>
 			<File
-				RelativePath=".\ErrorReportDlg.h"
+				RelativePath=".\error_report_dlg.h"
 				>
 			</File>
 			<File
-				RelativePath=".\ErrorReportSender.h"
+				RelativePath=".\error_report_sender.h"
 				>
 			</File>
 			<File
-				RelativePath=".\FilePreviewCtrl.h"
+				RelativePath=".\file_preview_ctrl.h"
 				>
 			</File>
 			<File
-				RelativePath=".\HttpRequestSender.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MailMsg.h"
+				RelativePath=".\http_request_sender.h"
 				>
 			</File>
 			<File
@@ -890,11 +846,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ProgressDlg.h"
+				RelativePath=".\progress_dlg.h"
 				>
 			</File>
 			<File
-				RelativePath=".\ResendDlg.h"
+				RelativePath=".\resend_dlg.h"
 				>
 			</File>
 			<File
@@ -902,11 +858,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ScreenCap.h"
-				>
-			</File>
-			<File
-				RelativePath=".\smtpclient.h"
+				RelativePath=".\screen_capure.h"
 				>
 			</File>
 			<File

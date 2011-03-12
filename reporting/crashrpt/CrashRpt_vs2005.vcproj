@@ -888,7 +888,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SharedMem.h"
+				RelativePath=".\shared_memory.h"
 				>
 			</File>
 			<File
