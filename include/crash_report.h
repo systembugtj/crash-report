@@ -1422,21 +1422,19 @@ crGetLastErrorMsgA(
 
 
 //  typedef std::basic_string<TCHAR> tstring;
-
-
 class CrAutoInstallHelper {
 public:
-	CrAutoInstallHelper() {
+  CrAutoInstallHelper() {
     memset(&info_, 0, sizeof(CR_INSTALL_INFO));
     //  set some default value for CR_INSTALL_INFO
     // only support HTTP now.delete SMTP and SMAPI
     info_.priorities[CR_HTTP] = 3;
     info_.priorities[CR_SMTP] = 0;
     info_.priorities[CR_SMAPI] = 0;
-	}
-	int Install() {
-		return crInstall(&info_);
-	}
+    }
+  ~CrAutoInstallHelper() {
+    crUninstall();
+    }
 	//  还需要一个函数用于设置发送协议。这里最好修改为协议名称，
     //  而不是发送协议的优先级。
   void set_application_name( TCHAR* name) {
@@ -1492,36 +1490,65 @@ public:
 	}
 
 	//  new function to check healthy before run application.
-	bool CheckHealthyBeforeStart();
+  // TODO(yesp) : 实现该函数，在程序正常运行前，
+  //  先检查上次是否是正确退出的，如果不是的话，则应该查看是否能够恢复，
+  //  比如某个模块不能加载之类，或者发送上次崩溃产生的崩溃报告文件等。
+  //  或者这里可能使用用户的回调函数，让用户自己去回去上次异常退出的情况。
+  //  比如在回调函数里，程序可以强制或者建议用户升级等。
+  bool CrAutoInstallHelper::CheckHealthyBeforeStart() {
+    return true;
+    }
 
-	~CrAutoInstallHelper() {
-		crUninstall();
-	}
+
+  bool AddFile(const TCHAR* pszFile,
+    const TCHAR* pszDestFile, const TCHAR* pszDesc, DWORD dwFlags) {
+      crAddFile2(pszFile, pszDestFile, pszDesc, dwFlags);
+      return true;
+    }
+  bool AddFile(const TCHAR* pszFile, const TCHAR* pszDesc) {
+    crAddFile(pszFile, pszDesc);
+    return true;
+
+    }
+  bool AddScreenshot(DWORD dwFlags) {
+    crAddScreenshot(dwFlags);
+    return true;
+
+    }
+  bool AddScreenshot(DWORD dwFlags, int nJpegQuality) {
+    crAddScreenshot2(dwFlags, nJpegQuality);
+    return true;
+    }
+  bool AddProperty(const TCHAR* key, const TCHAR* value) {
+    crAddProperty(key, value);
+    return true;
+    }
+  bool AddRegKey(const TCHAR* pszRegKey,
+    const TCHAR* pszDstFileName, DWORD dwFlags) {
+      crAddRegKey(pszRegKey, pszDstFileName, dwFlags);
+      return true;
+    }
+
+  int Install() {
+    return crInstall(&info_);
+    }
 private:
 	CR_INSTALL_INFO info_;
 };
 
 class CrThreadAutoInstallHelper {
 public:
-
-	//  Installs exception handlers to the caller thread
-	CrThreadAutoInstallHelper(DWORD falgs = 0) {
-		result_ = crInstallToCurrentThread2(falgs);
-		assert(result_ == 0);
-	}
-
-	// Uninstalls exception handlers from the caller thread
-	~CrThreadAutoInstallHelper() {
-		result_ = crUninstallFromCurrentThread();
-		assert(result_ == 0);
-	}
-
-	int result() {
-		return result_;
-	}
+  CrThreadAutoInstallHelper(DWORD falgs = 0) {
+    result_ = crInstallToCurrentThread2(falgs);
+    assert(result_ == 0);
+    }
+  ~CrThreadAutoInstallHelper() {
+    result_ = crUninstallFromCurrentThread();
+    assert(result_ == 0);
+    }
+	int result() { return result_; }
 private:
 	int result_;
 };
-
 #endif //  _CRASHRPT_NO_WRAPPERS
 #endif //  _CRASHRPT_H_

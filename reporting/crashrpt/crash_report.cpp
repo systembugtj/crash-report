@@ -308,7 +308,6 @@ crUninstallFromCurrentThread()
   return 0;
 }
 
-
 CRASHRPTAPI(int) 
 crInstallToCurrentThread()
 {
