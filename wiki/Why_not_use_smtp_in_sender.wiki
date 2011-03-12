@@ -1,5 +1,4 @@
-#summary One-sentence summary of this page.
-说明为什么要废弃smtp协议发送崩溃报告
+#说明为什么要废弃smtp协议发送崩溃报告
 = Introduction =
 smtp协议需要用户名密码，这个不适合在代码中存放
 
