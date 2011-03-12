@@ -522,7 +522,7 @@ typedef struct tagCR_INSTALL_INFOW {
 	LPGETLOGFILE crash_callback;
 	//   Array of error sending transport priorities.
 	UINT priorities[5];
-	DWORD falgs;
+	DWORD flags;
 	const wchar_t* privacy_policy_url;
 	//   File name or folder of Debug help DLL.
 	const wchar_t* debug_help_dll;
@@ -550,7 +550,7 @@ typedef struct tagCR_INSTALL_INFOA {
 	const char* sender_path;
 	LPGETLOGFILE crash_callback;
 	UINT priorities[3];
-	DWORD falgs;
+	DWORD flags;
 	const char* privacy_policy_url;
 	const char* debug_help_dll;
 	MINIDUMP_TYPE minidump_type;
@@ -1458,8 +1458,8 @@ public:
   void set_crash_callback(LPGETLOGFILE crash_callback) {
     info_.crash_callback = crash_callback;
     }
-  void set_falgs(DWORD falgs) {
-    info_.falgs = falgs;
+  void set_flags(DWORD flags) {
+    info_.flags = flags;
     }
   void set_privacy_policy_url( TCHAR* privacy_policy_url) {
     info_.privacy_policy_url = privacy_policy_url;

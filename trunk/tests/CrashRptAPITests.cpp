@@ -872,7 +872,7 @@ void Test_crGenerateErrorReport()
   memset(&info, 0, sizeof(CR_INSTALL_INFO));
   info.size = sizeof(CR_INSTALL_INFO);
   info.application_version = _T("1.0.0"); // Specify app version, otherwise it will fail.
-  info.falgs = CR_INST_NO_GUI|CR_INST_DONT_SEND_REPORT;
+  info.flags = CR_INST_NO_GUI|CR_INST_DONT_SEND_REPORT;
   info.save_dir = sTmpFolder;
   int nInstResult = crInstall(&info);
   TEST_ASSERT(nInstResult==0);

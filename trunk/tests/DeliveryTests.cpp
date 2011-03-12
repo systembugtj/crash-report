@@ -56,7 +56,7 @@ void Test_HttpDelivery_legacy_encoding()
   memset(&info, 0, sizeof(CR_INSTALL_INFO));
   info.size = sizeof(CR_INSTALL_INFO);
   info.application_version = _T("1.0.0"); // Specify app version, otherwise it will fail.
-  info.falgs = CR_INST_NO_GUI;
+  info.flags = CR_INST_NO_GUI;
   info.crash_server_url = _T("localhost/crashrpt.php"); // Use HTTP address for delivery 
   info.priorities[CR_HTTP] = 0;
   info.priorities[CR_SMTP] = CR_NEGATIVE_PRIORITY;
@@ -107,7 +107,7 @@ void Test_HttpDelivery_binary_encoding()
   memset(&info, 0, sizeof(CR_INSTALL_INFO));
   info.size = sizeof(CR_INSTALL_INFO);
   info.application_version = _T("1.0.0"); // Specify app version, otherwise it will fail.
-  info.falgs = CR_INST_NO_GUI|CR_INST_HTTP_BINARY_ENCODING;
+  info.flags = CR_INST_NO_GUI|CR_INST_HTTP_BINARY_ENCODING;
   info.crash_server_url = _T("localhost/crashrpt.php"); // Use HTTP address for delivery 
   info.priorities[CR_HTTP] = 0;
   info.priorities[CR_SMTP] = CR_NEGATIVE_PRIORITY;
@@ -158,7 +158,7 @@ void Test_SmtpDelivery()
   memset(&info, 0, sizeof(CR_INSTALL_INFO));
   info.size = sizeof(CR_INSTALL_INFO);
   info.application_version = _T("1.0.0"); // Specify app version, otherwise it will fail.
-  info.falgs = CR_INST_NO_GUI|CR_INST_HTTP_BINARY_ENCODING;
+  info.flags = CR_INST_NO_GUI|CR_INST_HTTP_BINARY_ENCODING;
   info.email_address = _T("test@localhost");
   info.email_subject = _T("Crash Report Whooaaa!!!");
   info.email_text = _T("And some text in the email body...");
@@ -211,7 +211,7 @@ void Test_SmtpDelivery_proxy()
   memset(&info, 0, sizeof(CR_INSTALL_INFO));
   info.size = sizeof(CR_INSTALL_INFO);
   info.application_version = _T("1.0.0"); // Specify app version, otherwise it will fail.
-  info.falgs = CR_INST_NO_GUI|CR_INST_HTTP_BINARY_ENCODING;
+  info.flags = CR_INST_NO_GUI|CR_INST_HTTP_BINARY_ENCODING;
   info.email_address = _T("test@localhost");
   info.smtp_proxy = _T("127.0.0.1:25");
   info.email_subject = _T("Crash Report Whooaaa!!!");
@@ -268,7 +268,7 @@ void Test_SMAPI_Delivery()
   memset(&info, 0, sizeof(CR_INSTALL_INFO));
   info.size = sizeof(CR_INSTALL_INFO);
   info.application_version = _T("1.0.0"); // Specify app version, otherwise it will fail.
-  info.falgs = CR_INST_NO_GUI|CR_INST_HTTP_BINARY_ENCODING;
+  info.flags = CR_INST_NO_GUI|CR_INST_HTTP_BINARY_ENCODING;
   info.email_address = _T("test@gmail.com");
   info.email_subject = _T("Crash Report Whooaaa!!!");
   info.email_text = _T("And some text in the email body...");
