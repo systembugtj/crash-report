@@ -1,0 +1,157 @@
+==== Error Report ==== 
+
+=====================     Summary     =====================
+
+Generator version = 1208
+Crash GUID = a5b7cfec-058b-488f-889a-cf954d169d39
+Application name = CrashRpt Tests
+Executable image = C:\Users\shunpingye\Desktop\paper\code\CrashRpt\bin\CrashRptTest.exe
+Application version = 1.2.0.8
+Date created (UTC) = 2011-03-11T02:10:41Z
+OS name (from user's registry) = Windows 7 Ultimate Build 7600
+OS version (from minidump) = 6.1.7600 
+OS is 64-bit = 1
+Geographic location = zh-cn
+Product type = 1 workstation
+CPU architecture = 0 x86
+CPU count = 4
+GUI resource count = 45
+Open handle count = 77
+Memory usage (Kbytes) = 7812
+Exception type = 11 SIGSEGV signal
+Exception address = 0x10007b12
+SEH exception code (from minidump) = 0xc0000005 
+Exception thread ID = 0xffc
+Exception module name = CrashRpt.dll
+User email = 
+Problem description = 
+
+
+=====================     Application-defined properties     =====================
+
+id Name             Value                           
+1  VideoCard        nVidia GeForce 9800             
+
+
+=====================     File list     =====================
+
+id Name             Description                     
+1  crashdump.dmp    Crash Minidump                  
+2  crashrpt.xml     Crash Description XML           
+3  dummy.ini        Dummy INI File                  
+4  dummy.log        Dummy Log File                  
+5  regkey.xml       Registry Key Dump               
+6  screenshot0.jpg  Desktop Screenshot              
+
+
+=====================     Stack trace for thread 0xffc     =====================
+
+Frame                           
+CrashRpt.dll!crEmulateCrash+0xae [ crashr: 719 ] 
+CrashRptTest.exe!CMainDlg::DoCrash+0x75 [ maind: 193 ] 
+CrashRptTest.exe!CMainDlg::OnOK+0x5 [ maind: 160 ] 
+CrashRptTest.exe!CMainDlg::ProcessWindowMessage+0x96 [ mai: 58 ] 
+CrashRptTest.exe!ATL::CDialogImplBaseT<ATL::CWindow>::DialogProc+0x42 [ atlwin.h: 3397 ] 
+user32.dll!0x75186238           
+user32.dll!0x751b12a1           
+user32.dll!0x751b10e2           
+user32.dll!0x751b11e7           
+user32.dll!0x75186238           
+user32.dll!0x751868ea           
+user32.dll!0x7518cd1a           
+user32.dll!0x7518cd81           
+comctl32.dll!0x725b4e95         
+comctl32.dll!0x725b4ef7         
+comctl32.dll!0x725b4d89         
+user32.dll!0x75186238           
+user32.dll!0x751868ea           
+user32.dll!0x75187d31           
+user32.dll!0x75187dfa           
+user32.dll!0x751a2292           
+CrashRptTest.exe!CMainDlg::PreTranslateMessage+0xd [ maind: 50 ] 
+[Frames below may be incorrect and/or missing]
+0xa132e                         
+
+
+=====================     Stack trace for thread 0xd48     =====================
+
+Frame                           
+ntdll.dll!0x76fcf861            
+kernel32.dll!0x74f01184         
+kernel32.dll!0x74f01138         
+CrashRptTest.exe!CrashThread+0xb3 [ crashthre: 112 ] 
+kernel32.dll!0x74f03677         
+ntdll.dll!0x76fe9f02            
+ntdll.dll!0x76fe9ed5            
+
+
+=====================     Module List     =====================
+
+id Name                             SymLoadStatus                    LoadedPDBName                                    LoadedImageName                                 
+1  CrashRptTest.exe                 Symbols loaded.                  C:\Users\shunpingye\Desktop\paper\code\CrashRpt\bin\CrashRptTest.pdb C:\Users\shunpingye\Desktop\paper\code\CrashRpt\bin\CrashRptTest.exe
+2  ntdll.dll                        No symbols loaded.                                                                C:\Windows\SysWOW64\ntdll.dll                   
+3  kernel32.dll                     No symbols loaded.                                                                C:\Windows\SysWOW64\kernel32.dll                
+4  KERNELBASE.dll                   No symbols loaded.                                                                C:\Windows\SysWOW64\KERNELBASE.dll              
+5  CrashRpt.dll                     Symbols loaded.                  C:\Users\shunpingye\Desktop\paper\code\CrashRpt\bin\CrashRpt.pdb C:\Users\shunpingye\Desktop\paper\code\CrashRpt\bin\CrashRpt.dll
+6  rpcrt4.dll                       No symbols loaded.                                                                C:\Windows\SysWOW64\rpcrt4.dll                  
+7  sspicli.dll                      No symbols loaded.                                                                C:\Windows\SysWOW64\sspicli.dll                 
+8  msvcrt.dll                       No symbols loaded.                                                                C:\Windows\SysWOW64\msvcrt.dll                  
+9  CRYPTBASE.dll                    No symbols loaded.                                                                C:\Windows\SysWOW64\CRYPTBASE.dll               
+10 sechost.dll                      No symbols loaded.                                                                C:\Windows\SysWOW64\sechost.dll                 
+11 version.dll                      No symbols loaded.                                                                C:\Windows\System32\version.dll                 
+12 shell32.dll                      No symbols loaded.                                                                C:\Windows\SysWOW64\shell32.dll                 
+13 shlwapi.dll                      No symbols loaded.                                                                C:\Windows\SysWOW64\shlwapi.dll                 
+14 gdi32.dll                        No symbols loaded.                                                                C:\Windows\SysWOW64\gdi32.dll                   
+15 user32.dll                       No symbols loaded.                                                                C:\Windows\SysWOW64\user32.dll                  
+16 advapi32.dll                     No symbols loaded.                                                                C:\Windows\SysWOW64\advapi32.dll                
+17 lpk.dll                          No symbols loaded.                                                                C:\Windows\SysWOW64\lpk.dll                     
+18 usp10.dll                        No symbols loaded.                                                                C:\Windows\SysWOW64\usp10.dll                   
+19 ole32.dll                        No symbols loaded.                                                                C:\Windows\SysWOW64\ole32.dll                   
+20 msvcp90.dll                      No symbols loaded.                                                                C:\Windows\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.4926_none_508ed732bcbc0e5a\msvcp90.dll
+21 msvcr90.dll                      No symbols loaded.                                                                C:\Windows\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.4926_none_508ed732bcbc0e5a\msvcr90.dll
+22 oleaut32.dll                     No symbols loaded.                                                                C:\Windows\SysWOW64\oleaut32.dll                
+23 comctl32.dll                     No symbols loaded.                                                                C:\Windows\winsxs\x86_microsoft.windows.common-controls_6595b64144ccf1df_6.0.7600.16661_none_420fe3fa2b8113bd\comctl32.dll
+24 imm32.dll                        No symbols loaded.                                                                C:\Windows\System32\imm32.dll                   
+25 msctf.dll                        No symbols loaded.                                                                C:\Windows\SysWOW64\msctf.dll                   
+26 uxtheme.dll                      No symbols loaded.                                                                C:\Windows\System32\uxtheme.dll                 
+27 profapi.dll                      No symbols loaded.                                                                C:\Windows\System32\profapi.dll                 
+28 apphelp.dll                      No symbols loaded.                                                                C:\Windows\System32\apphelp.dll                 
+29 dwmapi.dll                       No symbols loaded.                                                                C:\Windows\System32\dwmapi.dll                  
+
+
+=====================     Minidump Load Log     =====================
+
+1  Loaded 'C:\Users\shunpingye\Desktop\paper\code\CrashRpt\bin\CrashRptTest.exe', Symbols loaded.
+2  Loaded 'C:\Windows\SysWOW64\ntdll.dll', No symbols loaded.      
+3  Loaded 'C:\Windows\SysWOW64\kernel32.dll', No symbols loaded.   
+4  Loaded 'C:\Windows\SysWOW64\KERNELBASE.dll', No symbols loaded. 
+5  Loaded 'C:\Users\shunpingye\Desktop\paper\code\CrashRpt\bin\CrashRpt.dll', Symbols loaded.
+6  Loaded 'C:\Windows\SysWOW64\rpcrt4.dll', No symbols loaded.     
+7  Loaded 'C:\Windows\SysWOW64\sspicli.dll', No symbols loaded.    
+8  Loaded 'C:\Windows\SysWOW64\msvcrt.dll', No symbols loaded.     
+9  Loaded 'C:\Windows\SysWOW64\CRYPTBASE.dll', No symbols loaded.  
+10 Loaded 'C:\Windows\SysWOW64\sechost.dll', No symbols loaded.    
+11 Loaded 'C:\Windows\System32\version.dll', No symbols loaded.    
+12 Loaded 'C:\Windows\SysWOW64\shell32.dll', No symbols loaded.    
+13 Loaded 'C:\Windows\SysWOW64\shlwapi.dll', No symbols loaded.    
+14 Loaded 'C:\Windows\SysWOW64\gdi32.dll', No symbols loaded.      
+15 Loaded 'C:\Windows\SysWOW64\user32.dll', No symbols loaded.     
+16 Loaded 'C:\Windows\SysWOW64\advapi32.dll', No symbols loaded.   
+17 Loaded 'C:\Windows\SysWOW64\lpk.dll', No symbols loaded.        
+18 Loaded 'C:\Windows\SysWOW64\usp10.dll', No symbols loaded.      
+19 Loaded 'C:\Windows\SysWOW64\ole32.dll', No symbols loaded.      
+20 Loaded 'C:\Windows\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.4926_none_508ed732bcbc0e5a\msvcp90.dll', No symbols loaded.
+21 Loaded 'C:\Windows\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.4926_none_508ed732bcbc0e5a\msvcr90.dll', No symbols loaded.
+22 Loaded 'C:\Windows\SysWOW64\oleaut32.dll', No symbols loaded.   
+23 Loaded 'C:\Windows\winsxs\x86_microsoft.windows.common-controls_6595b64144ccf1df_6.0.7600.16661_none_420fe3fa2b8113bd\comctl32.dll', No symbols loaded.
+24 Loaded 'C:\Windows\System32\imm32.dll', No symbols loaded.      
+25 Loaded 'C:\Windows\SysWOW64\msctf.dll', No symbols loaded.      
+26 Loaded 'C:\Windows\System32\uxtheme.dll', No symbols loaded.    
+27 Loaded 'C:\Windows\System32\profapi.dll', No symbols loaded.    
+28 Loaded 'C:\Windows\System32\apphelp.dll', No symbols loaded.    
+29 Loaded 'C:\Windows\System32\dwmapi.dll', No symbols loaded.     
+30 Unhandled exception at 0x10007b12 in CrashRpt.dll: 0xc0000005 : Exception description.
+
+
+
+== END ==
