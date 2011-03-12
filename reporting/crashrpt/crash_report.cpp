@@ -164,7 +164,7 @@ CRASHRPTAPI(int) crInstallW(CR_INSTALL_INFOW* pInfo)
     ptszEmailSubject,
     ptszUrl,
     &pInfo->priorities,
-    pInfo->falgs,
+    pInfo->flags,
     ptszPrivacyPolicyURL,
     ptszDebugHelpDLL_file,
     miniDumpType,
@@ -220,7 +220,7 @@ CRASHRPTAPI(int) crInstallA(CR_INSTALL_INFOA* pInfo)
   ii.email_address = strconv.a2w(pInfo->email_address);
   ii.crash_server_url = strconv.a2w(pInfo->crash_server_url);
   memcpy(&ii.priorities, pInfo->priorities, 3*sizeof(UINT));
-  ii.falgs = pInfo->falgs;
+  ii.flags = pInfo->flags;
   ii.privacy_policy_url = strconv.a2w(pInfo->privacy_policy_url);
   ii.debug_help_dll = strconv.a2w(pInfo->debug_help_dll);
   ii.minidump_type = pInfo->minidump_type;
