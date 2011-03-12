@@ -13,12 +13,12 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Neutral resources
+// 非特定语言 resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
 #ifdef _WIN32
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-#pragma code_page(1251)
+#pragma code_page(936)
 #endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
@@ -66,12 +66,12 @@ BEGIN
     END
 END
 
-#endif    // Neutral resources
+#endif    // 非特定语言 resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Russian resources
+// 俄语 resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
 #ifdef _WIN32
@@ -84,20 +84,6 @@ LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
 // Dialog
 //
 
-IDD_DETAILDLG DIALOGEX 0, 0, 289, 230
-STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
-CAPTION "Error Report Details"
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
-BEGIN
-    DEFPUSHBUTTON   "Close",IDOK,105,209,57,14
-    PUSHBUTTON      "Export...",IDC_EXPORT,222,209,60,14
-    LTEXT           "Privacy Policy",IDC_PRIVACYPOLICY,14,196,144,8
-    CONTROL         "",IDC_FILE_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,7,19,275,78
-    LTEXT           "Double-click an item to open it with an appropriate program.",IDC_HEADERTEXT,7,7,275,8
-    LTEXT           "Preview",IDC_PREVIEWTEXT,7,100,151,8
-    LTEXT           "",IDC_PREVIEW,7,111,275,82,0,WS_EX_CLIENTEDGE
-END
-
 IDD_MAINDLG DIALOGEX 0, 0, 325, 230
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Error Report"
@@ -109,12 +95,11 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,10,152,294,10
     EDITTEXT        IDC_EMAIL,96,98,208,14,ES_AUTOHSCROLL
     EDITTEXT        IDC_DESCRIPTION,27,128,277,14,ES_AUTOHSCROLL
-    LTEXT           "What does this report contain?",IDC_LINK,10,66,294,8
     LTEXT           "Provide additional info about the problem (recommended)",IDC_MOREINFO,10,81,294,8
     CONTROL         "",IDC_HORZLINE,"Static",SS_ETCHEDHORZ,0,198,325,1
     LTEXT           "CrashRpt",IDC_CRASHRPT,286,194,31,8,WS_DISABLED
     CONTROL         "",IDC_UPPERHORZ,"Static",SS_ETCHEDHORZ,0,37,326,1
-    LTEXT           "Please send us this error report to help fix the problem and improve this software.",IDC_SUBHEADER,10,47,294,16
+    LTEXT           "Please send us this error report to help fix the problem and improve this software.",IDC_SUBHEADER,10,51,294,16
     LTEXT           "Your E-mail:",IDC_STATMAIL,27,101,65,8
     LTEXT           "Describe in few words what did you do when the error occurred:",IDC_DESCRIBE,27,118,279,8
     LTEXT           "Privacy Policy",IDC_PRIVACYPOLICY,10,184,165,8
@@ -168,14 +153,6 @@ END
 #ifdef APSTUDIO_INVOKED
 GUIDELINES DESIGNINFO 
 BEGIN
-    IDD_DETAILDLG, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 282
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 223
-    END
-
     IDD_MAINDLG, DIALOG
     BEGIN
         VERTGUIDE, 10
@@ -209,12 +186,12 @@ BEGIN
 END
 #endif    // APSTUDIO_INVOKED
 
-#endif    // Russian resources
+#endif    // 俄语 resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// 英语(美国) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 #ifdef _WIN32
@@ -430,7 +407,7 @@ BEGIN
     IDS_SYMBOL_FILE         "Symbol File"
 END
 
-#endif    // English (U.S.) resources
+#endif    // 英语(美国) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

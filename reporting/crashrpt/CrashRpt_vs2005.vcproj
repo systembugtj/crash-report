@@ -753,7 +753,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\SharedMem.cpp"
+				RelativePath=".\shared_memory.cpp"
 				>
 			</File>
 			<File

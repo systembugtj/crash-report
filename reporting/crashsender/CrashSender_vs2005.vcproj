@@ -657,10 +657,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\detail_dlg.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\error_report_dlg.cpp"
 				>
 			</File>
@@ -822,10 +818,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\detail_dlg.h"
-				>
-			</File>
-			<File
 				RelativePath=".\error_report_dlg.h"
 				>
 			</File>
@@ -870,6 +862,10 @@
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;manifest"
 			>
+			<File
+				RelativePath=".\res\CrashSender.exe.manifest"
+				>
+			</File>
 			<File
 				RelativePath=".\res\CrashSender.ico"
 				>

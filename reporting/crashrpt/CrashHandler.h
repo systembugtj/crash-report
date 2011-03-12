@@ -44,7 +44,7 @@
 #include "crash_report.h"      
 #include "Utility.h"
 #include "CritSec.h"
-#include "SharedMem.h"
+#include "shared_memory.h"
 
 /* This structure contains pointer to the exception handlers for a thread.*/
 struct ThreadExceptionHandlers
