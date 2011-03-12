@@ -1,5 +1,4 @@
-#summary One-sentence summary of this page.
-该项目相关的参考资料
+#summary 该项目相关的参考资料
 = Introduction =
 如果相对该项目的各个细节进行了解，请参考以下资料：
 1，
