@@ -590,15 +590,15 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
-				RelativePath=".\CrashRptTest.cpp"
+				RelativePath=".\crash_thread.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CrashThread.cpp"
+				RelativePath=".\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\MainDlg.cpp"
+				RelativePath=".\main_dlg.cpp"
 				>
 			</File>
 			<File
@@ -659,19 +659,15 @@
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
-				RelativePath=".\AboutDlg.h"
+				RelativePath=".\about_dlg.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CrashThread.h"
+				RelativePath=".\crash_thread.h"
 				>
 			</File>
 			<File
-				RelativePath=".\DocumentDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MainDlg.h"
+				RelativePath=".\main_dlg.h"
 				>
 			</File>
 			<File
@@ -688,12 +684,24 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;manifest"
 			>
 			<File
+				RelativePath=".\res\CrashRptTest.exe.manifest"
+				>
+			</File>
+			<File
 				RelativePath=".\res\CrashRptTest.ico"
 				>
 			</File>
 			<File
 				RelativePath=".\CrashRptTest.rc"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+						Culture="2052"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\res\Keys.ico"

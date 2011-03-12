@@ -30,20 +30,52 @@
   OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***************************************************************************************/
 
-#pragma once
-#include "stdafx.h"
-#include "crash_report.h"
+// MainDlg.h : interface of the CMainDlg class
+//
+/////////////////////////////////////////////////////////////////////////////
 
+#ifndef MAIN_DLG_H_
+#define MAIN_DLG_H_
+#include "about_dlg.h"
 
-struct CrashThreadInfo
-{  
-  HANDLE m_hWakeUpEvent;
-  bool m_bStop;
-  int m_ExceptionType;
+#define WM_POSTCREATE (WM_USER+256)
+
+class CMainDlg : public CDialogImpl<CMainDlg>, public CUpdateUI<CMainDlg>,
+		public CMessageFilter, public CIdleHandler
+{
+public:
+	enum { IDD = IDD_MAINDLG };
+
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	virtual BOOL OnIdle();
+
+	BEGIN_UPDATE_UI_MAP(CMainDlg)
+	END_UPDATE_UI_MAP()
+
+	BEGIN_MSG_MAP(CMainDlg)
+		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)		
+    MESSAGE_HANDLER(WM_POSTCREATE, OnPostCreate)		
+		COMMAND_ID_HANDLER(IDOK, OnOK)
+		COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
+    COMMAND_ID_HANDLER(ID_FILE_EXIT, OnCancel)
+    COMMAND_ID_HANDLER(ID_HELP_ABOUT, OnHelpAbout)
+   
+  END_MSG_MAP()
+
+	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);	
+  LRESULT OnPostCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);	
+	LRESULT OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+  LRESULT OnFileNewWindow(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+  LRESULT OnHelpAbout(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+
+	void CloseDialog(int nVal);
+  void DoCrash();
+  BOOL m_bRestarted;
+
+  CComboBox m_cboThread;
+  CComboBox m_cboExcType;
+  CAboutDlg m_dlgAbout;
+  int m_nDocNum;
 };
-
-DWORD WINAPI CrashThread(LPVOID pParam);
-
-void test_seh();
-void test_generate_report();
-
+#endif // MAIN_DLG_H_
