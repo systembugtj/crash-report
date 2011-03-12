@@ -38,46 +38,44 @@
 
 class CAboutDlg: public CDialogImpl<CAboutDlg> {
 public:
-	enum {
-		IDD = IDD_ABOUTBOX
-	};
+  enum {
+    IDD = IDD_ABOUTBOX
+  };
 
-	CStatic m_statVersion;
-	CHyperLink m_lnkVisit;
+  CStatic m_statVersion;
+  CHyperLink m_lnkVisit;
 
-	BEGIN_MSG_MAP( CAboutDlg)MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
-	COMMAND_ID_HANDLER(IDOK, OnOK)
-	COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
-	END_MSG_MAP()
+  BEGIN_MSG_MAP( CAboutDlg)MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
+  COMMAND_ID_HANDLER(IDOK, OnOK)
+  COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
+  END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
-	{
-		m_statVersion = GetDlgItem(IDC_VERSION);
-		CString sVersion;
-		sVersion.Format(_T("Version: %d.%d.%d"),
-				CRASHRPT_VER/1000,
-				(CRASHRPT_VER%1000)/100,
-				(CRASHRPT_VER%1000)%100);
-		m_statVersion.SetWindowText(sVersion);
-		m_lnkVisit.SubclassWindow(GetDlgItem(IDC_LINK));
-		m_lnkVisit.SetHyperLink(_T("http://code.google.com/p/crashrpt/"));
-		return 0;
-	}
+  LRESULT OnInitDialog(UINT, WPARAM , LPARAM , BOOL&) {
+    m_statVersion = GetDlgItem(IDC_VERSION);
+    CString sVersion;
+    sVersion.Format(_T("Version: %d.%d.%d"),
+        CRASHRPT_VER/1000,
+        (CRASHRPT_VER%1000)/100,
+        (CRASHRPT_VER%1000)%100);
+    m_statVersion.SetWindowText(sVersion);
+    m_lnkVisit.SubclassWindow(GetDlgItem(IDC_LINK));
+    m_lnkVisit.SetHyperLink(_T("http://code.google.com/p/crash-report/"));
+    return 0;
+  }
 
-	LRESULT OnOK(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/) {
-		CloseDialog(0);
-		return 0;
-	}
+  LRESULT OnOK(WORD, WORD, HWND, BOOL&) {
+    CloseDialog(0);
+    return 0;
+  }
 
-	LRESULT OnCancel(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/,
-			BOOL& /*bHandled*/) {
-		CloseDialog(1);
-		return 0;
-	}
+  LRESULT OnCancel(WORD, WORD, HWND, BOOL&) {
+    CloseDialog(1);
+    return 0;
+  }
 
-	void CloseDialog(int /*nVal*/) {
-		ShowWindow( SW_HIDE);
-	}
+  void CloseDialog(int) {
+    ShowWindow( SW_HIDE);
+  }
 
 };
 #endif // ABOUT_DLG_H_
