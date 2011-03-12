@@ -1,4 +1,4 @@
-说明为什么要废弃smtp协议发送崩溃报告
+#Summary 对废弃smtp协议发送崩溃报告的说明
 = Introduction =
 smtp协议需要用户名密码，这个不适合在代码中存放
 
