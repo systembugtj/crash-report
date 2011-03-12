@@ -1,5 +1,4 @@
-#summary One-sentence summary of this page.
-some books and papers on windows SEH and crash reporting
+#summary some books and papers on windows SEH and crash reporting
 = Introduction =
 a list of books and papers
 Add your content here.
