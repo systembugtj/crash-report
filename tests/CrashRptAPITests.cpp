@@ -671,15 +671,9 @@ void Test_crGetLastErrorMsgW()
 REGISTER_TEST(Test_CrAutoInstallHelper);
 void Test_CrAutoInstallHelper()
 {   
-  // Install crash handler
-
-  CR_INSTALL_INFO info;
-  memset(&info, 0, sizeof(CR_INSTALL_INFO));
-  info.size = sizeof(CR_INSTALL_INFO);
-  info.application_version = _T("1.0.0"); // Specify app version, otherwise it will fail.
-
-  CrAutoInstallHelper cr_install_helper(&info);
-  TEST_ASSERT(cr_install_helper.result()==0);
+  CrAutoInstallHelper helper;
+  helper.set_application_version(_T("1.0.0"));
+  TEST_ASSERT(helper.Install()==0);
     
   __TEST_CLEANUP__;  
 }
@@ -701,13 +695,9 @@ void Test_CrThreadAutoInstallHelper()
 {   
   // Install crash handler for the main thread
 
-  CR_INSTALL_INFO info;
-  memset(&info, 0, sizeof(CR_INSTALL_INFO));
-  info.size = sizeof(CR_INSTALL_INFO);
-  info.application_version = _T("1.0.0"); // Specify app version, otherwise it will fail.
-
-  CrAutoInstallHelper cr_install_helper(&info);
-  TEST_ASSERT(cr_install_helper.result()==0);
+  CrAutoInstallHelper helper;
+  helper.set_application_version(_T("1.0.0"));
+  TEST_ASSERT(helper.Install()==0);
   
   // Run a worker thread
   int nResult = -1;

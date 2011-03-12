@@ -24,7 +24,7 @@
 			IntermediateDirectory="Debug"
 			ConfigurationType="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -53,8 +53,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\include;..\..\thirdparty\wtl"
-				PreprocessorDefinitions="WIN32;_WINDOWS;STRICT;_DEBUG"
+				AdditionalIncludeDirectories="..\..\include;..\..\thirdparty\wtl;..\..\dep_include"
+				PreprocessorDefinitions="WIN32;_WINDOWS;STRICT;_DEBUG;GOOGLE_GLOG_DLL_DECL="
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -81,7 +81,7 @@
 				AdditionalDependencies="CrashRptd.lib shell32.lib gdi32.lib"
 				OutputFile="$(OutDir)\CrashRptTestd.exe"
 				LinkIncremental="0"
-				AdditionalLibraryDirectories="..\..\lib"
+				AdditionalLibraryDirectories="..\..\lib;..\..\dep_libs"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="..\..\bin\CrashRptTestd.pdb"
 				SubSystem="2"
@@ -118,7 +118,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"

@@ -37,10 +37,12 @@
  */
 #ifndef _CRASHRPT_H_
 #define _CRASHRPT_H_
+#include <iostream>
+#include <string>
+#define NOGDI
 #include <windows.h>
 #include <dbghelp.h>
 #include <assert.h>
-
 // Define SAL macros to be empty if some old Visual Studio used
 #ifndef __reserved
 #define __reserved
@@ -143,9 +145,9 @@ typedef BOOL (CALLBACK *LPGETLOGFILE) (__reserved LPVOID lpvState);
 
 CRASHRPTAPI(LPVOID)
 InstallW(
-    __in_opt LPGETLOGFILE pfnCallback,
-    const wchar_t* pszEmailTo,
-    const wchar_t* pszEmailSubject
+		__in_opt LPGETLOGFILE pfnCallback,
+		const wchar_t* pszEmailTo,
+		const wchar_t* pszEmailSubject
 );
 
 /*! \ingroup DeprecatedAPI
@@ -154,9 +156,9 @@ InstallW(
 
 CRASHRPTAPI(LPVOID)
 InstallA(
-    __in_opt LPGETLOGFILE pfnCallback,
-    const char* pszEmailTo,
-    const char* pszEmailSubject
+		__in_opt LPGETLOGFILE pfnCallback,
+		const char* pszEmailTo,
+		const char* pszEmailSubject
 );
 
 /*! \brief Character set-independent mapping of InstallW() and InstallA() functions.
@@ -186,7 +188,7 @@ InstallA(
 
 CRASHRPTAPI(void)
 Uninstall(
-    __reserved LPVOID lpState
+		__reserved LPVOID lpState
 );
 
 /*! \ingroup DeprecatedAPI
@@ -219,9 +221,9 @@ Uninstall(
 
 CRASHRPTAPI(void)
 AddFileW(
-    __reserved LPVOID lpState,
-    const wchar_t* pszFile,
-    const wchar_t* pszDesc
+		__reserved LPVOID lpState,
+		const wchar_t* pszFile,
+		const wchar_t* pszDesc
 );
 
 /*! \ingroup DeprecatedAPI
@@ -231,9 +233,9 @@ AddFileW(
 
 CRASHRPTAPI(void)
 AddFileA(
-    __reserved LPVOID lpState,
-    const char* pszFile,
-    const char* pszDesc
+		__reserved LPVOID lpState,
+		const char* pszFile,
+		const char* pszDesc
 );
 
 /*! \brief Character set-independent mapping of AddFileW() and AddFileA() functions.
@@ -272,8 +274,8 @@ AddFileA(
 
 CRASHRPTAPI(void)
 GenerateErrorReport(
-    __reserved LPVOID lpState,
-    PEXCEPTION_POINTERS pExInfo
+		__reserved LPVOID lpState,
+		PEXCEPTION_POINTERS pExInfo
 );
 
 #endif //_CRASHRPT_REMOVE_DEPRECATED
@@ -505,59 +507,59 @@ GenerateErrorReport(
  */
 
 typedef struct tagCR_INSTALL_INFOW {
-   //   Size of this structure in bytes; must be initialized before using!
-  WORD size;
-  const wchar_t* application_name;
-  const wchar_t* application_version;
-  //   E-mail address of crash reports recipient.
-  const wchar_t* email_address;
-  const wchar_t* email_subject;
-  //   URL of server-side script (used in HTTP connection).
-  const wchar_t* crash_server_url;
-  //   Directory name where CrashSender.exe is located.
-  const wchar_t* sender_path;
-  //   User crash callback.
-  LPGETLOGFILE crash_callback;
-  //   Array of error sending transport priorities.
-  UINT priorities[5];
-  DWORD falgs;
-  const wchar_t* privacy_policy_url;
-  //   File name or folder of Debug help DLL.
-  const wchar_t* debug_help_dll;
-  MINIDUMP_TYPE minidump_type;
-  //   Directory where to save error reports.
-  const wchar_t* save_dir;
-  const wchar_t* restart_cmd;
-  const wchar_t* langpack_path;
-  const wchar_t* email_text;
-  const wchar_t* smtp_proxy;
-  //   Custom icon used for Error Report dialog.
-  const wchar_t* custom_sender_icon;
+	//   Size of this structure in bytes; must be initialized before using!
+	WORD size;
+	const wchar_t* application_name;
+	const wchar_t* application_version;
+	//   E-mail address of crash reports recipient.
+	const wchar_t* email_address;
+	const wchar_t* email_subject;
+	//   URL of server-side script (used in HTTP connection).
+	const wchar_t* crash_server_url;
+	//   Directory name where CrashSender.exe is located.
+	const wchar_t* sender_path;
+	//   User crash callback.
+	LPGETLOGFILE crash_callback;
+	//   Array of error sending transport priorities.
+	UINT priorities[5];
+	DWORD falgs;
+	const wchar_t* privacy_policy_url;
+	//   File name or folder of Debug help DLL.
+	const wchar_t* debug_help_dll;
+	MINIDUMP_TYPE minidump_type;
+	//   Directory where to save error reports.
+	const wchar_t* save_dir;
+	const wchar_t* restart_cmd;
+	const wchar_t* langpack_path;
+	const wchar_t* email_text;
+	const wchar_t* smtp_proxy;
+	//   Custom icon used for Error Report dialog.
+	const wchar_t* custom_sender_icon;
 } CR_INSTALL_INFOW;
 
 typedef CR_INSTALL_INFOW *PCR_INSTALL_INFOW;
 
 //  see CR_INSTALL_INFOW for details
 typedef struct tagCR_INSTALL_INFOA {
-  WORD size;
-  const char* application_name;
-  const char* application_version;
-  const char* email_address;
-  const char* email_subject;
-  const char* crash_server_url;
-  const char* sender_path;
-  LPGETLOGFILE crash_callback;
-  UINT priorities[3];
-  DWORD falgs;
-  const char* privacy_policy_url;
-  const char* debug_help_dll;
-  MINIDUMP_TYPE minidump_type;
-  const char* save_dir;
-  const char* restart_cmd;
-  const char* langpack_path;
-  const char* email_text;
-  const char* smtp_proxy;
-  const char* custom_sender_icon;
+	WORD size;
+	const char* application_name;
+	const char* application_version;
+	const char* email_address;
+	const char* email_subject;
+	const char* crash_server_url;
+	const char* sender_path;
+	LPGETLOGFILE crash_callback;
+	UINT priorities[3];
+	DWORD falgs;
+	const char* privacy_policy_url;
+	const char* debug_help_dll;
+	MINIDUMP_TYPE minidump_type;
+	const char* save_dir;
+	const char* restart_cmd;
+	const char* langpack_path;
+	const char* email_text;
+	const char* smtp_proxy;
+	const char* custom_sender_icon;
 } CR_INSTALL_INFOA;
 
 typedef CR_INSTALL_INFOA *PCR_INSTALL_INFOA;
@@ -631,7 +633,7 @@ typedef PCR_INSTALL_INFOA PCR_INSTALL_INFO;
 
 CRASHRPTAPI(int)
 crInstallW(
-    __in PCR_INSTALL_INFOW pInfo
+		__in PCR_INSTALL_INFOW pInfo
 );
 
 /*! \ingroup CrashRptAPI
@@ -640,7 +642,7 @@ crInstallW(
 
 CRASHRPTAPI(int)
 crInstallA(
-    __in PCR_INSTALL_INFOA pInfo
+		__in PCR_INSTALL_INFOA pInfo
 );
 
 /*! \brief Character set-independent mapping of crInstallW() and crInstallA() functions.
@@ -821,8 +823,8 @@ crUninstallFromCurrentThread();
 
 CRASHRPTAPI(int)
 crAddFileW(
-    const wchar_t* pszFile,
-    const wchar_t* pszDesc
+		const wchar_t* pszFile,
+		const wchar_t* pszDesc
 );
 
 /*! \ingroup DeprecatedAPI
@@ -831,8 +833,8 @@ crAddFileW(
 
 CRASHRPTAPI(int)
 crAddFileA(
-    const char* pszFile,
-    const char* pszDesc
+		const char* pszFile,
+		const char* pszDesc
 );
 
 /*! \brief Character set-independent mapping of crAddFileW() and crAddFileA() functions.
@@ -901,10 +903,10 @@ crAddFileA(
 
 CRASHRPTAPI(int)
 crAddFile2W(
-    const wchar_t* pszFile,
-    const wchar_t* pszDestFile,
-    const wchar_t* pszDesc,
-    DWORD dwFlags
+		const wchar_t* pszFile,
+		const wchar_t* pszDestFile,
+		const wchar_t* pszDesc,
+		DWORD dwFlags
 );
 
 /*! \ingroup CrashRptAPI
@@ -913,10 +915,10 @@ crAddFile2W(
 
 CRASHRPTAPI(int)
 crAddFile2A(
-    const char* pszFile,
-    const char* pszDestFile,
-    const char* pszDesc,
-    DWORD dwFlags
+		const char* pszFile,
+		const char* pszDestFile,
+		const char* pszDesc,
+		DWORD dwFlags
 );
 
 /*! \brief Character set-independent mapping of crAddFile2W() and crAddFile2A() functions.
@@ -983,7 +985,7 @@ crAddFile2A(
 
 CRASHRPTAPI(int)
 crAddScreenshot(
-    DWORD dwFlags
+		DWORD dwFlags
 );
 
 /*! \ingroup CrashRptAPI
@@ -1037,8 +1039,8 @@ crAddScreenshot(
 
 CRASHRPTAPI(int)
 crAddScreenshot2(
-    DWORD dwFlags,
-    int nJpegQuality
+		DWORD dwFlags,
+		int nJpegQuality
 );
 
 /*! \ingroup CrashRptAPI
@@ -1070,8 +1072,8 @@ crAddScreenshot2(
 
 CRASHRPTAPI(int)
 crAddPropertyW(
-    const wchar_t* pszPropName,
-    const wchar_t* pszPropValue
+		const wchar_t* pszPropName,
+		const wchar_t* pszPropValue
 );
 
 /*! \ingroup CrashRptAPI
@@ -1080,8 +1082,8 @@ crAddPropertyW(
 
 CRASHRPTAPI(int)
 crAddPropertyA(
-    const char* pszPropName,
-    const char* pszPropValue
+		const char* pszPropName,
+		const char* pszPropValue
 );
 
 /*! \brief Character set-independent mapping of crAddPropertyW() and crAddPropertyA() functions.
@@ -1130,9 +1132,9 @@ crAddPropertyA(
 
 CRASHRPTAPI(int)
 crAddRegKeyW(
-    const wchar_t* pszRegKey,
-    const wchar_t* pszDstFileName,
-    DWORD dwFlags
+		const wchar_t* pszRegKey,
+		const wchar_t* pszDstFileName,
+		DWORD dwFlags
 );
 
 /*! \ingroup CrashRptAPI
@@ -1141,9 +1143,9 @@ crAddRegKeyW(
 
 CRASHRPTAPI(int)
 crAddRegKeyA(
-    const char* pszRegKey,
-    const char* pszDstFileName,
-    DWORD dwFlags
+		const char* pszRegKey,
+		const char* pszDstFileName,
+		DWORD dwFlags
 );
 
 /*! \brief Character set-independent mapping of crAddRegKeyW() and crAddRegKeyA() functions.
@@ -1233,17 +1235,17 @@ crAddRegKeyA(
  */
 
 typedef struct tagCR_EXCEPTION_INFO {
-  WORD cb; //   Size of this structure in bytes; should be initialized before using.
-  PEXCEPTION_POINTERS pexcptrs; //   Exception pointers.
-  int exctype; //   Exception type.
-  DWORD code; //   Code of SEH exception.
-  unsigned int fpe_subcode; //   Floating point exception subcode.
-  const wchar_t* expression; //   Assertion expression.
-  const wchar_t* function; //   Function in which assertion happened.
-  const wchar_t* file; //   File in which assertion happened.
-  unsigned int line; //   Line number.
-  BOOL bManual; //   Flag telling if the error report is generated manually or not.
-  HANDLE hSenderProcess; //   Handle to the CrashSender.exe process.
+	WORD cb; //   Size of this structure in bytes; should be initialized before using.
+	PEXCEPTION_POINTERS pexcptrs; //   Exception pointers.
+	int exctype; //   Exception type.
+	DWORD code; //   Code of SEH exception.
+	unsigned int fpe_subcode; //   Floating point exception subcode.
+	const wchar_t* expression; //   Assertion expression.
+	const wchar_t* function; //   Function in which assertion happened.
+	const wchar_t* file; //   File in which assertion happened.
+	unsigned int line; //   Line number.
+	BOOL bManual; //   Flag telling if the error report is generated manually or not.
+	HANDLE hSenderProcess; //   Handle to the CrashSender.exe process.
 } CR_EXCEPTION_INFO;
 
 typedef CR_EXCEPTION_INFO *PCR_EXCEPTION_INFO;
@@ -1294,7 +1296,7 @@ typedef CR_EXCEPTION_INFO *PCR_EXCEPTION_INFO;
 
 CRASHRPTAPI(int)
 crGenerateErrorReport(
-    __in_opt CR_EXCEPTION_INFO* pExceptionInfo
+		__in_opt CR_EXCEPTION_INFO* pExceptionInfo
 );
 
 /*! \ingroup DeprecatedAPI
@@ -1339,8 +1341,8 @@ crGenerateErrorReport(
 
 CRASHRPTAPI(int)
 crExceptionFilter(
-    unsigned int code,
-    __in_opt struct _EXCEPTION_POINTERS* ep);
+		unsigned int code,
+		__in_opt struct _EXCEPTION_POINTERS* ep);
 
 #define CR_NONCONTINUABLE_EXCEPTION  32  //   Non continuable sofware exception.
 #define CR_THROW                     33  //   Throw C++ typed exception.
@@ -1397,58 +1399,17 @@ crExceptionFilter(
 
 CRASHRPTAPI(int)
 crEmulateCrash(
-    unsigned ExceptionType) throw (...);
-
-/*! \ingroup CrashRptAPI
- *  \brief Gets the last CrashRpt error message.
- *
- *  \return This function returns length of error message in characters. If output buffer is invalid, returns a negative number.
- *
- *  \param[out] pszBuffer Pointer to the buffer.
- *  \param[in]  uBuffSize Size of buffer in characters.
- *
- *  \remarks
- *
- *    This function gets the last CrashRpt error message. You can use this function
- *    to retrieve the text status of the last called CrashRpt function.
- *
- *    If buffer is too small for the error message, the message is truncated.
- *
- *  crGetLastErrorMsgW() and crGetLastErrorMsgA() are wide-character and multi-byte character versions
- *  of crGetLastErrorMsg(). The crGetLastErrorMsg() macro defines character set independent mapping.
- *
- *  The following example shows how to use crGetLastErrorMsg() function.
- *
- *  \code
- *
- *  // .. call some CrashRpt function
- *
- *  // Get the status message
- *  TCHAR szErrorMsg[256];
- *  crGetLastErrorMsg(szErrorMsg, 256);
- *  \endcode
- *
- *  \sa crGetLastErrorMsgA(), crGetLastErrorMsgW(), crGetLastErrorMsg()
- */
+		unsigned ExceptionType) throw (...);
 
 CRASHRPTAPI(int)
 crGetLastErrorMsgW(
-    __out_ecount_z(uBuffSize) LPWSTR pszBuffer,
-    UINT uBuffSize);
-
-/*! \ingroup CrashRptAPI
- *  \copydoc crGetLastErrorMsgW()
- *
- */
+		__out_ecount_z(uBuffSize) LPWSTR pszBuffer,
+		UINT uBuffSize);
 
 CRASHRPTAPI(int)
 crGetLastErrorMsgA(
-    __out_ecount_z(uBuffSize) LPSTR pszBuffer,
-    UINT uBuffSize);
-
-/*! \brief Defines character set-independent mapping for crGetLastErrorMsgW() and crGetLastErrorMsgA().
- *  \ingroup CrashRptAPI
- */
+		__out_ecount_z(uBuffSize) LPSTR pszBuffer,
+		UINT uBuffSize);
 
 #ifdef UNICODE
 #define crGetLastErrorMsg crGetLastErrorMsgW
@@ -1459,45 +1420,107 @@ crGetLastErrorMsgA(
 
 #ifndef _CRASHRPT_NO_WRAPPERS
 
+
+//  typedef std::basic_string<TCHAR> tstring;
+
+
 class CrAutoInstallHelper {
 public:
-  CrAutoInstallHelper(CR_INSTALL_INFOA* info) {
-    result_ = crInstallA(info);
-    assert(result_ == 0);
-  }
+	CrAutoInstallHelper() {
+    memset(&info_, 0, sizeof(CR_INSTALL_INFO));
+    //  set some default value for CR_INSTALL_INFO
+    // only support HTTP now.delete SMTP and SMAPI
+    info_.priorities[CR_HTTP] = 3;
+    info_.priorities[CR_SMTP] = 0;
+    info_.priorities[CR_SMAPI] = 0;
+	}
+	int Install() {
+		return crInstall(&info_);
+	}
+	//  还需要一个函数用于设置发送协议。这里最好修改为协议名称，
+    //  而不是发送协议的优先级。
+  void set_application_name( TCHAR* name) {
+    info_.application_name = name;
+    }
+  void set_application_version( TCHAR* version) {
+    info_.application_version = version;
+    }
+  void set_email_address( TCHAR* email_address) {
+    info_.email_address = email_address;
+    }
+  void set_email_subject( TCHAR* email_subject) {
+    info_.email_subject = email_subject;
+    }
+  void set_crash_server_url( TCHAR* crash_server_url) {
+    info_.crash_server_url = crash_server_url;
+    }
+  void set_sender_path( TCHAR* sender_path) {
+    info_.sender_path = sender_path;
+    }
+  void set_crash_callback(LPGETLOGFILE crash_callback) {
+    info_.crash_callback = crash_callback;
+    }
+  void set_falgs(DWORD falgs) {
+    info_.falgs = falgs;
+    }
+  void set_privacy_policy_url( TCHAR* privacy_policy_url) {
+    info_.privacy_policy_url = privacy_policy_url;
+    }
+  void set_debug_help_dll( TCHAR* debug_help_dll) {
+    info_.debug_help_dll = debug_help_dll;
+    }
+  void set_minidump_type(MINIDUMP_TYPE minidump_type) {
+    info_.minidump_type = minidump_type;
+    }
+  void set_save_dir( TCHAR* save_dir) {
+    info_.save_dir = save_dir;
+    }
+  void set_restart_cmd( TCHAR* restart_cmd) {
+    info_.restart_cmd = restart_cmd;
+    }
+  void set_langpack_path( TCHAR* langpack_path) {
+    info_.langpack_path = langpack_path;
+    }
+  void set_email_text( TCHAR* email_text) {
+    info_.email_text = email_text;
+    }
+  void set_smtp_proxy( TCHAR* smtp_proxy) {
+    info_.smtp_proxy = smtp_proxy;
+    }
+	void set_custom_sender_icon( TCHAR* custom_sender_icon) {
+	    info_.custom_sender_icon = custom_sender_icon;
+	}
 
-  CrAutoInstallHelper(CR_INSTALL_INFOW* info) {
-    result_ = crInstallW(info);
-  }
+	//  new function to check healthy before run application.
+	bool CheckHealthyBeforeStart();
 
-  ~CrAutoInstallHelper() {
-    result_ = crUninstall();
-    assert(result_ == 0);
-  }
-  int result() {return result_;}
+	~CrAutoInstallHelper() {
+		crUninstall();
+	}
 private:
-  //  Install status
-  int result_;
+	CR_INSTALL_INFO info_;
 };
 
 class CrThreadAutoInstallHelper {
 public:
 
-  //  Installs exception handlers to the caller thread
-  CrThreadAutoInstallHelper(DWORD falgs = 0) {
-    result_ = crInstallToCurrentThread2(falgs);
-    assert(result_ == 0);
-  }
+	//  Installs exception handlers to the caller thread
+	CrThreadAutoInstallHelper(DWORD falgs = 0) {
+		result_ = crInstallToCurrentThread2(falgs);
+		assert(result_ == 0);
+	}
 
-  // Uninstalls exception handlers from the caller thread
-  ~CrThreadAutoInstallHelper() {
-    result_ = crUninstallFromCurrentThread();
-    assert(result_ == 0);
-  }
-  
-  int result() {return result_;}
+	// Uninstalls exception handlers from the caller thread
+	~CrThreadAutoInstallHelper() {
+		result_ = crUninstallFromCurrentThread();
+		assert(result_ == 0);
+	}
+
+	int result() {
+		return result_;
+	}
 private:
-  int result_;
+	int result_;
 };
 
 #endif //  _CRASHRPT_NO_WRAPPERS
