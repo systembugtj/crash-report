@@ -1,0 +1,18 @@
+#summary One-sentence summary of this page.
+some books and papers on windows SEH and crash reporting
+= Introduction =
+a list of books and papers
+Add your content here.
+
+
+= Details =
+[1]	Matt Pietrek. A Crash Course on the Depths of Win32 Structured Exception Handling
+[2]	Jeffrey Tichter, Christophe Nasarre.Windows via C/C++[M].北京：清华大学出版社，2008:621-710
+[3]	毛德操. Windows内核情景分析（上册）[M]. 北京：电子工业出版社，2009:665-728
+[4]	张银奎. 软件调试[M]. 北京：电子工业出版社，2009:65-780
+[5]	Mark E.Russinovich, David A.Solomon. 深入解析Windows操作系统[M].北京：电子工业出版社，2009:845-870
+[6]	段钢. 加密与解密(第三版)[M]. 北京：电子工业出版社，2008：306-312.
+[7]	潘爱民 Windows内核原理与实现[M]. 北京：电子工业出版社 2010:310-342
+[8]	http://en.wikipedia.org/wiki/Exception_handling
+[9]	Ken Johnson(Skywing). Programming against the x64 exception handling support. http://www.nynaeve.net?p=99
+[10]	Excetption Behavior: x64 Structured Exception Handling. The NT Insider, 2006
