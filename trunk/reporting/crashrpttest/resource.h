@@ -6,7 +6,6 @@
 #define IDR_MAINFRAME                   128
 #define IDD_MAINDLG                     129
 #define IDR_MENU                        201
-#define IDD_DOCUMENT                    202
 #define IDI_KEYS                        203
 #define IDC_MAIN_NOEXC                  1000
 #define IDC_MAIN_WIN32                  1001
@@ -49,7 +48,6 @@
 #define IDC_RADIO2                      1047
 #define IDC_RADIO3                      1048
 #define IDC_EDIT1                       1049
-#define IDC_EDIT                        1049
 #define IDC_EDIT2                       1050
 #define IDC_EDIT3                       1051
 #define IDC_CHECK2                      1052
