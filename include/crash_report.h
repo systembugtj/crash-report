@@ -281,8 +281,6 @@ GenerateErrorReport(
 #endif //_CRASHRPT_REMOVE_DEPRECATED
 // Array indices for CR_INSTALL_INFO::priorities.
 #define CR_HTTP 0  //   Send error report via HTTP connection.
-#define CR_SMTP 1  //   Send error report via SMTP connection.
-#define CR_SMAPI 2 //   Send error report via simple MAPI (using default mail client).
 //! Special priority constant that allows to skip certain delivery method.
 #define CR_NEGATIVE_PRIORITY ((UINT)-1)
 
@@ -1429,8 +1427,6 @@ public:
     //  set some default value for CR_INSTALL_INFO
     // only support HTTP now.delete SMTP and SMAPI
     info_.priorities[CR_HTTP] = 3;
-    info_.priorities[CR_SMTP] = 0;
-    info_.priorities[CR_SMAPI] = 0;
     }
   ~CrAutoInstallHelper() {
     crUninstall();
