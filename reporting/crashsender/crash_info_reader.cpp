@@ -151,10 +151,6 @@ int CCrashInfoReader::UnpackCrashDescription(ErrorReportInfo& eri) {
   //m_bAppRestart = m_pCrashDesc->m_bAppRestart (unpacked from dwFlags);
   UnpackString(m_pCrashDesc->m_dwRestartCmdLineOffs, m_sRestartCmdLine);
   UnpackString(m_pCrashDesc->m_dwUrlOffs, m_sUrl);
-  UnpackString(m_pCrashDesc->m_dwEmailToOffs, m_sEmailTo);
-  m_nSmtpPort = m_pCrashDesc->m_nSmtpPort;
-  UnpackString(m_pCrashDesc->m_dwSmtpProxyServerOffs, m_sSmtpProxyServer);
-  m_nSmtpProxyPort = m_pCrashDesc->m_nSmtpProxyPort;
   UnpackString(m_pCrashDesc->m_dwEmailSubjectOffs, m_sEmailSubject);
   UnpackString(m_pCrashDesc->m_dwEmailTextOffs, m_sEmailText);
   memcpy(m_uPriorities, m_pCrashDesc->m_uPriorities, sizeof(UINT) * 3);

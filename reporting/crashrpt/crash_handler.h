@@ -90,8 +90,6 @@ public:
       LPCTSTR lpcszAppVersion = NULL,
       LPCTSTR lpcszCrashSenderPath = NULL,
       LPGETLOGFILE lpfnCallback = NULL,           
-      LPCTSTR lpcszTo = NULL,             
-      LPCTSTR lpcszSubject = NULL,
       LPCTSTR lpcszUrl = NULL,
       UINT (*puPriorities)[5] = NULL,
       DWORD dwFlags = 0,
@@ -101,40 +99,20 @@ public:
       LPCTSTR lpcszErrorReportSaveDir = NULL,
       LPCTSTR lpcszRestartCmdLine = NULL,
       LPCTSTR lpcszLangFilePath = NULL,
-      LPCTSTR lpcszEmailText = NULL,
-      LPCTSTR lpcszSmtpProxy = NULL,
       LPCTSTR lpcszCustomSenderIcon = NULL);
 
   BOOL IsInitialized();
-
   int Destroy();
-
-   
-  // Adds a file to the crash report
   int AddFile(LPCTSTR lpFile, LPCTSTR lpDestFile, LPCTSTR lpDesc, DWORD dwFlags);
-
-  // Adds a named text property to the report
   int AddProperty(CString sPropName, CString sPropValue);
-
-  // Adds desktop screenshot on crash
   int AddScreenshot(DWORD dwFlags, int nJpegQuality);
-
-  // Adds a registry key 
   int AddRegKey(LPCTSTR szRegKey, LPCTSTR szDstFileName, DWORD dwFlags);
-
-  // Generates error report
   int GenerateErrorReport(PCR_EXCEPTION_INFO pExceptionInfo = NULL);
      
-  // Sets/unsets exception handlers for the current process
   int SetProcessExceptionHandlers(DWORD dwFlags);
   int UnSetProcessExceptionHandlers();
-
-  // Sets/unsets exception handlers for the caller thread
   int SetThreadExceptionHandlers(DWORD dwFlags);   
   int UnSetThreadExceptionHandlers();
-  
-  // Returns the crash handler object if such object was 
-  // created for the current process
   static CCrashHandler* GetCurrentProcessCrashHandler();
   static void ReleaseCurrentProcessCrashHandler();
 
@@ -231,12 +209,6 @@ public:
   //BOOL m_bAppRestart;            // This is packed into dwFlags
   CString m_sRestartCmdLine;     // App restart command line.
   CString m_sUrl;                // Url to use when sending error report over HTTP.  
-  CString m_sEmailTo;            // E-mail recipient.
-  int m_nSmtpPort;               // SMTP port.
-  CString m_sSmtpProxyServer;    // SMTP proxy.
-  int m_nSmtpProxyPort;          // SMTP proxy port.
-  CString m_sEmailSubject;       // E-mail subject.
-  CString m_sEmailText;          // E-mail text.
   UINT m_uPriorities[3];         // Delivery priorities.
   CString m_sPrivacyPolicyURL;   // Privacy policy URL.
   CString m_sPathToCrashSender;  // Path to CrashSender.exe
