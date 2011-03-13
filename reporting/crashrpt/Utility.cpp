@@ -36,7 +36,7 @@
 // Date: 
 
 #include "stdafx.h"
-#include "Utility.h"
+#include "utility.h"
 #include "resource.h"
 #include "strconv.h"
 

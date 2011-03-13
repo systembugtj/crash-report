@@ -35,13 +35,13 @@
 //
 
 #include "stdafx.h"
-#include "CrashRptProbe.h"
+#include "crash_report_probe.h"
 #include "crash_report.h"
 #include <map>
-#include "CrashDescReader.h"
-#include "MinidumpReader.h"
+#include "crash_desc_reader.h"
+#include "minidump_reader.h"
 #include "md5.h"
-#include "Utility.h"
+#include "utility.h"
 #include "strconv.h"
 #include "unzip.h"
 

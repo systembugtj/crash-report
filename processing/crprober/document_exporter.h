@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 #include "output.h"
-#include "CrashRptProbe.h"
+#include "crash_report_probe.h"
 
 // Return codes
 enum ReturnCode {

@@ -490,11 +490,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\CrashDescReader.cpp"
+				RelativePath=".\crash_desc_reader.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CrashRptProbe.cpp"
+				RelativePath=".\crash_report_probe.cpp"
 				>
 			</File>
 			<File
@@ -550,7 +550,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\MinidumpReader.cpp"
+				RelativePath=".\minidump_reader.cpp"
 				>
 			</File>
 			<File
@@ -606,16 +606,8 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\reporting\crashrpt\Utility.cpp"
+				RelativePath="..\..\reporting\crashrpt\utility.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -624,15 +616,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\CrashDescReader.h"
+				RelativePath=".\crash_desc_reader.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\CrashRptProbe.h"
+				RelativePath="..\..\include\crash_report_probe.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MinidumpReader.h"
+				RelativePath=".\minidump_reader.h"
 				>
 			</File>
 			<File

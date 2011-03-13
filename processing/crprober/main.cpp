@@ -37,7 +37,7 @@
 #include <vector>
 #include <string>
 #include <assert.h>
-#include "CrashRptProbe.h"
+#include "crash_report_probe.h"
 #include "gflags/gflags.h"
 #include "glog/logging.h"
 

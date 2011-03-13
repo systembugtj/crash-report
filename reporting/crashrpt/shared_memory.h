@@ -32,7 +32,7 @@
 
 #pragma once
 #include "stdafx.h"
-#include "CritSec.h"
+#include "critical_section.h"
 
 // Generic block header.
 struct GENERIC_HEADER {
