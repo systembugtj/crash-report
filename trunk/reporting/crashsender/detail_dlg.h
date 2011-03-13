@@ -31,41 +31,48 @@
 ***************************************************************************************/
 
 #pragma once
-
+#include "stdafx.h"
 #include "resource.h"
-#include "error_report_sender.h"
+#include "mail_msg.h"
+#include "file_preview_ctrl.h"
 
-#define WM_COMPLETECOLLECT (WM_APP+1)
-
-class CProgressDlg : public CDialogImpl<CProgressDlg>,
-  public CDialogResize<CProgressDlg>
+class CDetailDlg : public CDialogImpl<CDetailDlg>,
+  public CDialogResize<CDetailDlg>
 {
 public:
-	enum { IDD = IDD_PROGRESSDLG };
-  
-  enum ActionOnCancel{DONT_CLOSE, CLOSE_MYSELF, CLOSE_MYSELF_AND_PARENT};
+	enum { IDD = IDD_DETAILDLG };
 
-  CProgressBarCtrl m_prgProgress;
-  CListViewCtrl m_listView;
-  CButton m_btnCancel;
-  CStatic m_statText;    
+  CImageList  m_iconList;       // Shell icon list
+  CListViewCtrl m_list;
+  CHyperLink m_linkPrivacyPolicy;
+  CButton m_btnClose;
+  CButton m_btnExport;
+  CStatic m_statPreview;
+  CFilePreviewCtrl m_filePreview;
+  PreviewMode m_previewMode;
+  TextEncoding m_textEncoding;
+  int m_nCurReport;
 
-  BEGIN_DLGRESIZE_MAP(CProgressDlg)
-    DLGRESIZE_CONTROL(IDC_PROGRESS, DLSZ_SIZE_X)
-    DLGRESIZE_CONTROL(IDC_LIST, DLSZ_SIZE_X|DLSZ_SIZE_Y)
-    DLGRESIZE_CONTROL(IDCANCEL, DLSZ_MOVE_Y)    
+  BEGIN_DLGRESIZE_MAP(CProgressDlg)    
+    DLGRESIZE_CONTROL(IDC_FILE_LIST, DLSZ_SIZE_X)
+    DLGRESIZE_CONTROL(IDC_PREVIEW, DLSZ_SIZE_X|DLSZ_SIZE_Y)
+    DLGRESIZE_CONTROL(IDC_PRIVACYPOLICY, DLSZ_MOVE_Y)
+    DLGRESIZE_CONTROL(IDOK, DLSZ_CENTER_X|DLSZ_MOVE_Y)
+    DLGRESIZE_CONTROL(IDC_EXPORT, DLSZ_MOVE_X|DLSZ_MOVE_Y)
   END_DLGRESIZE_MAP()
 
-	BEGIN_MSG_MAP(CProgressDlg)
+	BEGIN_MSG_MAP(CDetailDlg)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
-    MESSAGE_HANDLER(WM_CLOSE, OnClose)
-    MESSAGE_HANDLER(WM_TIMER, OnTimer)        
-    COMMAND_ID_HANDLER(IDCANCEL, OnCancel)    
-    COMMAND_ID_HANDLER(ID_MENU1_COPYSEL, OnCopySel)
-    COMMAND_ID_HANDLER(ID_MENU1_COPYLOG, OnCopyLog)
-    NOTIFY_HANDLER(IDC_LIST, NM_RCLICK, OnListRClick)
+    NOTIFY_HANDLER(IDC_FILE_LIST, LVN_ITEMCHANGED, OnItemChanged)
+    NOTIFY_HANDLER(IDC_FILE_LIST, NM_DBLCLK, OnItemDblClicked)
+		COMMAND_ID_HANDLER(IDOK, OnOK)
+    COMMAND_ID_HANDLER(IDCANCEL, OnOK)
+    COMMAND_ID_HANDLER(IDC_EXPORT, OnExport)
+    COMMAND_RANGE_HANDLER(ID_PREVIEW_AUTO, ID_PREVIEW_IMAGE, OnPreviewModeChanged)
+    COMMAND_RANGE_HANDLER(ID_ENCODING_AUTO, ID_ENCODING_UTF16BE, OnTextEncodingChanged)
+    NOTIFY_HANDLER(IDC_PREVIEW, NM_RCLICK, OnPreviewRClick)
 
-    CHAIN_MSG_MAP(CDialogResize<CProgressDlg>)
+    CHAIN_MSG_MAP(CDialogResize<CDetailDlg>)
 	END_MSG_MAP()
 
 // Handler prototypes (uncomment arguments if needed):
@@ -74,21 +81,18 @@ public:
 //	LRESULT NotifyHandler(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/)
 
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
-  LRESULT OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
-  LRESULT OnTimer(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
-  LRESULT OnListRClick(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/);
+	LRESULT OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);  
-  LRESULT OnCopySel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);  
-  LRESULT OnCopyLog(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);  
+  LRESULT OnExport(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+  LRESULT OnPreviewModeChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);  
+  LRESULT OnTextEncodingChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);  
+  LRESULT OnItemChanged(int /*idCtrl*/, LPNMHDR pnmh, BOOL& /*bHandled*/);
+  LRESULT OnItemDblClicked(int /*idCtrl*/, LPNMHDR pnmh, BOOL& /*bHandled*/);
+  LRESULT OnPreviewRClick(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/);
+  
 
-
-  void Start(BOOL bCollectInfo, BOOL bMakeVisible=TRUE);
-  void Stop();
-  void CloseDialog(int nVal);
-  int SetClipboard(CString& sData);
-
-  ActionOnCancel m_ActionOnCancel;  
-  ActionOnCancel m_ActionOnClose;  
+  void SelectItem(int iItem);
+	  
 };
 
 
