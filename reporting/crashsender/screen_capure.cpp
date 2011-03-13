@@ -78,8 +78,8 @@ BOOL CALLBACK EnumMonitorsProc(HMONITOR hMonitor, HDC /*hdcMonitor*/,
   SelectObject(hCompatDC, hBitmap);
 
   int i;
-  for (i = 0; i < (int) psc->m_arcCapture.size(); i++) {
-    CRect rc = psc->m_arcCapture[i];
+  for (i = 0; i < (int) psc->capture_rect().size(); i++) {
+    const CRect& rc = psc->capture_rect()[i];
     CRect rcIntersect;
     if (IntersectRect(&rcIntersect, lprcMonitor, &rc)) {
       BOOL bBitBlt = BitBlt(hCompatDC, rc.left - lprcMonitor->left, rc.top
@@ -91,13 +91,13 @@ BOOL CALLBACK EnumMonitorsProc(HMONITOR hMonitor, HDC /*hdcMonitor*/,
   }
 
   // Draw mouse cursor.
-  if (PtInRect(lprcMonitor, psc->m_ptCursorPos)) {
-    if (psc->m_CursorInfo.flags == CURSOR_SHOWING) {
+  if (PtInRect(lprcMonitor, psc->cursor_pos())) {
+    if (psc->cursor_info().flags == CURSOR_SHOWING) {
       ICONINFO IconInfo;
-      GetIconInfo((HICON) psc->m_CursorInfo.hCursor, &IconInfo);
-      int x = psc->m_ptCursorPos.x - lprcMonitor->left - IconInfo.xHotspot;
-      int y = psc->m_ptCursorPos.y - lprcMonitor->top - IconInfo.yHotspot;
-      DrawIcon(hCompatDC, x, y, (HICON) psc->m_CursorInfo.hCursor);
+      GetIconInfo((HICON) psc->cursor_info().hCursor, &IconInfo);
+      int x = psc->cursor_pos().x - lprcMonitor->left - IconInfo.xHotspot;
+      int y = psc->cursor_pos().y - lprcMonitor->top - IconInfo.yHotspot;
+      DrawIcon(hCompatDC, x, y, (HICON) psc->cursor_info().hCursor);
       DeleteObject(IconInfo.hbmMask);
       DeleteObject(IconInfo.hbmColor);
     }
@@ -105,22 +105,24 @@ BOOL CALLBACK EnumMonitorsProc(HMONITOR hMonitor, HDC /*hdcMonitor*/,
 
   /* Write screenshot bitmap to an image file. */
 
-  if (psc->m_fmt == SCREENSHOT_FORMAT_PNG) {
+  if (psc->format() == SCREENSHOT_FORMAT_PNG) {
     // Init PNG writer
-    sFileName.Format(_T("%s\\screenshot%d.png"), psc->m_sSaveDirName,
-        psc->m_nIdStartFrom++);
-    BOOL bInit = psc->PngInit(nWidth, nHeight, psc->m_bGrayscale, sFileName);
+    sFileName.Format(_T("%s\\screenshot%d.png"), psc->save_dir(),
+        psc->start_id());
+    psc->set_start_id(psc->start_id() + 1);
+    BOOL bInit = psc->PngInit(nWidth, nHeight, psc->grayscale(), sFileName);
     if (!bInit)
       goto cleanup;
-  } else if (psc->m_fmt == SCREENSHOT_FORMAT_JPG) {
+  } else if (psc->format() == SCREENSHOT_FORMAT_JPG) {
     // Init JPG writer
-    sFileName.Format(_T("%s\\screenshot%d.jpg"), psc->m_sSaveDirName,
-        psc->m_nIdStartFrom++);
-    BOOL bInit = psc->JpegInit(nWidth, nHeight, psc->m_bGrayscale,
-        psc->m_nJpegQuality, sFileName);
+    sFileName.Format(_T("%s\\screenshot%d.jpg"), psc->save_dir(),
+        psc->start_id());
+        psc->set_start_id(psc->start_id() + 1);
+    BOOL bInit = psc->JpegInit(nWidth, nHeight, psc->grayscale(),
+        psc->jpeg_quality(), sFileName);
     if (!bInit)
       goto cleanup;
-  } else if (psc->m_fmt == SCREENSHOT_FORMAT_BMP) {
+  } else if (psc->format() == SCREENSHOT_FORMAT_BMP) {
   }
 
   // We will get bitmap bits row by row
@@ -143,34 +145,34 @@ BOOL CALLBACK EnumMonitorsProc(HMONITOR hMonitor, HDC /*hdcMonitor*/,
     if (nFetched != 1)
       break;
 
-    if (psc->m_fmt == SCREENSHOT_FORMAT_PNG) {
-      BOOL bWrite = psc->PngWriteRow(pRowBits, nRowWidth, psc->m_bGrayscale);
+    if (psc->format() == SCREENSHOT_FORMAT_PNG) {
+      BOOL bWrite = psc->PngWriteRow(pRowBits, nRowWidth, psc->grayscale());
       if (!bWrite)
         goto cleanup;
-    } else if (psc->m_fmt == SCREENSHOT_FORMAT_JPG) {
-      BOOL bWrite = psc->JpegWriteRow(pRowBits, nRowWidth, psc->m_bGrayscale);
+    } else if (psc->format() == SCREENSHOT_FORMAT_JPG) {
+      BOOL bWrite = psc->JpegWriteRow(pRowBits, nRowWidth, psc->grayscale());
       if (!bWrite)
         goto cleanup;
-    } else if (psc->m_fmt == SCREENSHOT_FORMAT_BMP) {
+    } else if (psc->format() == SCREENSHOT_FORMAT_BMP) {
     }
   }
 
-  if (psc->m_fmt == SCREENSHOT_FORMAT_PNG) {
+  if (psc->format() == SCREENSHOT_FORMAT_PNG) {
     psc->PngFinalize();
-  } else if (psc->m_fmt == SCREENSHOT_FORMAT_JPG) {
+  } else if (psc->format() == SCREENSHOT_FORMAT_JPG) {
     psc->JpegFinalize();
-  } else if (psc->m_fmt == SCREENSHOT_FORMAT_BMP) {
+  } else if (psc->format() == SCREENSHOT_FORMAT_BMP) {
   } else {
     ATLASSERT(0); // Invalid format
     goto cleanup;
   }
 
-  psc->m_out_file_list.push_back(sFileName);
+  psc->AddOutFile(sFileName);
 
   monitor_info.m_rcMonitor = mi.rcMonitor;
   monitor_info.m_sDeviceID = mi.szDevice;
   monitor_info.m_sFileName = sFileName;
-  psc->m_monitor_list.push_back(monitor_info);
+  psc->AddMonitorInfo(monitor_info);
 
   cleanup:
 
@@ -193,9 +195,9 @@ BOOL CALLBACK EnumMonitorsProc(HMONITOR hMonitor, HDC /*hdcMonitor*/,
 
 CScreenCapture::CScreenCapture() {
   m_fp = NULL;
-  m_png_ptr = NULL;
-  m_info_ptr = NULL;
-  m_nIdStartFrom = 0;
+  png_ptr_ = NULL;
+  info_ptr_ = NULL;
+  start_id_ = 0;
 }
 
 CScreenCapture::~CScreenCapture() {
@@ -210,26 +212,26 @@ BOOL CScreenCapture::CaptureScreenRect(std::vector<CRect> arcCapture,
   out_file_list.clear();
 
   // Set internal variables
-  m_nIdStartFrom = nIdStartFrom;
-  m_sSaveDirName = sSaveDirName;
-  m_fmt = fmt;
-  m_nJpegQuality = nJpegQuality;
-  m_bGrayscale = bGrayscale;
-  m_arcCapture = arcCapture;
-  m_out_file_list.clear();
-  m_monitor_list.clear();
+  start_id_ = nIdStartFrom;
+  save_dir_ = sSaveDirName;
+  format_ = fmt;
+  jpeg_quality_ = nJpegQuality;
+  grayscale_ = bGrayscale;
+  capture_rect_ = arcCapture;
+  out_file_.clear();
+  monitor_list_.clear();
 
   // Get cursor information
-  GetCursorPos(&m_ptCursorPos);
-  m_CursorInfo.cbSize = sizeof(CURSORINFO);
-  GetCursorInfo(&m_CursorInfo);
+  GetCursorPos(&cursor_pos_);
+  cursor_info_.cbSize = sizeof(CURSORINFO);
+  GetCursorInfo(&cursor_info_);
 
   // Perform actual capture task inside of EnumMonitorsProc
   EnumDisplayMonitors(NULL, NULL, EnumMonitorsProc, (LPARAM) this);
 
   // Return
-  out_file_list = m_out_file_list;
-  monitor_list = m_monitor_list;
+  out_file_list = out_file_;
+  monitor_list = monitor_list_;
   return TRUE;
 }
 
@@ -247,10 +249,10 @@ void CScreenCapture::GetScreenRect(LPRECT rcScreen) {
 BOOL CScreenCapture::PngInit(int nWidth, int nHeight, BOOL bGrayscale,
     CString sFileName) {
   m_fp = NULL;
-  m_png_ptr = NULL;
-  m_info_ptr = NULL;
+  png_ptr_ = NULL;
+  info_ptr_ = NULL;
 
-  m_out_file_list.push_back(sFileName);
+  out_file_.push_back(sFileName);
 
 #if _MSC_VER>=1400
   _tfopen_s(&m_fp, sFileName.GetBuffer(0), _T("wb"));
@@ -262,47 +264,47 @@ BOOL CScreenCapture::PngInit(int nWidth, int nHeight, BOOL bGrayscale,
     return FALSE;
   }
 
-  m_png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, (png_voidp) NULL,
+  png_ptr_ = png_create_write_struct(PNG_LIBPNG_VER_STRING, (png_voidp) NULL,
       NULL, NULL);
-  if (!m_png_ptr)
+  if (!png_ptr_)
     return FALSE;
 
-  m_info_ptr = png_create_info_struct(m_png_ptr);
-  if (!m_info_ptr) {
-    png_destroy_write_struct(&m_png_ptr, (png_infopp) NULL);
+  info_ptr_ = png_create_info_struct(png_ptr_);
+  if (!info_ptr_) {
+    png_destroy_write_struct(&png_ptr_, (png_infopp) NULL);
     return FALSE;
   }
 
   /* Error handler*/
-  if (setjmp(png_jmpbuf(m_png_ptr))) {
-    png_destroy_write_struct(&m_png_ptr, &m_info_ptr);
+  if (setjmp(png_jmpbuf(png_ptr_))) {
+    png_destroy_write_struct(&png_ptr_, &info_ptr_);
     fclose(m_fp);
     return FALSE;
   }
 
-  png_init_io(m_png_ptr, m_fp);
+  png_init_io(png_ptr_, m_fp);
 
   /* set the zlib compression level */
-  png_set_compression_level(m_png_ptr, Z_BEST_COMPRESSION);
+  png_set_compression_level(png_ptr_, Z_BEST_COMPRESSION);
 
   /* set other zlib parameters */
-  png_set_compression_mem_level(m_png_ptr, 8);
-  png_set_compression_strategy(m_png_ptr, Z_DEFAULT_STRATEGY);
-  png_set_compression_window_bits(m_png_ptr, 15);
-  png_set_compression_method(m_png_ptr, 8);
-  png_set_compression_buffer_size(m_png_ptr, 8192);
+  png_set_compression_mem_level(png_ptr_, 8);
+  png_set_compression_strategy(png_ptr_, Z_DEFAULT_STRATEGY);
+  png_set_compression_window_bits(png_ptr_, 15);
+  png_set_compression_method(png_ptr_, 8);
+  png_set_compression_buffer_size(png_ptr_, 8192);
 
-  png_set_IHDR(m_png_ptr, m_info_ptr, nWidth, //width,
+  png_set_IHDR(png_ptr_, info_ptr_, nWidth, //width,
       nHeight, //height,
       8, // bit_depth
       bGrayscale ? PNG_COLOR_TYPE_GRAY : PNG_COLOR_TYPE_RGB, // color_type
       PNG_INTERLACE_NONE, // interlace_type
       PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 
-  png_set_bgr(m_png_ptr);
+  png_set_bgr(png_ptr_);
 
   /* write the file information */
-  png_write_info(m_png_ptr, m_info_ptr);
+  png_write_info(png_ptr_, info_ptr_);
 
   return TRUE;
 }
@@ -321,7 +323,7 @@ BOOL CScreenCapture::PngWriteRow(LPBYTE pRow, int nRowLen, BOOL bGrayscale) {
   }
 
   png_bytep rows[1] = { pRow2 };
-  png_write_rows(m_png_ptr, (png_bytepp) &rows, 1);
+  png_write_rows(png_ptr_, (png_bytepp) &rows, 1);
 
   if (bGrayscale)
     delete[] pRow2;
@@ -330,10 +332,10 @@ BOOL CScreenCapture::PngWriteRow(LPBYTE pRow, int nRowLen, BOOL bGrayscale) {
 
 BOOL CScreenCapture::PngFinalize() {
   /* end write */
-  png_write_end(m_png_ptr, m_info_ptr);
+  png_write_end(png_ptr_, info_ptr_);
 
   /* clean up */
-  png_destroy_write_struct(&m_png_ptr, (png_infopp) &m_info_ptr);
+  png_destroy_write_struct(&png_ptr_, (png_infopp) &info_ptr_);
 
   if (m_fp)
     fclose(m_fp);
@@ -345,8 +347,8 @@ BOOL CScreenCapture::JpegInit(int nWidth, int nHeight, BOOL bGrayscale,
     int nQuality, CString sFileName) {
   /* Step 1: allocate and initialize JPEG compression object */
 
-  m_cinfo.err = jpeg_std_error(&m_jerr);
-  jpeg_create_compress(&m_cinfo);
+  jpeg_compress_.err = jpeg_std_error(&jpeg_error_mgr_);
+  jpeg_create_compress(&jpeg_compress_);
 
   /* Step 2: specify data destination (eg, a file) */
 
@@ -358,20 +360,20 @@ BOOL CScreenCapture::JpegInit(int nWidth, int nHeight, BOOL bGrayscale,
   if (m_fp == NULL)
     return FALSE;
 
-  jpeg_stdio_dest(&m_cinfo, m_fp);
+  jpeg_stdio_dest(&jpeg_compress_, m_fp);
 
   /* Step 3: set parameters for compression */
 
-  m_cinfo.image_width = nWidth; /* image width and height, in pixels */
-  m_cinfo.image_height = nHeight;
-  m_cinfo.input_components = bGrayscale ? 1 : 3; /* # of color components per pixel */
-  m_cinfo.in_color_space = bGrayscale ? JCS_GRAYSCALE : JCS_RGB; /* colorspace of input image */
-  jpeg_set_defaults(&m_cinfo);
-  jpeg_set_quality(&m_cinfo, nQuality, TRUE /* limit to baseline-JPEG values */);
+  jpeg_compress_.image_width = nWidth; /* image width and height, in pixels */
+  jpeg_compress_.image_height = nHeight;
+  jpeg_compress_.input_components = bGrayscale ? 1 : 3; /* # of color components per pixel */
+  jpeg_compress_.in_color_space = bGrayscale ? JCS_GRAYSCALE : JCS_RGB; /* colorspace of input image */
+  jpeg_set_defaults(&jpeg_compress_);
+  jpeg_set_quality(&jpeg_compress_, nQuality, TRUE /* limit to baseline-JPEG values */);
 
   /* Step 4: Start compressor */
 
-  jpeg_start_compress(&m_cinfo, TRUE);
+  jpeg_start_compress(&jpeg_compress_, TRUE);
 
   return TRUE;
 }
@@ -395,7 +397,7 @@ BOOL CScreenCapture::JpegWriteRow(LPBYTE pRow, int nRowLen, BOOL bGrayscale) {
 
   JSAMPROW row_pointer[1];
   row_pointer[0] = (JSAMPROW) pRow2;
-  (void) jpeg_write_scanlines(&m_cinfo, row_pointer, 1);
+  (void) jpeg_write_scanlines(&jpeg_compress_, row_pointer, 1);
 
   delete[] pRow2;
 
@@ -404,7 +406,7 @@ BOOL CScreenCapture::JpegWriteRow(LPBYTE pRow, int nRowLen, BOOL bGrayscale) {
 
 BOOL CScreenCapture::JpegFinalize() {
   /* Step 6: Finish compression */
-  jpeg_finish_compress(&m_cinfo);
+  jpeg_finish_compress(&jpeg_compress_);
 
   /* After finish_compress, we can close the output file. */
   if (m_fp != NULL)
@@ -414,9 +416,16 @@ BOOL CScreenCapture::JpegFinalize() {
   /* Step 7: release JPEG compression object */
 
   /* This is an important step since it will release a good deal of memory. */
-  jpeg_destroy_compress(&m_cinfo);
+  jpeg_destroy_compress(&jpeg_compress_);
 
   return TRUE;
+}
+
+void CScreenCapture::AddOutFile(const CString& file) {
+  out_file_.push_back(file);
+}
+void CScreenCapture::AddMonitorInfo(const MonitorInfo& monitor) {
+  monitor_list_.push_back(monitor);
 }
 
 struct FindWindowData {

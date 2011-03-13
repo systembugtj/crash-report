@@ -78,7 +78,6 @@ enum SCREENSHOT_IMAGE_FORMAT {
 // Desktop screenshot capture
 class CScreenCapture {
 public:
-
   // Constructor
   CScreenCapture();
   ~CScreenCapture();
@@ -113,24 +112,59 @@ public:
   BOOL JpegWriteRow(LPBYTE pRow, int nRowLen, BOOL bGrayscale);
   BOOL JpegFinalize();
 
-  /* Member variables. */
+  void AddOutFile(const CString& file);
+  void AddMonitorInfo(const MonitorInfo& monitor);
 
-  CPoint m_ptCursorPos; // Current mouse cursor pos
-  std::vector<CRect> m_arcCapture; // Array of capture rectangles
-  CURSORINFO m_CursorInfo; // Cursor info
-  int m_nIdStartFrom; // An ID for the current screenshot image
-  CString m_sSaveDirName; // Directory name to save screenshots to
-  SCREENSHOT_IMAGE_FORMAT m_fmt; // Image format
-  int m_nJpegQuality; // Jpeg quality
-  BOOL m_bGrayscale; // Create grayscale image or not
-  FILE* m_fp; // Handle to the file
-  png_structp m_png_ptr; // libpng stuff
-  png_infop m_info_ptr; // libpng stuff
-  struct jpeg_compress_struct m_cinfo; // libjpeg stuff
-  struct jpeg_error_mgr m_jerr; // libjpeg stuff
-  std::vector<MonitorInfo> m_monitor_list; // The list of monitor devices
-  std::vector<CString> m_out_file_list; // The list of output image files
+  //  setter and getter
+  BOOL grayscale() {
+    return grayscale_;
+  }
+  int start_id() {
+    return start_id_;
+  }
+  int jpeg_quality() {
+    return jpeg_quality_;
+  }
+  CPoint cursor_pos() {
+    return cursor_pos_;
+  }
+  CString save_dir() {
+    return save_dir_;
+  }
+  CURSORINFO cursor_info() {
+    return cursor_info_;
+  }
+  SCREENSHOT_IMAGE_FORMAT format() {
+    return format_;
+  }
+  const std::vector<CRect>& capture_rect() {
+    return capture_rect_;
+  }
+  void set_start_id(int id) {
+    start_id_ = id;
+  }
+
+private:
+  // Array of capture rectangles
+  std::vector<CRect> capture_rect_;
+  // Create grayscale image or not
+  BOOL grayscale_;
+  CURSORINFO cursor_info_;
+  SCREENSHOT_IMAGE_FORMAT format_;
+  // An ID for the current screenshot image
+  int start_id_;
+  int jpeg_quality_;
+  std::vector<MonitorInfo> monitor_list_;
+  // The list of output image files
+  std::vector<CString> out_file_;
+  // Current mouse cursor pos
+  CPoint cursor_pos_;
+  CString save_dir_;
+  FILE* m_fp;
+  png_structp png_ptr_;
+  png_infop info_ptr_;
+  struct jpeg_compress_struct jpeg_compress_;
+  struct jpeg_error_mgr jpeg_error_mgr_;
 };
 
 #endif //SCREEN_CAPURE_H_
-
