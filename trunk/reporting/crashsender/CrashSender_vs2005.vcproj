@@ -152,7 +152,7 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				FloatingPointExceptions="false"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -609,10 +609,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\detail_dlg.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\error_report_dlg.cpp"
 				>
 			</File>
@@ -621,15 +617,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\file_preview_ctrl.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\http_request_sender.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\mail_msg.cpp"
 				>
 			</File>
 			<File
@@ -650,10 +638,6 @@
 			</File>
 			<File
 				RelativePath="..\crashrpt\shared_memory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\smtpclient.cpp"
 				>
 			</File>
 			<File
@@ -686,10 +670,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\detail_dlg.h"
-				>
-			</File>
-			<File
 				RelativePath=".\error_report_dlg.h"
 				>
 			</File>
@@ -698,15 +678,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\file_preview_ctrl.h"
-				>
-			</File>
-			<File
 				RelativePath=".\http_request_sender.h"
-				>
-			</File>
-			<File
-				RelativePath=".\mail_msg.h"
 				>
 			</File>
 			<File
@@ -727,10 +699,6 @@
 			</File>
 			<File
 				RelativePath=".\screen_capure.h"
-				>
-			</File>
-			<File
-				RelativePath=".\smtpclient.h"
 				>
 			</File>
 			<File
