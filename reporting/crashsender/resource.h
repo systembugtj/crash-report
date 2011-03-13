@@ -6,6 +6,7 @@
 #define IDR_MAINFRAME                   128
 #define IDC_MESSAGE_TEXT                131
 #define IDR_LICENSE                     210
+#define IDD_DETAILDLG                   211
 #define IDD_MAINDLG                     212
 #define IDD_PROGRESSDLG                 213
 #define IDR_POPUPMENU                   214
@@ -26,6 +27,8 @@
 #define IDS_SYMBOL_FILE                 1006
 #define IDS_HTTP_FORM_DATA              1007
 #define IDC_BUTTON1                     1014
+#define IDC_EXPORT                      1014
+#define IDC_FILE_LIST                   1015
 #define IDC_RICHEDIT21                  1017
 #define IDC_HEADINGTEXT                 1018
 #define IDC_HEADING_TEXT                1018
@@ -47,8 +50,11 @@
 #define IDC_BYSENDING                   1033
 #define IDC_SUBHEADER                   1034
 #define IDC_RADIOPNG                    1034
+#define IDC_HEADERTEXT                  1035
+#define IDC_PREVIEWTEXT                 1036
 #define IDC_CONSENT                     1037
 #define IDC_INDENT                      1038
+#define IDC_PREVIEW                     1039
 #define IDC_CHECK1                      1040
 #define IDC_RESTART                     1040
 #define IDC_OTHERACTIONS                1041
