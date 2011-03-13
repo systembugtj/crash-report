@@ -30,8 +30,8 @@
   OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***************************************************************************************/
 
-#pragma once
-
+#ifndef PROGRESS_DLG_H_
+#define PROGRESS_DLG_H_
 #include "resource.h"
 #include "error_report_sender.h"
 
@@ -86,4 +86,4 @@ public:
   ActionOnCancel m_ActionOnClose;  
 };
 
-
+#endif //  PROGRESS_DLG_H_

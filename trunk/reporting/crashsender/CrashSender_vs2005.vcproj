@@ -597,10 +597,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\black_box.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\crash_info_reader.cpp"
 				>
 			</File>
@@ -659,10 +655,6 @@
 			</File>
 			<File
 				RelativePath=".\base64.h"
-				>
-			</File>
-			<File
-				RelativePath=".\black_box.h"
 				>
 			</File>
 			<File

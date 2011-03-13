@@ -35,7 +35,8 @@
 // Authors: zexspectrum
 // Date: 2009
 
-#pragma once
+#ifndef ASSYNC_NOTIFICATION_H_
+#define ASSYNC_NOTIFICATION_H_
 #include "stdafx.h"
 
 struct AssyncNotification {
@@ -67,3 +68,5 @@ private:
   int m_nPercentCompleted;
   std::vector<CString> m_statusLog; // Status log
 };
+
+#endif // ASSYNC_NOTIFICATION_H_
