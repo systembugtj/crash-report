@@ -30,8 +30,8 @@
  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ***************************************************************************************/
 
-#ifndef __SCREENCAP_H__
-#define __SCREENCAP_H__
+#ifndef SCREEN_CAPURE_H_
+#define SCREEN_CAPURE_H_
 
 #include "stdafx.h"
 
@@ -132,5 +132,5 @@ public:
   std::vector<CString> m_out_file_list; // The list of output image files
 };
 
-#endif //__SCREENCAP_H__
+#endif //SCREEN_CAPURE_H_
 

@@ -35,7 +35,8 @@
 // Authors: zexspectrum
 // Date: 2010
 
-#pragma once
+#ifndef CRASH_INFO_READER_H_
+#define CRASH_INFO_READER_H_
 #include "stdafx.h"
 #include "tinyxml.h"
 #include "shared_memory.h"
@@ -207,4 +208,5 @@ private:
 
 // Declare globally available object.
 extern CCrashInfoReader g_CrashInfo;
+#endif //  CRASH_INFO_READER_H_
 

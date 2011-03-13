@@ -35,7 +35,8 @@
 // Authors: zexspectrum
 // Date: 2009
 
-#pragma once
+#ifndef HTTP_REQUEST_SENDER_H_
+#define HTTP_REQUEST_SENDER_H_
 #include "stdafx.h"
 #include "assync_notification.h"
 
@@ -101,3 +102,4 @@ private:
   DWORD m_dwUploaded;
 };
 
+#endif //  HTTP_REQUEST_SENDER_H_

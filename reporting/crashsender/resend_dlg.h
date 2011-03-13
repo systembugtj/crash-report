@@ -35,7 +35,8 @@
 // Authors: zexspectrum
 // Date: 
 
-#pragma once
+#ifndef RESEND_DLG_H_
+#define RESEND_DLG_H_
 #include "stdafx.h"
 #include "progress_dlg.h"
 
@@ -176,3 +177,5 @@ public:
 
   enum eActionOnClose {HIDE, EXIT} m_ActionOnClose;
 };
+
+#endif //  RESEND_DLG_H_

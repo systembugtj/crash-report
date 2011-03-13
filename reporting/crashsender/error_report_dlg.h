@@ -35,7 +35,8 @@
 // Authors: mikecarruth, zexspectrum
 // Date: 
 
-#pragma once
+#ifndef ERROR_REPORT_DLG_H_
+#define ERROR_REPORT_DLG_H_
 #include "stdafx.h"
 #include "progress_dlg.h"
 
@@ -206,3 +207,5 @@ public:
   void ShowMoreInfo(BOOL bShow);
   int CreateTrayIcon(bool bCreate, HWND hWndParent);
 };
+
+#endif //  ERROR_REPORT_DLG_H_
