@@ -45,27 +45,21 @@ HANDLE g_hModuleCrashRpt = NULL; // Handle to CrashRpt.dll module.
 CComAutoCriticalSection g_cs;    // Critical section for thread-safe accessing error messages.
 std::map<DWORD, CString> g_sErrorMsg; // Last error messages for each calling thread.
 
-CRASHRPTAPI(LPVOID) InstallW(LPGETLOGFILE pfnCallback, const wchar_t* pszEmailTo, const wchar_t* pszEmailSubject)
+CRASHRPTAPI(LPVOID) InstallW(LPGETLOGFILE pfnCallback)
 {
   CR_INSTALL_INFOW info;
   memset(&info, 0, sizeof(CR_INSTALL_INFO));
   info.size = sizeof(CR_INSTALL_INFO);
   info.crash_callback = pfnCallback;
-  info.email_address = pszEmailTo;
-  info.email_subject = pszEmailSubject;
-
   crInstallW(&info);
 
   return NULL;
 }
 
-CRASHRPTAPI(LPVOID) InstallA(LPGETLOGFILE pfnCallback, const char* pszEmailTo, const char* pszEmailSubject)
+CRASHRPTAPI(LPVOID) InstallA(LPGETLOGFILE pfnCallback)
 {
   strconv_t strconv;
-  const wchar_t* lpwszEmailTo = strconv.a2w(pszEmailTo);
-  const wchar_t* lpwszEmailSubject = strconv.a2w(pszEmailSubject);
-
-  return InstallW(pfnCallback, lpwszEmailTo, lpwszEmailSubject);
+  return InstallW(pfnCallback);
 }
 
 CRASHRPTAPI(void) Uninstall(LPVOID lpState)
@@ -142,8 +136,6 @@ CRASHRPTAPI(int) crInstallW(CR_INSTALL_INFOW* pInfo)
   LPCTSTR ptszAppName = strconv.w2t((LPWSTR)pInfo->application_name);
   LPCTSTR ptszAppVersion = strconv.w2t((LPWSTR)pInfo->application_version);
   LPCTSTR ptszCrashSenderPath = strconv.w2t((LPWSTR)pInfo->sender_path);
-  LPCTSTR ptszEmailTo = strconv.w2t((LPWSTR)pInfo->email_address);
-  LPCTSTR ptszEmailSubject = strconv.w2t((LPWSTR)pInfo->email_subject);
   LPCTSTR ptszUrl = strconv.w2t((LPWSTR)pInfo->crash_server_url);
   LPCTSTR ptszPrivacyPolicyURL = strconv.w2t((LPWSTR)pInfo->privacy_policy_url);
   LPCTSTR ptszDebugHelpDLL_file = strconv.w2t((LPWSTR)pInfo->debug_help_dll);
@@ -151,8 +143,6 @@ CRASHRPTAPI(int) crInstallW(CR_INSTALL_INFOW* pInfo)
   LPCTSTR ptszErrorReportSaveDir = strconv.w2t((LPWSTR)pInfo->save_dir);
   LPCTSTR ptszRestartCmdLine = strconv.w2t((LPWSTR)pInfo->restart_cmd);
   LPCTSTR ptszLangFilePath = strconv.w2t((LPWSTR)pInfo->langpack_path);
-  LPCTSTR ptszEmailText = strconv.w2t((LPWSTR)pInfo->email_text);
-  LPCTSTR ptszSmtpProxy = strconv.w2t((LPWSTR)pInfo->smtp_proxy);
   LPCTSTR ptszCustomSenderIcon = strconv.w2t((LPWSTR)pInfo->custom_sender_icon);
 
   int nInitResult = pCrashHandler->Init(
@@ -160,8 +150,6 @@ CRASHRPTAPI(int) crInstallW(CR_INSTALL_INFOW* pInfo)
     ptszAppVersion, 
     ptszCrashSenderPath,
     pInfo->crash_callback,
-    ptszEmailTo,
-    ptszEmailSubject,
     ptszUrl,
     &pInfo->priorities,
     pInfo->flags,
@@ -171,8 +159,6 @@ CRASHRPTAPI(int) crInstallW(CR_INSTALL_INFOW* pInfo)
     ptszErrorReportSaveDir,
     ptszRestartCmdLine,
     ptszLangFilePath,
-    ptszEmailText,
-    ptszSmtpProxy,
     ptszCustomSenderIcon
     );
   
@@ -216,8 +202,6 @@ CRASHRPTAPI(int) crInstallA(CR_INSTALL_INFOA* pInfo)
   ii.application_name = strconv.a2w(pInfo->application_name);
   ii.application_version = strconv.a2w(pInfo->application_version);
   ii.sender_path = strconv.a2w(pInfo->sender_path);
-  ii.email_subject = strconv.a2w(pInfo->email_subject);
-  ii.email_address = strconv.a2w(pInfo->email_address);
   ii.crash_server_url = strconv.a2w(pInfo->crash_server_url);
   memcpy(&ii.priorities, pInfo->priorities, 3*sizeof(UINT));
   ii.flags = pInfo->flags;
@@ -227,9 +211,6 @@ CRASHRPTAPI(int) crInstallA(CR_INSTALL_INFOA* pInfo)
   ii.save_dir = strconv.a2w(pInfo->save_dir);
   ii.restart_cmd = strconv.a2w(pInfo->restart_cmd);
   ii.langpack_path = strconv.a2w(pInfo->langpack_path);
-  ii.email_text = strconv.a2w(pInfo->email_text);
-  ii.smtp_proxy = strconv.a2w(pInfo->smtp_proxy);
-
   return crInstallW(&ii);
 }
 

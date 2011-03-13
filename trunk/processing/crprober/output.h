@@ -35,7 +35,7 @@ public:
   virtual void PutTableColumnName(const char* pszValue, int width, bool bLastInRow){
 	  PutTableCell(pszValue, width, bLastInRow);
   }
-  virtual void BeginTableCell(int border){}
+  virtual void BeginTableCell(int /*border*/){}
   virtual void EndTableCell(){}
 };
 

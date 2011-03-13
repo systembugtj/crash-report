@@ -64,221 +64,8 @@
 #define CRASHRPTAPI(rettype) CRASHRPT_EXTERNC rettype WINAPI
 //! Current CrashRpt version
 #define CRASHRPT_VER 1208
-/*! \defgroup CrashRptAPI CrashRpt Functions */
-/*! \defgroup DeprecatedAPI Obsolete Functions */
-/*! \defgroup CrashRptStructs CrashRpt Structures */
-/*! \defgroup CrashRptWrappers CrashRpt Wrapper Classes */
-/*! \ingroup CrashRptAPI
- *  \brief Client crash callback function prototype
- *  \param[in] lpvState Currently not used, equals to NULL.
- *
- *  \remarks
- *
- *  The crash callback function is called when crash occurs. This way client application is
- *  notified about the crash.
- *
- *  It is generally unsafe to do complex actions (e.g. memory allocation, heap operations) inside of this callback.
- *  The application state may be unstable.
- *
- *  One reason the application may use this callback for is to close handles to open log files that the
- *  application plans to include into the error report. Log files should be accessible for reading, otherwise
- *  CrashRpt won't be able to include them into error report.
- *
- *  The crash callback function should typically return \c TRUE to allow generate error report.
- *  Returning \c FALSE will prevent crash report generation.
- *
- *  The following example shows how to use the crash callback function.
- *
- *  \code
- *  // define the crash callback
- *  BOOL CALLBACK CrashCallback(LPVOID lpvState)
- *  {
- *    // Do something...
- *
- *    return TRUE;
- *  }
- *  \endcode
- *
- *  \sa crAddFile2()
- */
 typedef BOOL (CALLBACK *LPGETLOGFILE) (__reserved LPVOID lpvState);
 
-#ifndef _CRASHRPT_REMOVE_DEPRECATED
-
-/*! \ingroup DeprecatedAPI
- *  \brief Installs exception handlers for the current process.
- *
- *  \param[in] pfnCallback Client crash callback.
- *  \param[in] pszEmailTo Email address to send crash report to.
- *  \param[in] pszEmailSubject Subject of the E-mail message.
- *
- *  \return Always returns NULL.
- *
- *  \deprecated
- *    This function is deprecated. It is still supported for compatiblity with
- *    older versions of CrashRpt, however consider using crInstall() function instead.
- *    This function is currently implemented as a wrapper for crInstall().
- *
- *  \remarks
- *
- *    This function installs SEH exception filter for the caller process.
- *    It also installs various C++ exception/error handlers. For the list of handlers,
- *    please see crInstall().
- *
- *    \a pfnCallback defines the callback function that is called on crash. This parameter can be NULL.
- *
- *    \a pszEmailTo should be the valid email address of recipient.
- *
- *    \a pszEmailSubject is the email subject. If this parameter is NULL, the default subject is
- *    generated.
- *
- *    This function assumes that CrashSender.exe is located in the same directory as CrashRpt.dll loaded
- *    by the caller process. To specify different directory, use crInstall().
- *
- *    On crash, the error report is sent as E-mail message using address and subject passed to the
- *    function as \a pszEmailTo and \a pszEmailSubject parameters, respectively.
- *
- *    InstallW() and InstallA() are wide-character and multibyte-character versions of Install().
- *    The Install() macro defines character set independent mapping for these functions.
- *
- */
-
-CRASHRPTAPI(LPVOID)
-InstallW(
-		__in_opt LPGETLOGFILE pfnCallback,
-		const wchar_t* pszEmailTo,
-		const wchar_t* pszEmailSubject
-);
-
-/*! \ingroup DeprecatedAPI
- *  \copydoc InstallW()
- */
-
-CRASHRPTAPI(LPVOID)
-InstallA(
-		__in_opt LPGETLOGFILE pfnCallback,
-		const char* pszEmailTo,
-		const char* pszEmailSubject
-);
-
-/*! \brief Character set-independent mapping of InstallW() and InstallA() functions.
- *  \ingroup DeprecatedAPI
- */
-#ifdef UNICODE
-#define Install InstallW
-#else
-#define Install InstallA
-#endif //UNICODE
-/*! \ingroup DeprecatedAPI
- *  \brief Uninstalls the exception filters set up by Install().
- *
- *  \param[in] lpState State information returned from Install(), ignored and should be NULL.
- *
- *  \deprecated
- *    This function is deprecated. It is still supported for compatiblity with
- *    older versions of CrashRpt, however consider using crUninstall() function instead.
- *    This function is implemented as a wrapper for crUninstall().
- *
- *  \remarks
- *
- *    Call this function on application exit to uninstall all previously installed exception
- *    handlers.
- *
- */
-
-CRASHRPTAPI(void)
-Uninstall(
-		__reserved LPVOID lpState
-);
-
-/*! \ingroup DeprecatedAPI
- *  \brief Adds a file to the crash report.
- *
- *  \param[in] lpState State information returned from Install(), ignored and should be NULL.
- *  \param[in] pszFile  Fully qualified file name.
- *  \param[in] pszDesc  Description of the file, used by the Error Report Details dialog.
- *
- *  \deprecated
- *    This function is deprecated. It is still supported for compatiblity with
- *    older versions of CrashRpt, however consider using crAddFile2() function instead.
- *    This function is implemented as a wrapper for crAddFile2().
- *
- *  \remarks
- *
- *    This function can be called anytime after Install() to add one or more
- *    files to the generated crash report.
- *
- *    \a pszFile should be a valid absolute path of a file to add to crash report.
- *
- *    \a pszDesc is a description of a file. It can be NULL.
- *
- *    Function fails if \a pszFile doesn't exist at the moment of function call.
- *
- *    AddFileW() and AddFileA() are wide-character and multibyte-character versions of AddFile().
- *    The AddFile() macro defines character set independent mapping for these functions.
- *
- */
-
-CRASHRPTAPI(void)
-AddFileW(
-		__reserved LPVOID lpState,
-		const wchar_t* pszFile,
-		const wchar_t* pszDesc
-);
-
-/*! \ingroup DeprecatedAPI
- *
- *  \copydoc AddFileW()
- */
-
-CRASHRPTAPI(void)
-AddFileA(
-		__reserved LPVOID lpState,
-		const char* pszFile,
-		const char* pszDesc
-);
-
-/*! \brief Character set-independent mapping of AddFileW() and AddFileA() functions.
- *  \ingroup DeprecatedAPI
- */
-#ifdef UNICODE
-#define AddFile AddFileW
-#else
-#define AddFile AddFileA
-#endif //UNICODE
-/*! \ingroup DeprecatedAPI
- *  \brief Generates the crash report.
- *
- *  \param[in] lpState     State information returned from Install(), ignored and should be NULL.
- *  \param[in] pExInfo     Pointer to an EXCEPTION_POINTERS structure, can be NULL.
- *
- *  \deprecated
- *    This function is deprecated. It is still supported for compatiblity with
- *    older versions of CrashRpt, however consider using crGenerateErrorReport() function instead.
- *    This function is implemented as a wrapper for crGenerateErrorReport().
- *
- *  \remarks
- *
- *    Call this function to manually generate a crash report.
- *
- *    The crash report contains the crash minidump, crash description in XML format and
- *    (optionally) additional files.
- *
- *    \a pExInfo defines the exception pointers for generating crash minidump file.
- *    If \a pExInfo is NULL, current CPU state is used to create exception pointers.
- *
- *    This function generates the error report and returns control to the caller. It doesn't
- *    terminate the caller process.
- *
- */
-
-CRASHRPTAPI(void)
-GenerateErrorReport(
-		__reserved LPVOID lpState,
-		PEXCEPTION_POINTERS pExInfo
-);
-
-#endif //_CRASHRPT_REMOVE_DEPRECATED
 // Array indices for CR_INSTALL_INFO::priorities.
 #define CR_HTTP 0  //   Send error report via HTTP connection.
 //! Special priority constant that allows to skip certain delivery method.
@@ -505,33 +292,21 @@ GenerateErrorReport(
  */
 
 typedef struct tagCR_INSTALL_INFOW {
-	//   Size of this structure in bytes; must be initialized before using!
 	WORD size;
 	const wchar_t* application_name;
 	const wchar_t* application_version;
-	//   E-mail address of crash reports recipient.
-	const wchar_t* email_address;
-	const wchar_t* email_subject;
-	//   URL of server-side script (used in HTTP connection).
 	const wchar_t* crash_server_url;
-	//   Directory name where CrashSender.exe is located.
 	const wchar_t* sender_path;
-	//   User crash callback.
 	LPGETLOGFILE crash_callback;
-	//   Array of error sending transport priorities.
 	UINT priorities[5];
 	DWORD flags;
 	const wchar_t* privacy_policy_url;
 	//   File name or folder of Debug help DLL.
 	const wchar_t* debug_help_dll;
 	MINIDUMP_TYPE minidump_type;
-	//   Directory where to save error reports.
 	const wchar_t* save_dir;
 	const wchar_t* restart_cmd;
 	const wchar_t* langpack_path;
-	const wchar_t* email_text;
-	const wchar_t* smtp_proxy;
-	//   Custom icon used for Error Report dialog.
 	const wchar_t* custom_sender_icon;
 } CR_INSTALL_INFOW;
 
@@ -542,8 +317,6 @@ typedef struct tagCR_INSTALL_INFOA {
 	WORD size;
 	const char* application_name;
 	const char* application_version;
-	const char* email_address;
-	const char* email_subject;
 	const char* crash_server_url;
 	const char* sender_path;
 	LPGETLOGFILE crash_callback;
@@ -555,8 +328,6 @@ typedef struct tagCR_INSTALL_INFOA {
 	const char* save_dir;
 	const char* restart_cmd;
 	const char* langpack_path;
-	const char* email_text;
-	const char* smtp_proxy;
 	const char* custom_sender_icon;
 } CR_INSTALL_INFOA;
 
@@ -1439,12 +1210,6 @@ public:
   void set_application_version( TCHAR* version) {
     info_.application_version = version;
     }
-  void set_email_address( TCHAR* email_address) {
-    info_.email_address = email_address;
-    }
-  void set_email_subject( TCHAR* email_subject) {
-    info_.email_subject = email_subject;
-    }
   void set_crash_server_url( TCHAR* crash_server_url) {
     info_.crash_server_url = crash_server_url;
     }
@@ -1474,12 +1239,6 @@ public:
     }
   void set_langpack_path( TCHAR* langpack_path) {
     info_.langpack_path = langpack_path;
-    }
-  void set_email_text( TCHAR* email_text) {
-    info_.email_text = email_text;
-    }
-  void set_smtp_proxy( TCHAR* smtp_proxy) {
-    info_.smtp_proxy = smtp_proxy;
     }
 	void set_custom_sender_icon( TCHAR* custom_sender_icon) {
 	    info_.custom_sender_icon = custom_sender_icon;

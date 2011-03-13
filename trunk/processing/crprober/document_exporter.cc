@@ -238,7 +238,7 @@ bool DocumentExporter::ExportSummary(int& result) {
   return true;
 }
 
-bool DocumentExporter::ExportUserDefineInfo(int& result) {
+bool DocumentExporter::ExportUserDefineInfo(int& /*result*/) {
 	outputer_->BeginSection(_T("Application-defined properties"));
 
 	int nPropCount =
@@ -357,7 +357,7 @@ bool DocumentExporter::ExportThreadStack(int& result) {
 	return true;
 }
 
-bool DocumentExporter::ExportFileList(int& result) {
+bool DocumentExporter::ExportFileList(int& /*result*/) {
 	outputer_->BeginSection(_T("File list"));
 
 	// Print file list

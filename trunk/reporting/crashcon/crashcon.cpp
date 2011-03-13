@@ -18,8 +18,6 @@ int main(int argc, char* argv[]) {
   CrAutoInstallHelper helper;
   helper.set_application_name(_T("Test Application"));
   helper.set_application_version(_T("0.1.1"));
-  helper.set_email_address(_T("CrashRpt Console Test"));
-  helper.set_email_address(_T("yeshunping@gmail.com"));
   helper.set_flags(CR_INST_ALL_EXCEPTION_HANDLERS | CR_INST_HTTP_BINARY_ENCODING |
       CR_INST_SEND_QUEUED_REPORTS | CR_INST_APP_RESTART);
   helper.set_crash_server_url(_T("http://localhost:8080/crashrpt.php"));

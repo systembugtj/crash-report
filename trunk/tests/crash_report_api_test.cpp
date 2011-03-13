@@ -38,55 +38,6 @@
 
 REGISTER_TEST_SUITE( CrashRptAPITests , "CrashRpt API function tests");
 
-REGISTER_TEST(Test_InstallW);
-void Test_InstallW()
-{   
-  // Test InstallW 
-  
-  // Should succeed
-  LPVOID pState = InstallW(NULL, L"example@example.com", L"Error report");
-  TEST_ASSERT(pState==NULL);
-
-  // Call twice - should fail
-  InstallW(NULL, L"example@example.com", L"Error report");
-  
-  __TEST_CLEANUP__;
-
-  Uninstall(NULL);
-}
-
-REGISTER_TEST(Test_InstallA);
-void Test_InstallA()
-{   
-  // Test InstallA 
-  
-  // Should succeed
-  LPVOID pState = InstallA(NULL, "example@example.com", "Error report");
-  TEST_ASSERT(pState==NULL);
-
-  // Call twice - should fail
-  InstallA(NULL, "example@example.com", "Error report");
-  
-  __TEST_CLEANUP__;
-
-  Uninstall(NULL);
-}
-
-REGISTER_TEST(Test_AddFile);
-void Test_AddFile()
-{   
-  LPVOID pState = InstallW(NULL, L"example@example.com", L"Error report");
-  TEST_ASSERT(pState==NULL);
-
-  AddFileW(NULL, L"abc.log", L"Log!");
-
-  AddFileA(NULL, "abc.log", "Log!");
-  
-  __TEST_CLEANUP__;
-
-  Uninstall(NULL);
-}
-
 REGISTER_TEST(Test_crInstall_null);
 void Test_crInstall_null()
 {   

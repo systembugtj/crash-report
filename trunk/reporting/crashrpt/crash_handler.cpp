@@ -69,8 +69,6 @@ CCrashHandler::CCrashHandler()
   m_dwFlags = 0;
   m_MinidumpType = MiniDumpNormal;
   //m_bAppRestart = FALSE;  
-  m_nSmtpPort = 25;
-  m_nSmtpProxyPort = 2525;
   memset(&m_uPriorities, 0, 3*sizeof(UINT));    
   m_lpfnCallback = NULL;
   m_bAddScreenshot = FALSE;
@@ -92,8 +90,6 @@ int CCrashHandler::Init(
   LPCTSTR lpcszAppVersion,
   LPCTSTR lpcszCrashSenderPath,
   LPGETLOGFILE lpfnCallback, 
-  LPCTSTR lpcszTo, 
-  LPCTSTR lpcszSubject,
   LPCTSTR lpcszUrl,
   UINT (*puPriorities)[5],
   DWORD dwFlags,
@@ -103,8 +99,6 @@ int CCrashHandler::Init(
   LPCTSTR lpcszErrorReportSaveDir,
   LPCTSTR lpcszRestartCmdLine,
   LPCTSTR lpcszLangFilePath,
-  LPCTSTR lpcszEmailText,
-  LPCTSTR lpcszSmtpProxy,
   LPCTSTR lpcszCustomSenderIcon)
 { 
   crSetErrorMsg(_T("Unspecified error."));
@@ -194,49 +188,7 @@ int CCrashHandler::Init(
   }
   
   m_sRestartCmdLine = lpcszRestartCmdLine;
-
-  // Save Email recipient address
-  m_sEmailTo = lpcszTo;
-  m_nSmtpPort = 25;
   
-  // Check for custom SMTP port
-  int pos = m_sEmailTo.ReverseFind(':');
-  if(pos>=0)
-  {
-    CString sServer = m_sEmailTo.Mid(0, pos);
-    CString sPort = m_sEmailTo.Mid(pos+1);
-    m_sEmailTo = sServer;
-    m_nSmtpPort = _ttoi(sPort);
-  }
-
-  m_nSmtpProxyPort = 25;
-  if(lpcszSmtpProxy!=NULL)
-  {
-    m_sSmtpProxyServer = lpcszSmtpProxy;      
-    int pos = m_sSmtpProxyServer.ReverseFind(':');
-    if(pos>=0)
-    {
-      CString sServer = m_sSmtpProxyServer.Mid(0, pos);
-      CString sPort = m_sSmtpProxyServer.Mid(pos+1);
-      m_sSmtpProxyServer = sServer;
-      m_nSmtpProxyPort = _ttoi(sPort);
-    }
-  }
-
-  // Save E-mail subject
-  m_sEmailSubject = lpcszSubject;
-
-  // If the subject is empty...
-  if(m_sEmailSubject.IsEmpty())
-  {
-    // Generate the default subject
-    m_sEmailSubject.Format(_T("%s %s Error Report"), m_sAppName, 
-      m_sAppVersion.IsEmpty()?_T("[unknown_ver]"):m_sAppVersion);
-  }
-
-  // Save Email text.
-  m_sEmailText = lpcszEmailText;
-
   // Save report sending priorities
   if(puPriorities!=NULL)
     memcpy(&m_uPriorities, puPriorities, 3*sizeof(UINT));
@@ -487,8 +439,6 @@ CRASH_DESCRIPTION* CCrashHandler::PackCrashInfoIntoSharedMem(CSharedMem* pShared
   m_pTmpCrashDesc->m_dwCrashRptVer = CRASHRPT_VER;
   m_pTmpCrashDesc->m_dwInstallFlags = m_dwFlags;
   m_pTmpCrashDesc->m_MinidumpType = m_MinidumpType;
-  m_pTmpCrashDesc->m_nSmtpPort = m_nSmtpPort;
-  m_pTmpCrashDesc->m_nSmtpProxyPort = m_nSmtpProxyPort;
   m_pTmpCrashDesc->m_bAddScreenshot = m_bAddScreenshot;
   m_pTmpCrashDesc->m_dwScreenshotFlags = m_dwScreenshotFlags;  
   //m_pTmpCrashDesc->m_bAppRestart = m_bAppRestart;
@@ -505,11 +455,6 @@ CRASH_DESCRIPTION* CCrashHandler::PackCrashInfoIntoSharedMem(CSharedMem* pShared
   m_pTmpCrashDesc->m_dwUnsentCrashReportsFolderOffs = PackString(m_sUnsentCrashReportsFolder);  
   m_pTmpCrashDesc->m_dwCustomSenderIconOffs = PackString(m_sCustomSenderIcon);
   m_pTmpCrashDesc->m_dwUrlOffs = PackString(m_sUrl);    
-  m_pTmpCrashDesc->m_dwEmailToOffs = PackString(m_sEmailTo);
-  m_pTmpCrashDesc->m_dwEmailSubjectOffs = PackString(m_sEmailSubject);
-  m_pTmpCrashDesc->m_dwEmailTextOffs = PackString(m_sEmailText);  
-  m_pTmpCrashDesc->m_dwSmtpProxyServerOffs = PackString(m_sSmtpProxyServer);    
-
   return m_pTmpCrashDesc;
 }
 

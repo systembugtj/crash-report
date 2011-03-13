@@ -72,17 +72,17 @@ void HtmlOutputter::PutRecord(const char* pszName, const char* pszValue) {
   fprintf(fout_, "<tr><td>%s</td><td>%s</td></tr>", pszName, pszValue);
   }
 
-void HtmlOutputter::PutTableCell(const char* pszValue, int width, bool bLastInRow) {
+void HtmlOutputter::PutTableCell(const char* pszValue, int /* width */, bool /*bLastInRow*/) {
   fprintf(fout_, "<td>%s</td>", pszValue);
   }
 
 HtmlOutputter::~HtmlOutputter() {
 	//  do nothing now
 }
-void HtmlOutputter::PutTableColumnName(const char* pszValue, int width, bool bLastInRow) {
+void HtmlOutputter::PutTableColumnName(const char* pszValue, int /* width */, bool /*bLastInRow*/) {
 	fprintf(fout_, "<th>%s</th>", pszValue);
 }
-void HtmlOutputter::BeginTableCell(int border) {
+void HtmlOutputter::BeginTableCell(int /*border*/) {
 	fprintf(fout_, "<tr>");
 }
 void HtmlOutputter::EndTableCell() {

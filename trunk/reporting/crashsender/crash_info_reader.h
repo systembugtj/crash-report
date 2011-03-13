@@ -108,21 +108,20 @@ enum REMIND_POLICY {
 // Class responsible for reading the crash info.
 class CCrashInfoReader {
 public:
-
-  /* Member variables. */
-
+  // TODO(yesp) : change public to private for these data members
+  // use std::string to replace CString
   int m_nCrashRptVersion; // CrashRpt version sent through shared memory
   CString m_sUnsentCrashReportsFolder; // Path to UnsentCrashReports folder for the application.
   CString m_sLangFileName; // Path to language INI file.
   CString m_sDbgHelpPath; // Path to dbghelp.dll.
   CString m_sAppName; // Application name.
   CString m_sCustomSenderIcon; // Custom icon resource for Error Report dialog.
-  CString m_sEmailTo; // E-mail recipient address.
+//  CString m_sEmailTo; // E-mail recipient address.
   CString m_sEmailSubject; // E-mail subject.
   CString m_sEmailText; // E-mail text.
-  int m_nSmtpPort; // SMTP port.
-  CString m_sSmtpProxyServer; // SMTP proxy server.
-  int m_nSmtpProxyPort; // SMTP proxy port.
+//  int m_nSmtpPort; // SMTP port.
+//  CString m_sSmtpProxyServer; // SMTP proxy server.
+//  int m_nSmtpProxyPort; // SMTP proxy port.
   CString m_sUrl; // URL (used for HTTP connection).
   BOOL m_bHttpBinaryEncoding; // Should we use binary transfer encoding (HTTP).
   BOOL m_bSilentMode; // Should we show GUI?
@@ -131,6 +130,7 @@ public:
   BOOL m_bSendRecentReports; // Should we send recent reports now?
   BOOL m_bAppRestart; // Should we restart the application?
   CString m_sRestartCmdLine; // Command line for app restart.
+  // TODO(yesp) : remove Priorities for all protocol, but use worker to try all protocols,
   UINT m_uPriorities[3]; // Delivery priorities.
   CString m_sPrivacyPolicyURL; // Privacy policy URL.
   BOOL m_bGenerateMinidump; // Should we generate crash minidump file?
@@ -157,24 +157,19 @@ public:
 
   // Gets crash info from shared memory
   int Init(CString sFileMappingName);
-
   // Loads custom icon (if defined)
   HICON GetCustomIcon();
-
   // Retrieves some crash info from crash description XML
   int ParseCrashDescription(CString sFileName, BOOL bParseFileItems,
       ErrorReportInfo& eri);
-
   BOOL AddUserInfoToCrashDescriptionXML(CString sEmail, CString sDesc);
   BOOL AddFilesToCrashDescriptionXML(std::vector<ERIFileItem>);
-
   ErrorReportInfo& GetReport(int nIndex) {
     return m_Reports[nIndex];
   }
   int GetReportCount() {
     return (int) m_Reports.size();
   }
-
   BOOL GetLastRemindDate(SYSTEMTIME& LastDate);
   BOOL SetLastRemindDateToday();
   BOOL IsRemindNowOK();
@@ -182,26 +177,19 @@ public:
   BOOL SetRemindPolicy(REMIND_POLICY Policy);
 
 private:
-
   int UnpackCrashDescription(ErrorReportInfo& eri);
   int UnpackString(DWORD dwOffset, CString& str);
-
   void CollectMiscCrashInfo(ErrorReportInfo& eri);
-
   // Gets the list of file items 
   int ParseFileList(TiXmlHandle& hRoot, ErrorReportInfo& eri);
-
   int ParseRegKeyList(TiXmlHandle& hRoot, ErrorReportInfo& eri);
-
   // Calculates size of an uncompressed error report.
   LONG64 GetUncompressedReportSize(ErrorReportInfo& eri);
 
   // Array of error reports
   std::vector<ErrorReportInfo> m_Reports;
-
   // Path to ~CrashRpt.ini file.
   CString m_sINIFile;
-
   CSharedMem m_SharedMem;
   CRASH_DESCRIPTION* m_pCrashDesc;
 };
