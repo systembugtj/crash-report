@@ -37,8 +37,8 @@
 
 #include "stdafx.h"
 #include "crash_report.h"
-#include "CrashHandler.h"
-#include "Utility.h"
+#include "crash_handler.h"
+#include "utility.h"
 #include "strconv.h"
 
 HANDLE g_hModuleCrashRpt = NULL; // Handle to CrashRpt.dll module.

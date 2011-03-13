@@ -509,15 +509,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\CrashRptAPITests.cpp"
+				RelativePath=".\crash_report_api_test.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CrashRptProbeAPITests.cpp"
+				RelativePath=".\crash_report_probe_test.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\DeliveryTests.cpp"
+				RelativePath=".\delivery_tests.cpp"
 				>
 			</File>
 			<File
@@ -557,7 +557,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Tests.cpp"
+				RelativePath=".\tests.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -593,7 +593,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\reporting\crashrpt\Utility.cpp"
+				RelativePath="..\reporting\crashrpt\utility.cpp"
 				>
 			</File>
 		</Filter>
@@ -607,7 +607,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Tests.h"
+				RelativePath=".\tests.h"
 				>
 			</File>
 		</Filter>

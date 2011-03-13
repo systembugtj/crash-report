@@ -42,8 +42,8 @@
 #include <signal.h>
 #include <exception>
 #include "crash_report.h"      
-#include "Utility.h"
-#include "CritSec.h"
+#include "utility.h"
+#include "critical_section.h"
 #include "shared_memory.h"
 
 /* This structure contains pointer to the exception handlers for a thread.*/

@@ -645,7 +645,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath=".\crash_report.cpp"
+				RelativePath=".\crash_handler.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -697,11 +697,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\crash_report_imp.h"
-				>
-			</File>
-			<File
-				RelativePath="CrashHandler.cpp"
+				RelativePath=".\crash_report.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -815,7 +811,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Utility.cpp"
+				RelativePath=".\utility.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -872,15 +868,15 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
+				RelativePath=".\crash_handler.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\crash_report.h"
 				>
 			</File>
 			<File
-				RelativePath="CrashHandler.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CritSec.h"
+				RelativePath=".\critical_section.h"
 				>
 			</File>
 			<File
@@ -900,7 +896,7 @@
 				>
 			</File>
 			<File
-				RelativePath="Utility.h"
+				RelativePath=".\utility.h"
 				>
 			</File>
 		</Filter>

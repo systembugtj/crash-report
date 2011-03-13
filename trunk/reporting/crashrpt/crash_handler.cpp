@@ -36,8 +36,8 @@
 // Date: 
 
 #include "stdafx.h"
-#include "CrashHandler.h"
-#include "Utility.h"
+#include "crash_handler.h"
+#include "utility.h"
 #include "resource.h"
 #include <sys/stat.h>
 #include <psapi.h>

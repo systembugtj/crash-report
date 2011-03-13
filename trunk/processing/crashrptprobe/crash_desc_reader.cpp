@@ -33,9 +33,9 @@
 
 #include "stdafx.h"
 #include "crash_report.h"
-#include "CrashDescReader.h"
+#include "crash_desc_reader.h"
 #include "tinyxml.h"
-#include "Utility.h"
+#include "utility.h"
 #include "strconv.h"
 
 CCrashDescReader::CCrashDescReader()

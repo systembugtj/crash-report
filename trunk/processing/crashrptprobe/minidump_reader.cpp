@@ -31,9 +31,9 @@
 ***************************************************************************************/
 
 #include "stdafx.h"
-#include "MinidumpReader.h"
+#include "minidump_reader.h"
 #include <assert.h>
-#include "Utility.h"
+#include "utility.h"
 #include "strconv.h"
 #include "md5.h"
 
