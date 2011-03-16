@@ -25,6 +25,9 @@ int main(int argc, char* argv[]) {
 
   if (helper.Install() != 0) {
     LOG(ERROR) << "fail to install crash_report for this application";
+    char reason[1000];
+    crGetLastErrorMsgA(reason, 1000);
+    LOG(ERROR) << "reason:" << reason;
     return -1;
   }
   LOG(INFO) << "install crash_report successfully";

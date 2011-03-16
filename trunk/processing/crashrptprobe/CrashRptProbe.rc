@@ -73,7 +73,7 @@ BEGIN
             VALUE "FileVersion", "1, 2, 0, 8"
             VALUE "InternalName", "CrashRpt"
             VALUE "LegalCopyright", "Copyright 2003-2011 Mike Carruth"
-            VALUE "OriginalFilename", "CrashRptProbe.dll"
+            VALUE "OriginalFilename", "crash_report_reader.dll"
             VALUE "ProductName", "CrashRpt"
             VALUE "ProductVersion", "1, 2, 0, 8"
         END

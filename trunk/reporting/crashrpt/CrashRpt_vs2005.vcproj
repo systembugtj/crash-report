@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="CrashRpt"
+	Name="crash_report"
 	ProjectGUID="{9BE99719-AA32-4463-A011-B61D55F020D6}"
 	RootNamespace="CrashRpt"
 	TargetFrameworkVersion="131072"
@@ -87,7 +87,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="dbghelp.lib mapi32.lib Rpcrt4.lib version.lib shell32.lib Comdlg32.lib gdi32.lib psapi.lib"
-				OutputFile="$(OutDir)\CrashRpt.dll"
+				OutputFile="$(OutDir)\crash_report.dll"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="../../zlib/lib"
@@ -97,7 +97,7 @@
 				OptimizeForWindows98="0"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="..\..\lib\CrashRpt.lib"
+				ImportLibrary="..\..\lib\crash_report.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -193,19 +193,19 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="mapi32.lib Rpcrt4.lib version.lib shell32.lib Comdlg32.lib gdi32.lib psapi.lib"
-				OutputFile="$(OutDir)\CrashRptd.dll"
+				OutputFile="$(OutDir)\crash_reportd.dll"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\thirdparty\lib"
 				ModuleDefinitionFile="CrashRptd.def"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\..\bin\CrashRptd.pdb"
+				ProgramDatabaseFile="..\..\bin\crash_reportd.pdb"
 				OptimizeForWindows98="1"
 				ResourceOnlyDLL="false"
 				BaseAddress="0x20000000"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="..\..\lib\CrashRptd.lib"
+				ImportLibrary="..\..\lib\crash_reportd.lib"
 				TargetMachine="1"
 			/>
 			<Tool

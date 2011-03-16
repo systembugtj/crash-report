@@ -116,13 +116,13 @@ struct CRASH_DESCRIPTION {
   UINT m_uInvParamLine; // Invalid parameter line.
   UINT m_uFPESubcode; // FPE subcode.
   PEXCEPTION_POINTERS m_pExceptionPtrs; // Exception pointers.
-  BOOL m_bSendRecentReports; // If TRUE, CrashSender.exe needs to send queued error reports.
-  // If FALSE, CrashSender.exe needs to send single report.
+  BOOL m_bSendRecentReports; // If TRUE, crash_sender.exe needs to send queued error reports.
+  // If FALSE, crash_sender.exe needs to send single report.
 };
 
 #define SHARED_MEM_MAX_SIZE 10*1024*1024   /* 10 MB */
 
-// Used to share memory between CrashRpt.dll and CrashSender.exe
+// Used to share memory between crash_report.dll and crash_sender.exe
 class CSharedMem {
 public:
 

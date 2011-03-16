@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="CrashSender"
+	Name="crash_sender"
 	ProjectGUID="{939312D6-690A-4103-92C5-4D89025BF10A}"
 	RootNamespace="CrashSender"
 	TargetFrameworkVersion="131072"
@@ -78,7 +78,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="tinyxmld.lib jpegd.lib zlibd.lib WS2_32.lib Dnsapi.lib wininet.lib Rpcrt4.lib Gdi32.lib shell32.lib Comdlg32.lib version.lib libpngd.lib psapi.lib minizipd.lib"
-				OutputFile="$(OutDir)\CrashSenderd.exe"
+				OutputFile="$(OutDir)\crash_senderd.exe"
 				LinkIncremental="0"
 				AdditionalLibraryDirectories="..\..\thirdparty\lib;..\..\thirdparty\dbghelp\lib"
 				GenerateDebugInformation="true"
@@ -171,7 +171,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="tinyxml.lib zlib.lib WS2_32.lib Dnsapi.lib wininet.lib Rpcrt4.lib Gdi32.lib shell32.lib Comdlg32.lib version.lib psapi.lib"
-				OutputFile="$(OutDir)\CrashSender.exe"
+				OutputFile="$(OutDir)\crash_sender.exe"
 				LinkIncremental="0"
 				AdditionalLibraryDirectories="..\..\thirdparty\lib"
 				GenerateDebugInformation="true"

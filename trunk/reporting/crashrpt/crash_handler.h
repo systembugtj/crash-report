@@ -160,7 +160,7 @@ public:
   DWORD PackProperty(CString sName, CString sValue);
   DWORD PackRegKey(CString sKeyName, CString sDstFileName);
     
-  // Launches the CrashSender.exe process.
+  // Launches the crash_sender.exe process.
   int LaunchCrashSender(
         CString sCmdLineParams, 
         BOOL bWait, 
@@ -211,7 +211,7 @@ public:
   CString m_sUrl;                // Url to use when sending error report over HTTP.  
   UINT m_uPriorities[3];         // Delivery priorities.
   CString m_sPrivacyPolicyURL;   // Privacy policy URL.
-  CString m_sPathToCrashSender;  // Path to CrashSender.exe
+  CString m_sPathToCrashSender;  // Path to crash_sender.exe
   CString m_sLangFileName;       // Language file.
   CString m_sPathToDebugHelpDll; // Path to dbghelp.dll.
   CString m_sUnsentCrashReportsFolder; // Path to the folder where to save error reports.
@@ -224,7 +224,7 @@ public:
   std::map<CString, CString> m_props;  // User-defined properties to include.
   std::map<CString, CString> m_RegKeys; // Registry keys to dump.  
   CCritSec m_csCrashLock;        // Critical section used to synchronize thread access to this object. 
-  HANDLE m_hEvent;               // Event used to synchronize CrashRpt.dll with CrashSender.exe.
+  HANDLE m_hEvent;               // Event used to synchronize crash_report.dll with crash_sender.exe.
   CSharedMem m_SharedMem;        // Shared memory.  
   CRASH_DESCRIPTION* m_pCrashDesc; // Pointer to crash description shared mem view.
   CSharedMem* m_pTmpSharedMem;        // Used temporary

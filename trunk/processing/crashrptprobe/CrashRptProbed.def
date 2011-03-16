@@ -1,4 +1,4 @@
-LIBRARY	"CrashRptProbed"
+LIBRARY	"crash_report_readerd"
 
 EXPORTS
    crpOpenErrorReportW   @1
