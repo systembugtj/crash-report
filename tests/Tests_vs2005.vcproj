@@ -65,7 +65,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="CrashRptd.lib CrashRptProbed.lib Rpcrt4.lib version.lib psapi.lib zlibd.lib WS2_32.lib Dnsapi.lib wininet.lib Gdi32.lib shell32.lib Comdlg32.lib libpngd.lib minizipd.lib"
+				AdditionalDependencies="crash_reportd.lib crash_report_readerd.lib Rpcrt4.lib version.lib psapi.lib zlibd.lib WS2_32.lib Dnsapi.lib wininet.lib Gdi32.lib shell32.lib Comdlg32.lib libpngd.lib minizipd.lib"
 				OutputFile="$(OutDir)\Testsd.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\lib;..\thirdparty\lib"
@@ -143,7 +143,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="CrashRpt.lib CrashRptProbe.lib Rpcrt4.lib version.lib psapi.lib zlib.lib WS2_32.lib Dnsapi.lib wininet.lib Gdi32.lib shell32.lib Comdlg32.lib libpng.lib minizip.lib"
+				AdditionalDependencies="crash_report.lib crash_report_reader.lib Rpcrt4.lib version.lib psapi.lib zlib.lib WS2_32.lib Dnsapi.lib wininet.lib Gdi32.lib shell32.lib Comdlg32.lib libpng.lib minizip.lib"
 				OutputFile="$(OutDir)\Tests.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\thirdparty\lib;..\lib"

@@ -1,4 +1,4 @@
-LIBRARY	"CrashRpt"
+LIBRARY	"crash_report"
 
 EXPORTS   
 

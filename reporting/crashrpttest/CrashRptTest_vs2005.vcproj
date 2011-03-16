@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="CrashRptTest"
+	Name="crash_simulator"
 	ProjectGUID="{97B22865-FFCE-4BD0-ABE5-3BE707B59B88}"
 	RootNamespace="CrashRptTest"
 	TargetFrameworkVersion="131072"
@@ -78,12 +78,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="CrashRptd.lib shell32.lib gdi32.lib"
-				OutputFile="$(OutDir)\CrashRptTestd.exe"
+				AdditionalDependencies="crash_reportd.lib shell32.lib gdi32.lib"
+				OutputFile="$(OutDir)\crash_simulatord.exe"
 				LinkIncremental="0"
 				AdditionalLibraryDirectories="..\..\lib;..\..\dep_libs"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\..\bin\CrashRptTestd.pdb"
+				ProgramDatabaseFile="..\..\bin\crash_simulatord.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -171,12 +171,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="CrashRpt.lib shell32.lib gdi32.lib"
-				OutputFile="$(OutDir)\CrashRptTest.exe"
+				AdditionalDependencies="crash_report.lib shell32.lib gdi32.lib"
+				OutputFile="$(OutDir)\crash_simulator.exe"
 				LinkIncremental="0"
 				AdditionalLibraryDirectories="..\..\lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\..\bin\CrashRptTest.pdb"
+				ProgramDatabaseFile="..\..\bin\crash_simulator.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"

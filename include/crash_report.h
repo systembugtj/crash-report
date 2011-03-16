@@ -30,7 +30,7 @@
  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ***************************************************************************************/
 /*! \file   CrashRpt.h
- *  \brief  Defines the interface for the CrashRpt.DLL.
+ *  \brief  Defines the interface for the crash_report.dll.
  *  \date   2003-2011
  *  \author Michael Carruth
  *  \author zeXspectrum
@@ -148,10 +148,10 @@ typedef BOOL (CALLBACK *LPGETLOGFILE) (__reserved LPVOID lpvState);
  *
  *    \b sender_path [in, optional]
  *
- *       This is the absolute path to the directory where CrashSender.exe is located.
+ *       This is the absolute path to the directory where crash_sender.exe is located.
  *       The crash sender process is responsible for letting end user know about the crash and
- *       sending the error report. If this is NULL, it is assumed that CrashSender.exe is located in
- *       the same directory as CrashRpt.dll.
+ *       sending the error report. If this is NULL, it is assumed that crash_sender.exe is located in
+ *       the same directory as crash_report.dll.
  *
  *    \b crash_callback [in, optional]
  *
@@ -265,7 +265,7 @@ typedef BOOL (CALLBACK *LPGETLOGFILE) (__reserved LPVOID lpvState);
  *   \b langpack_path [in, optional]
  *
  *     Since v.1.2.4, this parameter defines the absolute path (including file name) for language file.
- *     If this is NULL, the lang file is assumed to be located in the same dir as CrashSender.exe file and have the name crashrpt_lang.ini.
+ *     If this is NULL, the lang file is assumed to be located in the same dir as crash_sender.exe file and have the name crashrpt_lang.ini.
  *
  *   \b email_text [in, optional]
  *
@@ -368,16 +368,16 @@ typedef PCR_INSTALL_INFOA PCR_INSTALL_INFO;
  *
  *    The \a pInfo parameter contains all required information needed to install CrashRpt.
  *
- *    This function fails when \a pInfo->sender_path doesn't contain valid path to CrashSender.exe
- *    or when \a pInfo->sender_path is equal to NULL, but \b CrashSender.exe is not located in the
- *    directory where \b CrashRpt.dll located.
+ *    This function fails when \a pInfo->sender_path doesn't contain valid path to crash_sender.exe
+ *    or when \a pInfo->sender_path is equal to NULL, but \b crash_sender.exe is not located in the
+ *    directory where \b crash_report.dll located.
  *
  *    On crash, the crash minidump file is created, which contains CPU information and
  *    stack trace information. Also XML file is created that contains additional
  *    information that may be helpful for crash analysis. These files along with several additional
  *    files added with crAddFile2() are packed to a single ZIP file.
  *
- *    When crash information is collected, another process, <b>CrashSender.exe</b>, is launched
+ *    When crash information is collected, another process, <b>crash_sender.exe</b>, is launched
  *    and the process where crash had occured is terminated. The CrashSender process is
  *    responsible for letting the user know about the crash and send the error report.
  *
@@ -386,7 +386,7 @@ typedef PCR_INSTALL_INFOA PCR_INSTALL_INFO;
  *    request using \a crash_server_url member of \ref CR_INSTALL_INFO.
  *
  *    This function may fail if an appropriate language file (\b crashrpt_lang.ini) is not found
- *    in the directory where the \b CrashSender.exe file is located.
+ *    in the directory where the \b crash_sender.exe file is located.
  *
  *    If this function fails, use crGetLastErrorMsg() to retrieve the error message.
  *
@@ -573,7 +573,7 @@ crUninstallFromCurrentThread();
  *
  *    When this function is called, the file is marked to be added to the error report,
  *    then the function returns control to the caller.
- *    When crash occurs, all marked files are added to the report by the \b CrashSender.exe process.
+ *    When crash occurs, all marked files are added to the report by the \b crash_sender.exe process.
  *    If a file is locked by someone for exclusive access, the file won't be included. Inside of \ref LPGETLOGFILE crash callback,
  *    ensure files to be included are acessible for reading.
  *
@@ -635,7 +635,7 @@ crAddFileA(
  *
  *    When this function is called, the file is marked to be added to the error report,
  *    then the function returns control to the caller.
- *    When crash occurs, all marked files are added to the report by the \b CrashSender.exe process.
+ *    When crash occurs, all marked files are added to the report by the \b crash_sender.exe process.
  *    If a file is locked by someone for exclusive access, the file won't be included. Inside of \ref LPGETLOGFILE crash callback,
  *    close open file handles and ensure files to be included are acessible for reading.
  *
@@ -648,8 +648,8 @@ crAddFileA(
  *    \a pszDesc is a literal description of a file. It can be NULL.
  *
  *    \a dwFlags parameter defines the behavior of the function. This can be a combination of the following flags:
- *       - \ref CR_AF_TAKE_ORIGINAL_FILE  On crash, the \b CrashSender.exe will try to locate the file from its original location. This behavior is the default one.
- *       - \ref CR_AF_MAKE_FILE_COPY      On crash, the \b CrashSender.exe will make a copy of the file and save it to the error report folder.
+ *       - \ref CR_AF_TAKE_ORIGINAL_FILE  On crash, the \b crash_sender.exe will try to locate the file from its original location. This behavior is the default one.
+ *       - \ref CR_AF_MAKE_FILE_COPY      On crash, the \b crash_sender.exe will make a copy of the file and save it to the error report folder.
  *
  *       - \ref CR_AF_FILE_MUST_EXIST     The function will fail if file doesn't exist at the moment of function call (the default behavior).
  *       - \ref CR_AF_MISSING_FILE_OK     Do not fail if file is missing (assume it will be created later).
@@ -719,7 +719,7 @@ crAddFile2A(
  *
  *  When this function is called, screenshot flags are saved,
  *  then the function returns control to the caller.
- *  When crash occurs, screenshot is made by the \b CrashSender.exe process and added to the report.
+ *  When crash occurs, screenshot is made by the \b crash_sender.exe process and added to the report.
  *
  *  \b dwFlags
  *
@@ -772,7 +772,7 @@ crAddScreenshot(
  *  at the moment of crash and reproduce the error.
  *
  *  When this function is called, screenshot flags are saved, then the function returns control to the caller.
- *  When crash occurs, screenshot is made by the \b CrashSender.exe process and added to the report.
+ *  When crash occurs, screenshot is made by the \b crash_sender.exe process and added to the report.
  *
  *  \b dwFlags
  *
@@ -998,8 +998,8 @@ crAddRegKeyA(
  *
  *  \b hSenderProcess [out]
  *
- *     As of v.1.2.8, \a hSenderProcess parameter will contain the handle to the <b>CrashSender.exe</b> process when
- *     \ref crGenerateErrorReport function returns. The caller may use this handle to wait until <b>CrashSender.exe</b>
+ *     As of v.1.2.8, \a hSenderProcess parameter will contain the handle to the <b>crash_sender.exe</b> process when
+ *     \ref crGenerateErrorReport function returns. The caller may use this handle to wait until <b>crash_sender.exe</b>
  *     process exits and check the exit code.
  */
 
@@ -1014,7 +1014,7 @@ typedef struct tagCR_EXCEPTION_INFO {
 	const wchar_t* file; //   File in which assertion happened.
 	unsigned int line; //   Line number.
 	BOOL bManual; //   Flag telling if the error report is generated manually or not.
-	HANDLE hSenderProcess; //   Handle to the CrashSender.exe process.
+	HANDLE hSenderProcess; //   Handle to the crash_sender.exe process.
 } CR_EXCEPTION_INFO;
 
 typedef CR_EXCEPTION_INFO *PCR_EXCEPTION_INFO;
@@ -1195,6 +1195,7 @@ class CrAutoInstallHelper {
 public:
   CrAutoInstallHelper() {
     memset(&info_, 0, sizeof(CR_INSTALL_INFO));
+    info_.size = sizeof(CR_INSTALL_INFO);
     //  set some default value for CR_INSTALL_INFO
     // only support HTTP now.delete SMTP and SMAPI
     info_.priorities[CR_HTTP] = 3;

@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="CrashRptProbe"
+	Name="crash_report_reader"
 	ProjectGUID="{42B7465D-C7ED-42D3-9DE6-D966721A6F86}"
 	RootNamespace="CrashRptProbe"
 	Keyword="Win32Proj"
@@ -67,7 +67,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="tinyxmld.lib dbghelp.lib Rpcrt4.lib shell32.lib gdi32.lib version.lib minizipd.lib zlibd.lib psapi.lib"
-				OutputFile="$(OutDir)\CrashRptProbed.dll"
+				OutputFile="$(OutDir)\crash_report_readerd.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\thirdparty\lib;..\..\thirdparty\dbghelp\lib"
 				ModuleDefinitionFile="CrashRptProbed.def"
@@ -75,7 +75,7 @@
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="..\..\lib\$(TargetName).lib"
+				ImportLibrary="..\..\lib\crash_report_readerd.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -147,7 +147,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="tinyxml.lib dbghelp.lib Rpcrt4.lib shell32.lib gdi32.lib zlib.lib minizip.lib version.lib psapi.lib"
-				OutputFile="$(OutDir)\CrashRptProbe.dll"
+				OutputFile="$(OutDir)\crash_report_reader.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\thirdparty\lib;..\..\thirdparty\dbghelp\lib"
 				ModuleDefinitionFile="CrashRptProbe.def"
@@ -157,7 +157,7 @@
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="..\..\lib\CrashRptProbe.lib"
+				ImportLibrary="..\..\lib\crash_report_reader.lib"
 				TargetMachine="1"
 			/>
 			<Tool

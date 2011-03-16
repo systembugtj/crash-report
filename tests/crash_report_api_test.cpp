@@ -143,7 +143,7 @@ void Test_crInstallA_twice()
 }
 
 #ifndef CRASHRPT_LIB
-// Test the case when CrashRpt.dll and CrashSender.exe are located in
+// Test the case when crash_report.dll and crash_sender.exe are located in
 // a different folder (not the same where process executable is located).
 // This test also checks that crInstall and crUninstall function names
 // are undecorated.
@@ -161,30 +161,30 @@ void Test_crInstall_in_different_folder()
   BOOL bCreate = Utility::CreateFolder(sTmpFolder);
   TEST_ASSERT(bCreate);
 
-  // Copy CrashRpt.dll and CrashSender.exe into that folder
+  // Copy crash_report.dll and crash_sender.exe into that folder
   sExeFolder = Utility::GetModulePath(NULL);
 
 #ifdef _DEBUG
-  BOOL bCopy = CopyFile(sExeFolder+_T("\\CrashRptd.dll"), sTmpFolder+_T("\\CrashRptd.dll"), TRUE);
+  BOOL bCopy = CopyFile(sExeFolder+_T("\\crash_reportd.dll"), sTmpFolder+_T("\\crash_reportd.dll"), TRUE);
   TEST_ASSERT(bCopy);
-  BOOL bCopy2 = CopyFile(sExeFolder+_T("\\CrashSenderd.exe"), sTmpFolder+_T("\\CrashSenderd.exe"), TRUE);
+  BOOL bCopy2 = CopyFile(sExeFolder+_T("\\crash_senderd.exe"), sTmpFolder+_T("\\crash_senderd.exe"), TRUE);
   TEST_ASSERT(bCopy2);
 #else
-  BOOL bCopy = CopyFile(sExeFolder+_T("\\CrashRpt.dll"), sTmpFolder+_T("\\CrashRpt.dll"), TRUE);
+  BOOL bCopy = CopyFile(sExeFolder+_T("\\crash_report.dll"), sTmpFolder+_T("\\crash_report.dll"), TRUE);
   TEST_ASSERT(bCopy);
-  BOOL bCopy2 = CopyFile(sExeFolder+_T("\\CrashSender.exe"), sTmpFolder+_T("\\CrashSender.exe"), TRUE);
+  BOOL bCopy2 = CopyFile(sExeFolder+_T("\\crash_sender.exe"), sTmpFolder+_T("\\crash_sender.exe"), TRUE);
   TEST_ASSERT(bCopy2);
 #endif
 
   BOOL bCopy3 = CopyFile(sExeFolder+_T("\\crashrpt_lang.ini"), sTmpFolder+_T("\\crashrpt_lang.ini"), TRUE);
   TEST_ASSERT(bCopy3);
   
-  // Load CrashRpt.dll dynamically
+  // Load crash_report.dll dynamically
 #ifdef _DEBUG
-  hCrashRpt = LoadLibrary(sTmpFolder+_T("\\CrashRptd.dll"));
+  hCrashRpt = LoadLibrary(sTmpFolder+_T("\\crash_reportd.dll"));
   TEST_ASSERT(hCrashRpt!=NULL);
 #else
-  hCrashRpt = LoadLibrary(sTmpFolder+_T("\\CrashRpt.dll"));
+  hCrashRpt = LoadLibrary(sTmpFolder+_T("\\crash_report.dll"));
   TEST_ASSERT(hCrashRpt!=NULL);
 #endif
   
@@ -861,11 +861,11 @@ void Test_undecorated_func_names()
 {
   HMODULE hCrashRpt = NULL;
     
-    // Load CrashRpt.dll dynamically
+    // Load crash_report.dll dynamically
 #ifdef _DEBUG
-  hCrashRpt = LoadLibrary(_T("CrashRptd.dll"));
+  hCrashRpt = LoadLibrary(_T("crash_reportd.dll"));
 #else
-  hCrashRpt = LoadLibrary(_T("CrashRpt.dll"));
+  hCrashRpt = LoadLibrary(_T("crash_report.dll"));
 #endif
   TEST_ASSERT(hCrashRpt!=NULL);
 

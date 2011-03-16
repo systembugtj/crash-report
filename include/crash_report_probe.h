@@ -31,7 +31,7 @@
 ***************************************************************************************/
 
 /*! \file   CrashRptProbe.h
- *  \brief  Defines the interface for the CrashRptProbe.DLL.
+ *  \brief  Defines the interface for the crash_report_reader.dll.
  *  \date   2009-2011
  *  \author zexspectrum
  */

@@ -283,7 +283,7 @@ BEGIN
             VALUE "FileVersion", "1, 2, 0, 8"
             VALUE "InternalName", "CrashSender"
             VALUE "LegalCopyright", "Copyright 2003-2011 Mike Carruth"
-            VALUE "OriginalFilename", "CrashSender.exe"
+            VALUE "OriginalFilename", "crash_sender.exe"
             VALUE "ProductName", "CrashRpt"
             VALUE "ProductVersion", "1, 2, 0, 8"
         END
@@ -300,7 +300,7 @@ END
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "res\\CrashSender.exe.manifest"
+1                       RT_MANIFEST             "res\\crash_sender.exe.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="crprober"
+	Name="crash_report_analyzer"
 	ProjectGUID="{485ADA7C-BF7C-4EDC-AA56-212BF0160351}"
 	RootNamespace="crprober"
 	Keyword="Win32Proj"
@@ -64,8 +64,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="CrashRptProbed.lib libglog_static.lib libgflags-debug.lib"
-				OutputFile="$(OutDir)\crproberd.exe"
+				AdditionalDependencies="crash_report_readerd.lib libglog_static.lib libgflags-debug.lib"
+				OutputFile="$(OutDir)\crash_report_analyzerd.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\lib;..\..\dep_libs\Debug"
 				GenerateDebugInformation="true"
@@ -141,8 +141,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="CrashRptProbe.lib libglog_static.lib libgflags.lib"
-				OutputFile="$(OutDir)\crprober.exe"
+				AdditionalDependencies="crash_report_reader.lib libglog_static.lib libgflags.lib"
+				OutputFile="$(OutDir)\crash_report_analyzer.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\lib;..\..\dep_libs\Release"
 				GenerateDebugInformation="true"

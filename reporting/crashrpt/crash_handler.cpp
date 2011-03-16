@@ -204,18 +204,18 @@ int CCrashHandler::Init(
 
 #ifndef CRASHRPT_LIB
   #ifdef _DEBUG
-    pszCrashRptModule = _T("CrashRptd.dll");
+    pszCrashRptModule = _T("crash_reportd.dll");
   #else
-    pszCrashRptModule = _T("CrashRpt.dll");
+    pszCrashRptModule = _T("crash_report.dll");
   #endif //_DEBUG
 #else //!CRASHRPT_LIB
   pszCrashRptModule = NULL;
 #endif
   
-  // Save path to CrashSender.exe
+  // Save path to crash_sender.exe
   if(lpcszCrashSenderPath==NULL)
   {
-    // By default assume that CrashSender.exe is located in the same dir as CrashRpt.dll    
+    // By default assume that crash_sender.exe is located in the same dir as crash_report.dll    
     m_sPathToCrashSender = Utility::GetModulePath((HMODULE)g_hModuleCrashRpt);    
   }
   else
@@ -228,12 +228,12 @@ int CCrashHandler::Init(
   CString sCrashSenderName;
 
 #ifdef _DEBUG
-  sCrashSenderName = _T("CrashSenderd.exe");
+  sCrashSenderName = _T("crash_senderd.exe");
 #else
-  sCrashSenderName = _T("CrashSender.exe");
+  sCrashSenderName = _T("crash_sender.exe");
 #endif //_DEBUG
 
-  // Check that CrashSender.exe file exists
+  // Check that crash_sender.exe file exists
   if(m_sPathToCrashSender.Right(1)!='\\')
       m_sPathToCrashSender+="\\";    
     
@@ -241,7 +241,7 @@ int CCrashHandler::Init(
       FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);  
   if(hFile==INVALID_HANDLE_VALUE)
   { 
-    crSetErrorMsg(_T("CrashSender.exe is not found in the specified path."));
+    crSetErrorMsg(_T("crash_sender.exe is not found in the specified path."));
     return 1;
   }
   else
@@ -257,7 +257,7 @@ int CCrashHandler::Init(
   }
   else
   {
-    // Look for crashrpt_lang.ini in the same folder as CrashSender.exe.
+    // Look for crashrpt_lang.ini in the same folder as crash_sender.exe.
     m_sLangFileName = m_sPathToCrashSender + _T("crashrpt_lang.ini");
   }
   
@@ -273,7 +273,7 @@ int CCrashHandler::Init(
     
   if(lpcszDebugHelpDLLPath==NULL)
   {
-    // By default assume that debughlp.dll is located in the same dir as CrashRpt.dll    
+    // By default assume that debughlp.dll is located in the same dir as crash_report.dll    
     m_sPathToDebugHelpDll = Utility::GetModulePath((HMODULE)g_hModuleCrashRpt);       
   }
   else
@@ -316,7 +316,7 @@ int CCrashHandler::Init(
     return 1; 
   }
 
-  // Create event that will be used to synchronize with CrashSender.exe process
+  // Create event that will be used to synchronize with crash_sender.exe process
   CString sEventName;
   sEventName.Format(_T("Local\\CrashRptEvent_%s"), m_sCrashGUID);
   m_hEvent = CreateEvent(NULL, FALSE, FALSE, sEventName);
@@ -374,11 +374,11 @@ int CCrashHandler::Init(
   m_pProcessCrashHandler =  this;
 
   // Pack configuration info to shared memory.
-  // It will be passed to CrashSender.exe later.
+  // It will be passed to crash_sender.exe later.
   m_pCrashDesc = PackCrashInfoIntoSharedMem(&m_SharedMem, FALSE);
 
   // If client wants us to send pending error reports that were queued recently,
-  // launch the CrashSender.exe and make it to alert user and send the reports.
+  // launch the crash_sender.exe and make it to alert user and send the reports.
   if(dwFlags&CR_INST_SEND_QUEUED_REPORTS)
   {
     // Create temporary shared mem.
@@ -387,7 +387,7 @@ int CCrashHandler::Init(
     pCrashDesc->m_bSendRecentReports = TRUE;
     if(0!=LaunchCrashSender(tmpSharedMem.GetName(), TRUE, NULL))
     {
-      crSetErrorMsg(_T("Couldn't launch CrashSender.exe process."));
+      crSetErrorMsg(_T("Couldn't launch crash_sender.exe process."));
       return 1;
     }
 
@@ -984,7 +984,7 @@ int CCrashHandler::GenerateErrorReport(
     return 2;
   }
   
-  // Start the CrashSender.exe process which will take the dekstop screenshot, 
+  // Start the crash_sender.exe process which will take the dekstop screenshot, 
   // copy user-specified files to the error report folder, create minidump, 
   // notify user about crash, compress the report into ZIP archive and send 
   // the error report. 
@@ -993,14 +993,14 @@ int CCrashHandler::GenerateErrorReport(
   if(result!=0)
   {
     ATLASSERT(result==0);
-    crSetErrorMsg(_T("Error launching CrashSender.exe"));
+    crSetErrorMsg(_T("Error launching crash_sender.exe"));
     
     // Failed to launch crash sender process.
     // Try notify user about crash using message box.
     CString szCaption;
     szCaption.Format(_T("%s has stopped working"), Utility::getAppName());
     CString szMessage;
-    szMessage.Format(_T("Error launching CrashSender.exe"));
+    szMessage.Format(_T("Error launching crash_sender.exe"));
     MessageBox(NULL, szMessage, szCaption, MB_OK|MB_ICONERROR);    
     return 3;
   }
@@ -1143,7 +1143,7 @@ void CCrashHandler::GetExceptionPointers(DWORD dwExceptionCode,
   (*ppExceptionPointers)->ContextRecord = pContextRecord;  
 }
 
-// Launches CrashSender.exe process
+// Launches crash_sender.exe process
 int CCrashHandler::LaunchCrashSender(CString sCmdLineParams, BOOL bWait, HANDLE* phProcess)
 {
   crSetErrorMsg(_T("Success."));
@@ -1176,7 +1176,7 @@ int CCrashHandler::LaunchCrashSender(CString sCmdLineParams, BOOL bWait, HANDLE*
     WaitForSingleObject(m_hEvent, INFINITE);  
   }
 
-  // Return handle to the CrashSender.exe process.
+  // Return handle to the crash_sender.exe process.
   if(phProcess!=NULL)
   {
     *phProcess = pi.hProcess;

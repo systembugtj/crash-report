@@ -31,7 +31,7 @@
  ***************************************************************************************/
 
 // File: CrashInfoReader.cpp
-// Description: Retrieves crash information passed from CrashRpt.dll in form of XML files.
+// Description: Retrieves crash information passed from crash_report.dll in form of XML files.
 // Authors: zexspectrum
 // Date: 2010
 

@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="crashcon"
+	Name="crash_console"
 	ProjectGUID="{26D45404-F202-438D-80D5-E1B57B7A22E1}"
 	RootNamespace="crashcon"
 	TargetFrameworkVersion="131072"
@@ -76,8 +76,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="CrashRptd.lib libgflags.lib libglog_static.lib"
-				OutputFile="$(OutDir)\crashcon.exe"
+				AdditionalDependencies="crash_report.lib libgflags.lib libglog_static.lib"
+				OutputFile="$(OutDir)\crash_console.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="../../lib;../../dep_libs/Release"
@@ -172,8 +172,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="CrashRptd.lib libglog_static.lib libgflags-debug.lib"
-				OutputFile="$(OutDir)\crashcond.exe"
+				AdditionalDependencies="crash_reportd.lib libglog_static.lib libgflags-debug.lib"
+				OutputFile="$(OutDir)\crash_consoled.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="../../lib;../../dep_libs/Debug"

@@ -48,7 +48,7 @@ int Run(LPTSTR /*lpstrCmdLine*/= NULL, int /*nCmdShow*/= SW_SHOWDEFAULT) {
   int argc = 0;
   LPWSTR* argv = CommandLineToArgvW(szCommandLine, &argc);
 
-  // Read the crash info passed by CrashRpt.dll to CrashSender.exe 
+  // Read the crash info passed by crash_report.dll to crash_sender.exe 
   if (argc != 2)
     return 1; // No arguments passed
 
@@ -56,7 +56,7 @@ int Run(LPTSTR /*lpstrCmdLine*/= NULL, int /*nCmdShow*/= SW_SHOWDEFAULT) {
   CString sFileName = CString(argv[1]);
   int nInit = g_CrashInfo.Init(sFileName);
   if (nInit != 0) {
-    MessageBox(NULL, _T("Couldn't initialize!"), _T("CrashSender.exe"),
+    MessageBox(NULL, _T("Couldn't initialize!"), _T("crash_sender.exe"),
         MB_ICONERROR);
     return 1;
   }
@@ -82,11 +82,11 @@ int Run(LPTSTR /*lpstrCmdLine*/= NULL, int /*nCmdShow*/= SW_SHOWDEFAULT) {
       return 0;
     }
   } else {
-    // check if another instance of CrashSender.exe is running
+    // check if another instance of crash_sender.exe is running
     ::CreateMutex(NULL, FALSE,
         _T("Local\\43773530-129a-4298-88f2-20eea3e4a59b"));
     if (::GetLastError() == ERROR_ALREADY_EXISTS) {
-      // Another CrashSender.exe already tries to resend recent reports; exit.
+      // Another crash_sender.exe already tries to resend recent reports; exit.
       return 0;
     }
 
