@@ -1,3 +1,6 @@
+//  Copyright 2011.
+//  Author: yeshunping@gmail.com (Shunping Ye)
+
 #include "document_exporter.h"
 #include <tchar.h>
 #include <string>

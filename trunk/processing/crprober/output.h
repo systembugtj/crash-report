@@ -1,3 +1,6 @@
+//  Copyright 2011.
+//  Author: yeshunping@gmail.com (Shunping Ye)
+
 #ifndef OUTPUT_H_
 #define OUTPUT_H_
 
