@@ -1,3 +1,6 @@
+//  Copyright 2011.
+//  Author: yeshunping@gmail.com (Shunping Ye)
+
 // COutputter
 // This class is used for generating the content of the resulting file.
 // Currently text format is supported.

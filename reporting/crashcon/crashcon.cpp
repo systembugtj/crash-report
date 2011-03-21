@@ -1,3 +1,6 @@
+//  Copyright 2011.
+//  Author: yeshunping@gmail.com (Shunping Ye)
+
 //  demo how to use crash_report in a application
 //  FIXME(yesp) : debug 版本Install总是失败，而Release版本却可以。
 #include <stdio.h>

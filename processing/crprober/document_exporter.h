@@ -1,3 +1,6 @@
+//  Copyright 2011.
+//  Author: yeshunping@gmail.com (Shunping Ye)
+
 #ifndef DOCUMENT_EXPORTER_H_
 #define DOCUMENT_EXPORTER_H_
 

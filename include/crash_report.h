@@ -29,12 +29,8 @@
  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ***************************************************************************************/
-/*! \file   CrashRpt.h
- *  \brief  Defines the interface for the crash_report.dll.
- *  \date   2003-2011
- *  \author Michael Carruth
- *  \author zeXspectrum
- */
+//  rewrited by Shunping Ye(yeshunping@gmail.com)
+
 #ifndef _CRASHRPT_H_
 #define _CRASHRPT_H_
 #include <iostream>

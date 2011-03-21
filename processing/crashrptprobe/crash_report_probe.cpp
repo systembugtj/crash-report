@@ -345,15 +345,15 @@ crpOpenErrorReportW(
     report_data.m_sMiniDumpTempName = sTempFile;
   } 
 
-  if(report_data.m_pDescReader->m_dwGeneratorVersion==1000)
+  if(report_data.m_pDescReader->crash_report_version==1000)
   {
     // Check if appname is empty (this may be true for v1.0 reports)
-    if(report_data.m_pDescReader->m_sAppName.IsEmpty())
-      report_data.m_pDescReader->m_sAppName = sAppName;
+    if(report_data.m_pDescReader->application_name.IsEmpty())
+      report_data.m_pDescReader->application_name = sAppName;
 
     // Check if app version is empty (this may be true for v1.0 reports)
-    if(report_data.m_pDescReader->m_sAppVersion.IsEmpty() ||
-      report_data.m_pDescReader->m_sImageName.IsEmpty())
+    if(report_data.m_pDescReader->applicataion_version.IsEmpty() ||
+      report_data.m_pDescReader->image_name.IsEmpty())
     {
       // Load minidump right now
       int nLoad = report_data.m_pDmpReader->Open(report_data.m_sMiniDumpTempName, 
@@ -374,7 +374,7 @@ crpOpenErrorReportW(
         CString sModuleName = pDmpReader->m_DumpData.m_Modules[i].m_sModuleName;
         CString sBaseName = Utility::GetBaseFileName(sModuleName);
         CString sExt = Utility::GetFileExtension(sModuleName);
-        if(sBaseName.CompareNoCase(report_data.m_pDescReader->m_sAppName)==0 &&
+        if(sBaseName.CompareNoCase(report_data.m_pDescReader->application_name)==0 &&
           sExt.CompareNoCase(_T("exe"))==0)
         {
           nExeModuleIndx = i;
@@ -383,13 +383,13 @@ crpOpenErrorReportW(
       }
       if(nExeModuleIndx>=0)
       {
-        if(report_data.m_pDescReader->m_sImageName.IsEmpty())
+        if(report_data.m_pDescReader->image_name.IsEmpty())
         {
-          report_data.m_pDescReader->m_sImageName =
+          report_data.m_pDescReader->image_name =
             pDmpReader->m_DumpData.m_Modules[i].m_sImageName;
         }
 
-        if(report_data.m_pDescReader->m_sAppVersion.IsEmpty())
+        if(report_data.m_pDescReader->applicataion_version.IsEmpty())
         {
           VS_FIXEDFILEINFO* fi = pDmpReader->m_DumpData.m_Modules[i].m_pVersionInfo;
           if(fi!=NULL)
@@ -399,7 +399,7 @@ crpOpenErrorReportW(
             WORD dwPatchLevel = (WORD)(fi->dwProductVersionLS>>16);
             WORD dwVerBuild = (WORD)(fi->dwProductVersionLS&0xFF);
 
-            report_data.m_pDescReader->m_sAppVersion.Format(_T("%u.%u.%u.%u"), 
+            report_data.m_pDescReader->applicataion_version.Format(_T("%u.%u.%u.%u"), 
               dwVerMajor, dwVerMinor, dwPatchLevel, dwVerBuild);            
           }
         }
@@ -566,7 +566,7 @@ crpGetPropertyW(
      sTableId.Compare(CRP_TBL_MDMP_THREADS)==0 ||
      sTableId.Compare(CRP_TBL_MDMP_LOAD_LOG)==0 ||
      nDynTable==0 ||
-     (pDescReader->m_dwGeneratorVersion==1000 && sTableId.Compare(CRP_TBL_XMLDESC_MISC)==0) )
+     (pDescReader->crash_report_version==1000 && sTableId.Compare(CRP_TBL_XMLDESC_MISC)==0) )
   {     
     // Load the minidump
     pDmpReader->Open(it->second.m_sMiniDumpTempName, it->second.m_sSymSearchPath);
@@ -593,196 +593,196 @@ crpGetPropertyW(
     }  
     else if(sColumnId.Compare(CRP_COL_CRASHRPT_VERSION)==0)
     {    
-      _ULTOT_S(pDescReader->m_dwGeneratorVersion, szBuff, BUFF_SIZE, 10);
+      _ULTOT_S(pDescReader->crash_report_version, szBuff, BUFF_SIZE, 10);
       pszPropVal = szBuff;
     }  
     else if(sColumnId.Compare(CRP_COL_CRASH_GUID)==0)
     { 
       // We do not support crash GUIDs for older version of CrashRpt
-      if(pDescReader->m_dwGeneratorVersion==1000)
+      if(pDescReader->crash_report_version==1000)
       {
         crpSetErrorMsg(_T("Invalid column ID is specified."));
         return -3;
       }
-      pszPropVal = strconv.t2w(pDescReader->m_sCrashGUID);    
+      pszPropVal = strconv.t2w(pDescReader->crash_guid);    
     }
     else if(sColumnId.Compare(CRP_COL_APP_NAME)==0)
     {
-      pszPropVal = strconv.t2w(pDescReader->m_sAppName);    
+      pszPropVal = strconv.t2w(pDescReader->application_name);    
     }
     else if(sColumnId.Compare(CRP_COL_APP_VERSION)==0)
     {      
-      pszPropVal = strconv.t2w(pDescReader->m_sAppVersion);    
+      pszPropVal = strconv.t2w(pDescReader->applicataion_version);    
     }
     else if(sColumnId.Compare(CRP_COL_IMAGE_NAME)==0)
     {
-      pszPropVal = strconv.t2w(pDescReader->m_sImageName);    
+      pszPropVal = strconv.t2w(pDescReader->image_name);    
     }
     else if(sColumnId.Compare(CRP_COL_OPERATING_SYSTEM)==0)
     {
       // We do not support this property for older version of CrashRpt
-      if(pDescReader->m_dwGeneratorVersion==1000)
+      if(pDescReader->crash_report_version==1000)
       {
         crpSetErrorMsg(_T("Invalid column ID is specified."));
         return -3;
       }
-      pszPropVal = strconv.t2w(pDescReader->m_sOperatingSystem);    
+      pszPropVal = strconv.t2w(pDescReader->os_version);    
     }
     else if(sColumnId.Compare(CRP_COL_SYSTEM_TIME_UTC)==0)
     {
       // We do not support this property for older version of CrashRpt
-      if(pDescReader->m_dwGeneratorVersion==1000)
+      if(pDescReader->crash_report_version==1000)
       {
         crpSetErrorMsg(_T("Invalid column ID is specified."));
         return -3;
       }
-      pszPropVal = strconv.t2w(pDescReader->m_sSystemTimeUTC);    
+      pszPropVal = strconv.t2w(pDescReader->system_time_UTC);    
     }
     else if(sColumnId.Compare(CRP_COL_INVPARAM_FUNCTION)==0)
     {  
-      if(pDescReader->m_dwExceptionType!=CR_CPP_INVALID_PARAMETER)
+      if(pDescReader->exception_type!=CR_CPP_INVALID_PARAMETER)
       {
         crpSetErrorMsg(_T("This property is supported for invalid parameter errors only."));
         return -3;
       }
-      pszPropVal = strconv.t2w(pDescReader->m_sInvParamFunction);    
+      pszPropVal = strconv.t2w(pDescReader->inv_param_function);    
     }
     else if(sColumnId.Compare(CRP_COL_INVPARAM_EXPRESSION)==0)
     {  
-      if(pDescReader->m_dwExceptionType!=CR_CPP_INVALID_PARAMETER)
+      if(pDescReader->exception_type!=CR_CPP_INVALID_PARAMETER)
       {
         crpSetErrorMsg(_T("This property is supported for invalid parameter errors only."));
         return -3;
       }
-      pszPropVal = strconv.t2w(pDescReader->m_sInvParamExpression);    
+      pszPropVal = strconv.t2w(pDescReader->inv_param_expression);    
     }
     else if(sColumnId.Compare(CRP_COL_INVPARAM_FILE)==0)
     {      
-      if(pDescReader->m_dwExceptionType!=CR_CPP_INVALID_PARAMETER)
+      if(pDescReader->exception_type!=CR_CPP_INVALID_PARAMETER)
       {
         crpSetErrorMsg(_T("This property is supported for invalid parameter errors only."));
         return -3;
       }
-      pszPropVal = strconv.t2w(pDescReader->m_sInvParamFile);    
+      pszPropVal = strconv.t2w(pDescReader->inv_param_file);    
     }
     else if(sColumnId.Compare(CRP_COL_INVPARAM_LINE)==0)
     {
-      if(pDescReader->m_dwExceptionType!=CR_CPP_INVALID_PARAMETER)
+      if(pDescReader->exception_type!=CR_CPP_INVALID_PARAMETER)
       {
         crpSetErrorMsg(_T("This property is supported for invalid parameter errors only."));
         return -3;
       }
-      _ULTOT_S(pDescReader->m_dwInvParamLine, szBuff, BUFF_SIZE, 10);
+      _ULTOT_S(pDescReader->inv_param_line, szBuff, BUFF_SIZE, 10);
       pszPropVal = szBuff;            
     }
     else if(sColumnId.Compare(CRP_COL_EXCEPTION_TYPE)==0)
     {
       // We do not support this property for older version of CrashRpt
-      if(pDescReader->m_dwGeneratorVersion==1000)
+      if(pDescReader->crash_report_version==1000)
       {
         crpSetErrorMsg(_T("Invalid column ID is specified."));
         return -3;
       }
-      _ULTOT_S(pDescReader->m_dwExceptionType, szBuff, BUFF_SIZE, 10);
+      _ULTOT_S(pDescReader->exception_type, szBuff, BUFF_SIZE, 10);
       _TCSCAT_S(szBuff, BUFF_SIZE, _T(" "));
-      _TCSCAT_S(szBuff, BUFF_SIZE, exctypes[pDescReader->m_dwExceptionType]);
+      _TCSCAT_S(szBuff, BUFF_SIZE, exctypes[pDescReader->exception_type]);
       pszPropVal = szBuff;            
     }
     else if(sColumnId.Compare(CRP_COL_EXCEPTION_CODE)==0)
     { 
       // We do not support this property for older version of CrashRpt
-      if(pDescReader->m_dwGeneratorVersion==1000)
+      if(pDescReader->crash_report_version==1000)
       {
         crpSetErrorMsg(_T("Invalid column ID is specified."));
         return -3;
       }
-      _ULTOT_S(pDescReader->m_dwExceptionCode, szBuff, BUFF_SIZE, 16);
+      _ULTOT_S(pDescReader->exception_code, szBuff, BUFF_SIZE, 16);
       _TCSCAT_S(szBuff, BUFF_SIZE, _T(" "));
-      CString msg = Utility::FormatErrorMsg(pDescReader->m_dwExceptionCode);
+      CString msg = Utility::FormatErrorMsg(pDescReader->exception_code);
       _TCSCAT_S(szBuff, BUFF_SIZE, msg);
       pszPropVal = szBuff;    
     }
     else if(sColumnId.Compare(CRP_COL_FPE_SUBCODE)==0)
     { 
       // We do not support this property for older version of CrashRpt
-      if(pDescReader->m_dwGeneratorVersion==1000)
+      if(pDescReader->crash_report_version==1000)
       {
         crpSetErrorMsg(_T("Invalid column ID is specified."));
         return -3;
       }
-      _ULTOT_S(pDescReader->m_dwFPESubcode, szBuff, BUFF_SIZE, 10);
+      _ULTOT_S(pDescReader->epe_subcode, szBuff, BUFF_SIZE, 10);
       pszPropVal = szBuff;        
     }    
     else if(sColumnId.Compare(CRP_COL_USER_EMAIL)==0)
     {
       // We do not support this property for older version of CrashRpt
-      if(pDescReader->m_dwGeneratorVersion==1000)
+      if(pDescReader->crash_report_version==1000)
       {
         crpSetErrorMsg(_T("Invalid column ID is specified."));
         return -3;
       }
-      pszPropVal = strconv.t2w(pDescReader->m_sUserEmail);    
+      pszPropVal = strconv.t2w(pDescReader->user_email);    
     }
     else if(sColumnId.Compare(CRP_COL_PROBLEM_DESCRIPTION)==0)
     {
       // We do not support this property for older version of CrashRpt
-      if(pDescReader->m_dwGeneratorVersion==1000)
+      if(pDescReader->crash_report_version==1000)
       {
         crpSetErrorMsg(_T("Invalid column ID is specified."));
         return -3;
       }
-      pszPropVal = strconv.t2w(pDescReader->m_sProblemDescription);    
+      pszPropVal = strconv.t2w(pDescReader->crash_description);    
     }
     else if(sColumnId.Compare(CRP_COL_GUI_RESOURCE_COUNT)==0)
     {
       // We do not support this property for older versions of CrashRpt
-      if(pDescReader->m_dwGeneratorVersion<1201)
+      if(pDescReader->crash_report_version<1201)
       {
         crpSetErrorMsg(_T("Invalid column ID is specified."));
         return -3;
       }
-      pszPropVal = strconv.t2w(pDescReader->m_sGUIResourceCount);    
+      pszPropVal = strconv.t2w(pDescReader->gui_resource_count);    
     }
     else if(sColumnId.Compare(CRP_COL_OPEN_HANDLE_COUNT)==0)
     {
       // We do not support this property for older versions of CrashRpt
-      if(pDescReader->m_dwGeneratorVersion<1201)
+      if(pDescReader->crash_report_version<1201)
       {
         crpSetErrorMsg(_T("Invalid column ID is specified."));
         return -3;
       }
-      pszPropVal = strconv.t2w(pDescReader->m_sOpenHandleCount);    
+      pszPropVal = strconv.t2w(pDescReader->open_handle_count);    
     }
     else if(sColumnId.Compare(CRP_COL_MEMORY_USAGE_KBYTES)==0)
     {
       // We do not support this property for older versions of CrashRpt
-      if(pDescReader->m_dwGeneratorVersion<1201)
+      if(pDescReader->crash_report_version<1201)
       {
         crpSetErrorMsg(_T("Invalid column ID is specified."));
         return -3;
       }
-      pszPropVal = strconv.t2w(pDescReader->m_sMemoryUsageKbytes);    
+      pszPropVal = strconv.t2w(pDescReader->memory_usage);    
     }
     else if(sColumnId.Compare(CRP_COL_OS_IS_64BIT)==0)
     {
       // We do not support this property for older versions of CrashRpt
-      if(pDescReader->m_dwGeneratorVersion<1207)
+      if(pDescReader->crash_report_version<1207)
       {
         crpSetErrorMsg(_T("Invalid column ID is specified."));
         return -3;
       }
-      _STPRINTF_S(szBuff, BUFF_SIZE, L"%d", pDescReader->m_bOSIs64Bit);    
+      _STPRINTF_S(szBuff, BUFF_SIZE, L"%d", pDescReader->is_64bit_system);    
       pszPropVal = szBuff;      
     }
     else if(sColumnId.Compare(CRP_COL_GEO_LOCATION)==0)
     {
       // We do not support this property for older versions of CrashRpt
-      if(pDescReader->m_dwGeneratorVersion<1207)
+      if(pDescReader->crash_report_version<1207)
       {
         crpSetErrorMsg(_T("Invalid column ID is specified."));
         return -3;
       }
-      pszPropVal = strconv.t2w(pDescReader->m_sGeoLocation);    
+      pszPropVal = strconv.t2w(pDescReader->geo_location);    
     }
     else
     {
@@ -792,7 +792,7 @@ crpGetPropertyW(
   }
   else if(sTableId.Compare(CRP_TBL_XMLDESC_FILE_ITEMS)==0)
   {
-    if(pDescReader->m_dwGeneratorVersion==1000)
+    if(pDescReader->crash_report_version==1000)
     {
       if(nRowIndex>=(int)it->second.m_ContainedFiles.size())
       {
@@ -802,7 +802,7 @@ crpGetPropertyW(
     }
     else
     {
-      if(nRowIndex>=(int)pDescReader->m_aFileItems.size())
+      if(nRowIndex>=(int)pDescReader->file_items.size())
       {
         crpSetErrorMsg(_T("Invalid row index specified."));
         return -4;    
@@ -811,14 +811,14 @@ crpGetPropertyW(
   
     if(sColumnId.Compare(CRP_META_ROW_COUNT)==0)
     {
-      if(pDescReader->m_dwGeneratorVersion==1000)
+      if(pDescReader->crash_report_version==1000)
         return (int)it->second.m_ContainedFiles.size();
-      return (int)pDescReader->m_aFileItems.size();
+      return (int)pDescReader->file_items.size();
     }
     else if( sColumnId.Compare(CRP_COL_FILE_ITEM_NAME)==0 || 
         sColumnId.Compare(CRP_COL_FILE_ITEM_DESCRIPTION)==0 )
     { 
-      if(pDescReader->m_dwGeneratorVersion==1000)
+      if(pDescReader->crash_report_version==1000)
       {
         if(sColumnId.Compare(CRP_COL_FILE_ITEM_NAME)==0)
           pszPropVal = strconv.t2w(it->second.m_ContainedFiles[nRowIndex]);            
@@ -827,7 +827,7 @@ crpGetPropertyW(
       }
       else
       {
-        std::map<CString, CString>::iterator it = pDescReader->m_aFileItems.begin();
+        std::map<CString, CString>::iterator it = pDescReader->file_items.begin();
         int i;
         for(i=0; i<nRowIndex; i++) it++;
 
@@ -845,13 +845,13 @@ crpGetPropertyW(
   }
   else if(sTableId.Compare(CRP_TBL_XMLDESC_CUSTOM_PROPS)==0)
   {
-    if(pDescReader->m_dwGeneratorVersion<1201)
+    if(pDescReader->crash_report_version<1201)
     {
       crpSetErrorMsg(_T("Invalid table ID specified."));
       return -3;    
     }
 
-    if(nRowIndex>=(int)pDescReader->m_aCustomProps.size())
+    if(nRowIndex>=(int)pDescReader->custom_props.size())
     {
       crpSetErrorMsg(_T("Invalid row index specified."));
       return -4;    
@@ -859,12 +859,12 @@ crpGetPropertyW(
       
     if(sColumnId.Compare(CRP_META_ROW_COUNT)==0)
     {
-      return (int)pDescReader->m_aCustomProps.size();
+      return (int)pDescReader->custom_props.size();
     }
     else if( sColumnId.Compare(CRP_COL_PROPERTY_NAME)==0 || 
         sColumnId.Compare(CRP_COL_PROPERTY_VALUE)==0 )
     { 
-      std::map<CString, CString>::iterator it = pDescReader->m_aCustomProps.begin();
+      std::map<CString, CString>::iterator it = pDescReader->custom_props.begin();
       int i;
       for(i=0; i<nRowIndex; i++) it++;
 
