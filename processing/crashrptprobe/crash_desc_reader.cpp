@@ -56,6 +56,8 @@ static const char* GetText(TiXmlHandle& hRoot, const char* tagname) {
     } else {
       return NULL;
     }
+  } else {
+    return NULL;
   }
 }
 

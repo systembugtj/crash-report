@@ -41,100 +41,104 @@
 #include <vector>
 
 // Describes a loaded module
-struct MdmpModule {
-  ULONG64 m_uBaseAddr; // Base address
-  ULONG64 m_uImageSize; // Size of module
-  CString m_sModuleName; // Module name  
-  CString m_sImageName; // The image name. The name may or may not contain a full path.
-  CString m_sLoadedImageName; // The full path and file name of the file from which symbols were loaded. 
-  CString m_sLoadedPdbName; // The full path and file name of the .pdb file.
-  BOOL m_bImageUnmatched; // If TRUE than there wasn't matching binary found.
-  BOOL m_bPdbUnmatched; // If TRUE than there wasn't matching PDB file found.
-  BOOL m_bNoSymbolInfo; // If TRUE than no symbols were generated for this module.
-  VS_FIXEDFILEINFO* m_pVersionInfo; // Version info for module.
+struct MinidumpModule {
+  ULONG64 base_address;
+  ULONG64 image_size;
+  CString module_name; // Module name  
+  CString image_name; // The image name. The name may or may not contain a full path.
+  CString loaded_image_name; // The full path and file name of the file from which symbols were loaded. 
+  CString loaded_pdb_name; // The full path and file name of the .pdb file.
+  BOOL image_unmatched; // If TRUE than there wasn't matching binary found.
+  BOOL pdb_unmatched; // If TRUE than there wasn't matching PDB file found.
+  BOOL no_symbol_info; // If TRUE than no symbols were generated for this module.
+  VS_FIXEDFILEINFO* version_info; // Version info for module.
 };
 
 // Describes a stack frame
-struct MdmpStackFrame {
-  MdmpStackFrame() {
-    m_nModuleRowID = -1;
-    m_dw64OffsInSymbol = 0;
-    m_nSrcLineNumber = -1;
+struct MinidumpStackFrame {
+  MinidumpStackFrame() {
+    module_row_id = -1;
+    symbol_offset = 0;
+    source_line_number = -1;
   }
 
-  DWORD64 m_dwAddrPCOffset;
-  int m_nModuleRowID; // ROWID of the record in CPR_MDMP_MODULES table.
-  CString m_sSymbolName; // Name of symbol
-  DWORD64 m_dw64OffsInSymbol; // Offset in symbol
-  CString m_sSrcFileName; // Name of source file
-  int m_nSrcLineNumber; // Line number in the source file
+  DWORD64 address_PC_offset;
+  int module_row_id; // ROWID of the record in CPR_MDMP_MODULES table.
+  CString symbol_name; // Name of symbol
+  DWORD64 symbol_offset; // Offset in symbol
+  CString source_file_name; // Name of source file
+  int source_line_number; // Line number in the source file
 };
 
 // Describes a thread
-struct MdmpThread {
-  MdmpThread() {
-    m_dwThreadId = 0;
-    m_pThreadContext = NULL;
-    m_bStackWalk = FALSE;
+struct MinidumpThread {
+  MinidumpThread() {
+    thread_id = 0;
+    thread_context = NULL;
+    has_stack_walk = FALSE;
   }
 
-  DWORD m_dwThreadId; // Thread ID.
-  CONTEXT* m_pThreadContext; // Thread context
-  BOOL m_bStackWalk; // Was stack trace retrieved for this thread?
-  CString m_sStackTraceMD5;
-  std::vector<MdmpStackFrame> m_StackTrace; // Stack trace for this thread.
+  DWORD thread_id; // Thread ID.
+  CONTEXT* thread_context; // Thread context
+  BOOL has_stack_walk; // Was stack trace retrieved for this thread?
+  CString stack_trace_md5;
+  std::vector<MinidumpStackFrame> stack_trace; // Stack trace for this thread.
 };
 
 // Describes a memory range
-struct MdmpMemRange {
-  ULONG64 m_u64StartOfMemoryRange; // Starting address
-  ULONG32 m_uDataSize; // Size of data
-  LPVOID m_pStartPtr; // Pointer to the memrange data stored in minidump
+struct MinidumpMemRange {
+  ULONG64 start_address; // Starting address
+  ULONG32 data_size; // Size of data
+  LPVOID start_pointer; // Pointer to the memrange data stored in minidump
 };
 
 // Minidump data
-struct MdmpData {
-  MdmpData() {
-    m_hProcess = INVALID_HANDLE_VALUE;
-    m_uProcessorArchitecture = 0;
-    m_uchProductType = 0;
-    m_ulVerMajor = 0;
-    m_ulVerMinor = 0;
-    m_ulVerBuild = 0;
-    m_uExceptionCode = 0;
-    m_uExceptionAddress = 0;
-    m_uExceptionThreadId = 0;
-    m_pExceptionThreadContext = NULL;
+struct MinidumpData {
+  MinidumpData() {
+    hProcess = INVALID_HANDLE_VALUE;
+    processor_architecture = 0;
+    product_type = 0;
+    major_version = 0;
+    minor_version = 0;
+    build_number = 0;
+    exception_code = 0;
+    exception_address = 0;
+    exception_thread_id = 0;
+    exception_thread_context = NULL;
   }
 
-  HANDLE m_hProcess; // Process ID
+  HANDLE hProcess;
 
-  USHORT m_uProcessorArchitecture; // CPU architecture
-  UCHAR m_uchNumberOfProcessors; // Number of processors
-  UCHAR m_uchProductType; // Type of machine (workstation, server, ...)
-  ULONG m_ulVerMajor; // OS major version number
-  ULONG m_ulVerMinor; // OS minor version number
-  ULONG m_ulVerBuild; // OS build number
-  CString m_sCSDVer; // The latest service pack installed
+  USHORT processor_architecture;
+  UCHAR processors_number;
+   // Type of machine (workstation, server, ...)
+  UCHAR product_type;
+  ULONG major_version;
+  ULONG minor_version;
+  ULONG build_number;
+  CString lastest_service_pack;
 
-  ULONG32 m_uExceptionCode; // Structured exception's code
-  ULONG64 m_uExceptionAddress; // Exception address
-  ULONG32 m_uExceptionThreadId; // Exceptions thread ID
-  CONTEXT* m_pExceptionThreadContext; // Thread context
+  // info for exception
+  ULONG32 exception_code;
+  ULONG64 exception_address;
+  ULONG32 exception_thread_id;
+  CONTEXT* exception_thread_context;
 
-  std::vector<MdmpThread> m_Threads; // The list of threads.
-  std::map<DWORD, size_t> m_ThreadIndex; // <thread_id, thread_entry_index> pairs
-  std::vector<MdmpModule> m_Modules; // The list of loaded modules.
-  std::map<DWORD64, size_t> m_ModuleIndex; // <base_addr, module_entry_index> pairs
-  std::vector<MdmpMemRange> m_MemRanges; // The list of memory ranges.
-  std::vector<CString> m_LoadLog; // Load log
+  std::vector<MinidumpThread> threads_list;
+   // <thread_id, thread_entry_index> pairs
+  std::map<DWORD, size_t> thread_index;
+  std::vector<MinidumpModule> modules_list;
+   // <base_addr, module_entry_index> pairs
+  std::map<DWORD64, size_t> module_index;
+  std::vector<MinidumpMemRange> memory_ranges;
+  std::vector<CString> load_log;
 };
 
 // Class for opening minidumps
-class CMiniDumpReader {
-public:
-  CMiniDumpReader();
-  ~CMiniDumpReader();
+class MiniDumpReader {
+ public:
+  MiniDumpReader();
+  ~MiniDumpReader();
   int Open(CString sFileName, CString sSymSearchPath);
   int StackWalk(DWORD dwThreadId);
   void Close();
@@ -143,16 +147,14 @@ public:
   int GetModuleRowIdByAddress(DWORD64 dwAddress);
   int GetThreadRowIdByThreadId(DWORD dwThreadId);
 
-  MdmpData m_DumpData; // Minidump data
+  BOOL read_sys_info_stream() const { return read_sys_info_stream_; }
+  BOOL read_exception_stream() const { return read_exception_stream_; }
+  BOOL read_module_list_stream() const { return read_module_list_stream_; }
+  BOOL read_memory_list_stream() const { return read_memory_list_stream_; }
+  BOOL read_thread_list_stream() const { return read_thread_list_stream_; }
+  const MinidumpData& dump_data() {return dump_data_;};
 
-  BOOL m_bLoaded; // Is minidump loaded?
-  BOOL m_bReadSysInfoStream; // Was system info stream read?
-  BOOL m_bReadExceptionStream; // Was exception stream read?
-  BOOL m_bReadModuleListStream; // Was module list stream read?
-  BOOL m_bReadMemoryListStream; // Was memory list stream read?
-  BOOL m_bReadThreadListStream; // Was thread list stream read?  
-
-private:
+ private:
   // Helper function which extracts a UNICODE string from the minidump
   CString GetMinidumpString(LPVOID pStartAddr, RVA rva);
 
@@ -162,12 +164,23 @@ private:
   int ReadMemoryListStream();
   int ReadThreadListStream();
 
-  /* Member variables */
-  CString m_sFileName; // Minidump file name.
-  CString m_sSymSearchPath; // The list of symbol search dirs passed.
-  HANDLE m_hFileMiniDump; // Handle to opened .DMP file
-  HANDLE m_hFileMapping; // Handle to memory mapping object
-  LPVOID m_pMiniDumpStartPtr; // Pointer to the biginning of memory-mapped minidump  
+ private:
+  MinidumpData dump_data_;
+   // Is minidump loaded?
+  BOOL loaded_;
+  //  has each stream been read? 
+  BOOL read_sys_info_stream_;
+  BOOL read_exception_stream_;
+  BOOL read_module_list_stream_;
+  BOOL read_memory_list_stream_;
+  BOOL read_thread_list_stream_;
+  CString file_name_;
+   // The list of symbol search dirs passed.
+  CString symbol_search_path_;
+   // Handle to opened .DMP file
+  HANDLE file_handle_;
+  HANDLE handle_file_mapping_;
+  LPVOID map_address_;
 
 };
 
