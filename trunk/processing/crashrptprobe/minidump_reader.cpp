@@ -38,108 +38,108 @@
 #include "strconv.h"
 #include "md5.h"
 
-CMiniDumpReader* g_pMiniDumpReader = NULL;
+MiniDumpReader* g_pMiniDumpReader = NULL;
 
 // Callback function prototypes
 BOOL CALLBACK ReadProcessMemoryProc64(HANDLE hProcess, DWORD64 lpBaseAddress,
-    PVOID lpBuffer, DWORD nSize, LPDWORD lpNumberOfBytesRead);
-
+                                      PVOID lpBuffer, DWORD nSize,
+                                      LPDWORD lpNumberOfBytesRead);
 PVOID CALLBACK FunctionTableAccessProc64(HANDLE hProcess, DWORD64 AddrBase);
-
 DWORD64 CALLBACK GetModuleBaseProc64(HANDLE hProcess, DWORD64 Address);
+BOOL CALLBACK SymRegisterCallbackProc64(HANDLE hProcess,
+                                        ULONG ActionCode,
+                                        ULONG64 CallbackData,
+                                        ULONG64 UserContext);
 
-BOOL CALLBACK SymRegisterCallbackProc64(HANDLE hProcess, ULONG ActionCode,
-    ULONG64 CallbackData, ULONG64 UserContext);
-
-CMiniDumpReader::CMiniDumpReader() {
-  m_bLoaded = FALSE;
-  m_bReadSysInfoStream = FALSE;
-  m_bReadExceptionStream = FALSE;
-  m_bReadModuleListStream = FALSE;
-  m_bReadMemoryListStream = FALSE;
-  m_bReadThreadListStream = FALSE;
-  m_hFileMiniDump = INVALID_HANDLE_VALUE;
-  m_hFileMapping = NULL;
-  m_pMiniDumpStartPtr = NULL;
+MiniDumpReader::MiniDumpReader() {
+  loaded_ = FALSE;
+  read_sys_info_stream_ = FALSE;
+  read_exception_stream_ = FALSE;
+  read_module_list_stream_ = FALSE;
+  read_memory_list_stream_ = FALSE;
+  read_thread_list_stream_ = FALSE;
+  file_handle_ = INVALID_HANDLE_VALUE;
+  handle_file_mapping_ = NULL;
+  map_address_ = NULL;
 }
 
-CMiniDumpReader::~CMiniDumpReader() {
+MiniDumpReader::~MiniDumpReader() {
   Close();
 }
 
-int CMiniDumpReader::Open(CString sFileName, CString sSymSearchPath) {
+int MiniDumpReader::Open(CString sFileName, CString sSymSearchPath) {
   static DWORD dwProcessID = 0;
 
-  if (m_bLoaded) {
+  if (loaded_) {
     return 1;
   }
 
-  m_sFileName = sFileName;
-  m_sSymSearchPath = sSymSearchPath;
-
-  m_hFileMiniDump = CreateFile(sFileName, FILE_ALL_ACCESS, 0, NULL,
-      OPEN_EXISTING, NULL, NULL);
-
-  if (m_hFileMiniDump == INVALID_HANDLE_VALUE) {
+  file_name_ = sFileName;
+  symbol_search_path_ = sSymSearchPath;
+  file_handle_ = CreateFile(sFileName, FILE_ALL_ACCESS, 0, NULL,
+                            OPEN_EXISTING, NULL, NULL);
+  if (file_handle_ == INVALID_HANDLE_VALUE) {
     Close();
     return 1;
   }
-
-  m_hFileMapping = CreateFileMapping(m_hFileMiniDump, NULL, PAGE_READONLY, 0,
-      0, 0);
-
-  if (m_hFileMapping == NULL) {
+  handle_file_mapping_ = CreateFileMapping(file_handle_, NULL,
+                                           PAGE_READONLY, 0, 0, 0);
+  if (handle_file_mapping_ == NULL) {
     Close();
     return 2;
   }
-
-  m_pMiniDumpStartPtr = MapViewOfFile(m_hFileMapping, FILE_MAP_READ, 0, 0, 0);
-  if (m_pMiniDumpStartPtr == NULL) {
+  map_address_ = MapViewOfFile(handle_file_mapping_, FILE_MAP_READ, 0, 0, 0);
+  if (map_address_ == NULL) {
     Close();
     return 3;
   }
 
-  m_DumpData.m_hProcess = (HANDLE)(++dwProcessID);
+  dump_data_.hProcess = (HANDLE)(++dwProcessID);
   DWORD dwOptions = 0;
-  //dwOptions |= SYMOPT_DEFERRED_LOADS; // Symbols are not loaded until a reference is made requiring the symbols be loaded.
-  dwOptions |= SYMOPT_EXACT_SYMBOLS; // Do not load an unmatched .pdb file. 
-  dwOptions |= SYMOPT_FAIL_CRITICAL_ERRORS; // Do not display system dialog boxes when there is a media failure such as no media in a drive.
-  dwOptions |= SYMOPT_UNDNAME; // All symbols are presented in undecorated form.   
+  // Symbols are not loaded until a reference is made requiring the symbols be loaded.
+  //dwOptions |= SYMOPT_DEFERRED_LOADS;
+  // Do not load an unmatched .pdb file.
+  dwOptions |= SYMOPT_EXACT_SYMBOLS;
+  // Do not display system dialog boxes when there is a media failure such
+  //  as no media in a drive.
+  dwOptions |= SYMOPT_FAIL_CRITICAL_ERRORS;
+  // All symbols are presented in undecorated form.
+  dwOptions |= SYMOPT_UNDNAME;
   SymSetOptions(dwOptions);
 
   strconv_t strconv;
-  BOOL bSymInit = SymInitializeW(m_DumpData.m_hProcess, strconv.t2w(
-      sSymSearchPath), FALSE);
+  BOOL bSymInit = SymInitializeW(dump_data_.hProcess,
+                                 strconv.t2w(sSymSearchPath), FALSE);
   if (!bSymInit) {
-    m_DumpData.m_hProcess = NULL;
+    dump_data_.hProcess = NULL;
     Close();
     return 5;
   }
 
-  m_bReadSysInfoStream = !ReadSysInfoStream();
-  m_bReadModuleListStream = !ReadModuleListStream();
-  m_bReadThreadListStream = !ReadThreadListStream();
-  m_bReadMemoryListStream = !ReadMemoryListStream();
-  m_bReadExceptionStream = !ReadExceptionStream();
-  m_bLoaded = true;
+  read_sys_info_stream_ = !ReadSysInfoStream();
+  read_module_list_stream_ = !ReadModuleListStream();
+  read_thread_list_stream_ = !ReadThreadListStream();
+  read_memory_list_stream_ = !ReadMemoryListStream();
+  read_exception_stream_ = !ReadExceptionStream();
+  loaded_ = TRUE;
   return 0;
 }
 
-void CMiniDumpReader::Close() {
-  UnmapViewOfFile(m_pMiniDumpStartPtr);
-  if (m_hFileMapping != NULL) {
-    CloseHandle(m_hFileMapping);
+void MiniDumpReader::Close() {
+  UnmapViewOfFile(map_address_);
+  if (handle_file_mapping_ != NULL) {
+    CloseHandle(handle_file_mapping_);
   }
-  if (m_hFileMiniDump != INVALID_HANDLE_VALUE) {
-    CloseHandle(m_hFileMiniDump);
+  if (file_handle_ != INVALID_HANDLE_VALUE) {
+    CloseHandle(file_handle_);
   }
-  m_pMiniDumpStartPtr = NULL;
-  if (m_DumpData.m_hProcess != NULL) {
-    SymCleanup(m_DumpData.m_hProcess);
+  map_address_ = NULL;
+  if (dump_data_.hProcess != NULL) {
+    SymCleanup(dump_data_.hProcess);
   }
 }
 
-BOOL CMiniDumpReader::CheckDbgHelpApiVersion() {
+BOOL MiniDumpReader::CheckDbgHelpApiVersion() {
   // Set valid dbghelp API version
   API_VERSION CompiledApiVer;
   CompiledApiVer.MajorVersion = 6;
@@ -157,30 +157,30 @@ BOOL CMiniDumpReader::CheckDbgHelpApiVersion() {
 }
 
 // Extracts a UNICODE string stored in minidump file by its relative address
-CString CMiniDumpReader::GetMinidumpString(LPVOID start_addr, RVA rva) {
+CString MiniDumpReader::GetMinidumpString(LPVOID start_addr, RVA rva) {
   MINIDUMP_STRING* pms = (MINIDUMP_STRING*) ((LPBYTE) start_addr + rva);
   CString sModule = pms->Buffer;
   return sModule;
 }
 
-int CMiniDumpReader::ReadSysInfoStream() {
+int MiniDumpReader::ReadSysInfoStream() {
   LPVOID pStreamStart = NULL;
   ULONG uStreamSize = 0;
   MINIDUMP_DIRECTORY* pmd = NULL;
   BOOL bRead = FALSE;
 
-  bRead = MiniDumpReadDumpStream(m_pMiniDumpStartPtr, SystemInfoStream, &pmd,
-      &pStreamStart, &uStreamSize);
+  bRead = MiniDumpReadDumpStream(map_address_, SystemInfoStream, &pmd,
+                                 &pStreamStart, &uStreamSize);
 
   if (bRead) {
     MINIDUMP_SYSTEM_INFO* pSysInfo = (MINIDUMP_SYSTEM_INFO*) pStreamStart;
-    m_DumpData.m_uProcessorArchitecture = pSysInfo->ProcessorArchitecture;
-    m_DumpData.m_uchNumberOfProcessors = pSysInfo->NumberOfProcessors;
-    m_DumpData.m_uchProductType = pSysInfo->ProductType;
-    m_DumpData.m_ulVerMajor = pSysInfo->MajorVersion;
-    m_DumpData.m_ulVerMinor = pSysInfo->MinorVersion;
-    m_DumpData.m_ulVerBuild = pSysInfo->BuildNumber;
-    m_DumpData.m_sCSDVer = GetMinidumpString(m_pMiniDumpStartPtr,
+    dump_data_.processor_architecture = pSysInfo->ProcessorArchitecture;
+    dump_data_.processors_number = pSysInfo->NumberOfProcessors;
+    dump_data_.product_type = pSysInfo->ProductType;
+    dump_data_.major_version = pSysInfo->MajorVersion;
+    dump_data_.minor_version = pSysInfo->MinorVersion;
+    dump_data_.build_number = pSysInfo->BuildNumber;
+    dump_data_.lastest_service_pack = GetMinidumpString(map_address_,
                                              pSysInfo->CSDVersionRva);
 
     // Clean up
@@ -193,13 +193,13 @@ int CMiniDumpReader::ReadSysInfoStream() {
   return 0;
 }
 
-int CMiniDumpReader::ReadExceptionStream() {
+int MiniDumpReader::ReadExceptionStream() {
   LPVOID pStreamStart = NULL;
   ULONG uStreamSize = 0;
   MINIDUMP_DIRECTORY* pmd = NULL;
   BOOL bRead = FALSE;
 
-  bRead = MiniDumpReadDumpStream(m_pMiniDumpStartPtr, ExceptionStream, &pmd,
+  bRead = MiniDumpReadDumpStream(map_address_, ExceptionStream, &pmd,
       &pStreamStart, &uStreamSize);
 
   if (bRead) {
@@ -207,46 +207,46 @@ int CMiniDumpReader::ReadExceptionStream() {
         (MINIDUMP_EXCEPTION_STREAM*) pStreamStart;
     if (pExceptionStream != NULL && uStreamSize
         >= sizeof(MINIDUMP_EXCEPTION_STREAM)) {
-      m_DumpData.m_uExceptionThreadId = pExceptionStream->ThreadId;
-      m_DumpData.m_uExceptionCode
+      dump_data_.exception_thread_id = pExceptionStream->ThreadId;
+      dump_data_.exception_code
           = pExceptionStream->ExceptionRecord.ExceptionCode;
-      m_DumpData.m_uExceptionAddress
+      dump_data_.exception_address
           = pExceptionStream->ExceptionRecord.ExceptionAddress;
-      m_DumpData.m_pExceptionThreadContext
-          = (CONTEXT*) (((LPBYTE) m_pMiniDumpStartPtr)
+      dump_data_.exception_thread_context
+          = (CONTEXT*) (((LPBYTE) map_address_)
               + pExceptionStream->ThreadContext.Rva);
 
       CString sMsg;
       int nExcModuleRowID = GetModuleRowIdByAddress(
-          m_DumpData.m_uExceptionAddress);
+          dump_data_.exception_address);
       if (nExcModuleRowID >= 0) {
         sMsg.Format(_T("Unhandled exception at 0x%I64x in %s: 0x%x : %s"),
-            m_DumpData.m_uExceptionAddress,
-            m_DumpData.m_Modules[nExcModuleRowID].m_sModuleName,
-            m_DumpData.m_uExceptionCode, _T("Exception description."));
+            dump_data_.exception_address,
+            dump_data_.modules_list[nExcModuleRowID].module_name,
+            dump_data_.exception_code, _T("Exception description."));
       } else {
 
       }
-      m_DumpData.m_LoadLog.push_back(sMsg);
+      dump_data_.load_log.push_back(sMsg);
     }
   } else {
     CString sMsg;
     sMsg = _T("No exception information found in minidump.");
-    m_DumpData.m_LoadLog.push_back(sMsg);
+    dump_data_.load_log.push_back(sMsg);
     return 1;
   }
 
   return 0;
 }
 
-int CMiniDumpReader::ReadModuleListStream() {
+int MiniDumpReader::ReadModuleListStream() {
   LPVOID pStreamStart = NULL;
   ULONG uStreamSize = 0;
   MINIDUMP_DIRECTORY* pmd = NULL;
   BOOL bRead = FALSE;
   strconv_t strconv;
 
-  bRead = MiniDumpReadDumpStream(m_pMiniDumpStartPtr, ModuleListStream, &pmd,
+  bRead = MiniDumpReadDumpStream(map_address_, ModuleListStream, &pmd,
       &pStreamStart, &uStreamSize);
 
   if (bRead) {
@@ -259,7 +259,7 @@ int CMiniDumpReader::ReadModuleListStream() {
             (MINIDUMP_MODULE*) ((LPBYTE) pModuleStream->Modules + i
                 * sizeof(MINIDUMP_MODULE));
 
-        CString sModuleName = GetMinidumpString(m_pMiniDumpStartPtr,
+        CString sModuleName = GetMinidumpString(map_address_,
             pModule->ModuleNameRva);
         const wchar_t* szModuleName = strconv.t2w(sModuleName);
         DWORD64 dwBaseAddr = pModule->BaseOfImage;
@@ -272,60 +272,60 @@ int CMiniDumpReader::ReadModuleListStream() {
           sShortModuleName = sShortModuleName.Mid(pos + 1);
 
         /*DWORD64 dwLoadResult = */
-        SymLoadModuleExW(m_DumpData.m_hProcess, NULL, (PWSTR) szModuleName,
+        SymLoadModuleExW(dump_data_.hProcess, NULL, (PWSTR) szModuleName,
             NULL, dwBaseAddr, (DWORD) dwImageSize, NULL, 0);
 
         IMAGEHLP_MODULE64 modinfo;
         memset(&modinfo, 0, sizeof(IMAGEHLP_MODULE64));
         modinfo.SizeOfStruct = sizeof(IMAGEHLP_MODULE64);
-        BOOL bModuleInfo = SymGetModuleInfo64(m_DumpData.m_hProcess,
+        BOOL bModuleInfo = SymGetModuleInfo64(dump_data_.hProcess,
             dwBaseAddr, &modinfo);
-        MdmpModule m;
+        MinidumpModule m;
         if (!bModuleInfo) {
-          m.m_bImageUnmatched = TRUE;
-          m.m_bNoSymbolInfo = TRUE;
-          m.m_bPdbUnmatched = TRUE;
-          m.m_pVersionInfo = NULL;
-          m.m_sImageName = sModuleName;
-          m.m_sModuleName = sShortModuleName;
-          m.m_uBaseAddr = dwBaseAddr;
-          m.m_uImageSize = dwImageSize;
+          m.image_unmatched = TRUE;
+          m.no_symbol_info = TRUE;
+          m.pdb_unmatched = TRUE;
+          m.version_info = NULL;
+          m.image_name = sModuleName;
+          m.module_name = sShortModuleName;
+          m.base_address = dwBaseAddr;
+          m.image_size = dwImageSize;
         } else {
-          m.m_uBaseAddr = modinfo.BaseOfImage;
-          m.m_uImageSize = modinfo.ImageSize;
-          m.m_sModuleName = sShortModuleName;
-          m.m_sImageName = modinfo.ImageName;
-          m.m_sLoadedImageName = modinfo.LoadedImageName;
-          m.m_sLoadedPdbName = modinfo.LoadedPdbName;
-          m.m_pVersionInfo = &pModule->VersionInfo;
-          m.m_bPdbUnmatched = modinfo.PdbUnmatched;
+          m.base_address = modinfo.BaseOfImage;
+          m.image_size = modinfo.ImageSize;
+          m.module_name = sShortModuleName;
+          m.image_name = modinfo.ImageName;
+          m.loaded_image_name = modinfo.LoadedImageName;
+          m.loaded_pdb_name = modinfo.LoadedPdbName;
+          m.version_info = &pModule->VersionInfo;
+          m.pdb_unmatched = modinfo.PdbUnmatched;
           BOOL bTimeStampMatched = pModule->TimeDateStamp
               == modinfo.TimeDateStamp;
-          m.m_bImageUnmatched = !bTimeStampMatched;
-          m.m_bNoSymbolInfo = !modinfo.GlobalSymbols;
+          m.image_unmatched = !bTimeStampMatched;
+          m.no_symbol_info = !modinfo.GlobalSymbols;
         }
 
-        m_DumpData.m_Modules.push_back(m);
-        m_DumpData.m_ModuleIndex[m.m_uBaseAddr] = m_DumpData.m_Modules.size()
+        dump_data_.modules_list.push_back(m);
+        dump_data_.module_index[m.base_address] = dump_data_.modules_list.size()
             - 1;
 
         CString sMsg;
-        if (m.m_bImageUnmatched)
+        if (m.image_unmatched)
           sMsg.Format(_T("Loaded '*%s'"), sModuleName);
         else
-          sMsg.Format(_T("Loaded '%s'"), m.m_sLoadedImageName);
+          sMsg.Format(_T("Loaded '%s'"), m.loaded_image_name);
 
-        if (m.m_bImageUnmatched)
+        if (m.image_unmatched)
           sMsg += _T(", No matching binary found.");
-        else if (m.m_bPdbUnmatched)
+        else if (m.pdb_unmatched)
           sMsg += _T(", No matching PDB file found.");
         else {
-          if (m.m_bNoSymbolInfo)
+          if (m.no_symbol_info)
             sMsg += _T(", No symbols loaded.");
           else
             sMsg += _T(", Symbols loaded.");
         }
-        m_DumpData.m_LoadLog.push_back(sMsg);
+        dump_data_.load_log.push_back(sMsg);
       }
     }
   } else {
@@ -335,40 +335,40 @@ int CMiniDumpReader::ReadModuleListStream() {
   return 0;
 }
 
-int CMiniDumpReader::GetModuleRowIdByBaseAddr(DWORD64 dwBaseAddr) {
-  std::map<DWORD64, size_t>::iterator it = m_DumpData.m_ModuleIndex.find(
+int MiniDumpReader::GetModuleRowIdByBaseAddr(DWORD64 dwBaseAddr) {
+  std::map<DWORD64, size_t>::iterator it = dump_data_.module_index.find(
       dwBaseAddr);
-  if (it != m_DumpData.m_ModuleIndex.end())
+  if (it != dump_data_.module_index.end())
     return (int) it->second;
   return -1;
 }
 
-int CMiniDumpReader::GetModuleRowIdByAddress(DWORD64 dwAddress) {
+int MiniDumpReader::GetModuleRowIdByAddress(DWORD64 dwAddress) {
   UINT i;
-  for (i = 0; i < m_DumpData.m_Modules.size(); i++) {
-    if (m_DumpData.m_Modules[i].m_uBaseAddr <= dwAddress && dwAddress
-        < m_DumpData.m_Modules[i].m_uBaseAddr
-            + m_DumpData.m_Modules[i].m_uImageSize)
+  for (i = 0; i < dump_data_.modules_list.size(); i++) {
+    if (dump_data_.modules_list[i].base_address <= dwAddress && dwAddress
+        < dump_data_.modules_list[i].base_address
+            + dump_data_.modules_list[i].image_size)
       return i;
   }
   return -1;
 }
 
-int CMiniDumpReader::GetThreadRowIdByThreadId(DWORD dwThreadId) {
-  std::map<DWORD, size_t>::iterator it = m_DumpData.m_ThreadIndex.find(
+int MiniDumpReader::GetThreadRowIdByThreadId(DWORD dwThreadId) {
+  std::map<DWORD, size_t>::iterator it = dump_data_.thread_index.find(
       dwThreadId);
-  if (it != m_DumpData.m_ThreadIndex.end())
+  if (it != dump_data_.thread_index.end())
     return (int) it->second;
   return -1;
 }
 
-int CMiniDumpReader::ReadMemoryListStream() {
+int MiniDumpReader::ReadMemoryListStream() {
   LPVOID pStreamStart = NULL;
   ULONG uStreamSize = 0;
   MINIDUMP_DIRECTORY* pmd = NULL;
   BOOL bRead = FALSE;
 
-  bRead = MiniDumpReadDumpStream(m_pMiniDumpStartPtr, MemoryListStream, &pmd,
+  bRead = MiniDumpReadDumpStream(map_address_, MemoryListStream, &pmd,
       &pStreamStart, &uStreamSize);
 
   if (bRead) {
@@ -379,12 +379,12 @@ int CMiniDumpReader::ReadMemoryListStream() {
       for (i = 0; i < uNumberOfMemRanges; i++) {
         MINIDUMP_MEMORY_DESCRIPTOR* pMemDesc =
             (MINIDUMP_MEMORY_DESCRIPTOR*) (&pMemStream->MemoryRanges[i]);
-        MdmpMemRange mr;
-        mr.m_u64StartOfMemoryRange = pMemDesc->StartOfMemoryRange;
-        mr.m_uDataSize = pMemDesc->Memory.DataSize;
-        mr.m_pStartPtr = (LPBYTE) m_pMiniDumpStartPtr + pMemDesc->Memory.Rva;
+        MinidumpMemRange mr;
+        mr.start_address = pMemDesc->StartOfMemoryRange;
+        mr.data_size = pMemDesc->Memory.DataSize;
+        mr.start_pointer = (LPBYTE) map_address_ + pMemDesc->Memory.Rva;
 
-        m_DumpData.m_MemRanges.push_back(mr);
+        dump_data_.memory_ranges.push_back(mr);
       }
     }
   } else {
@@ -394,13 +394,13 @@ int CMiniDumpReader::ReadMemoryListStream() {
   return 0;
 }
 
-int CMiniDumpReader::ReadThreadListStream() {
+int MiniDumpReader::ReadThreadListStream() {
   LPVOID pStreamStart = NULL;
   ULONG uStreamSize = 0;
   MINIDUMP_DIRECTORY* pmd = NULL;
   BOOL bRead = FALSE;
 
-  bRead = MiniDumpReadDumpStream(m_pMiniDumpStartPtr, ThreadListStream, &pmd,
+  bRead = MiniDumpReadDumpStream(map_address_, ThreadListStream, &pmd,
       &pStreamStart, &uStreamSize);
 
   if (bRead) {
@@ -413,13 +413,13 @@ int CMiniDumpReader::ReadThreadListStream() {
         MINIDUMP_THREAD* pThread =
             (MINIDUMP_THREAD*) (&pThreadList->Threads[i]);
 
-        MdmpThread mt;
-        mt.m_dwThreadId = pThread->ThreadId;
-        mt.m_pThreadContext = (CONTEXT*) (((LPBYTE) m_pMiniDumpStartPtr)
+        MinidumpThread mt;
+        mt.thread_id = pThread->ThreadId;
+        mt.thread_context = (CONTEXT*) (((LPBYTE) map_address_)
             + pThread->ThreadContext.Rva);
 
-        m_DumpData.m_Threads.push_back(mt);
-        m_DumpData.m_ThreadIndex[mt.m_dwThreadId] = m_DumpData.m_Threads.size()
+        dump_data_.threads_list.push_back(mt);
+        dump_data_.thread_index[mt.thread_id] = dump_data_.threads_list.size()
             - 1;
       }
     }
@@ -429,18 +429,18 @@ int CMiniDumpReader::ReadThreadListStream() {
   return 0;
 }
 
-int CMiniDumpReader::StackWalk(DWORD dwThreadId) {
+int MiniDumpReader::StackWalk(DWORD dwThreadId) {
   int nThreadIndex = GetThreadRowIdByThreadId(dwThreadId);
-  if (m_DumpData.m_Threads[nThreadIndex].m_bStackWalk == TRUE)
+  if (dump_data_.threads_list[nThreadIndex].has_stack_walk == TRUE)
     return 0; // Already done
 
   CONTEXT* pThreadContext = NULL;
 
-  if (m_DumpData.m_Threads[nThreadIndex].m_dwThreadId
-      == m_DumpData.m_uExceptionThreadId)
-    pThreadContext = m_DumpData.m_pExceptionThreadContext;
+  if (dump_data_.threads_list[nThreadIndex].thread_id
+      == dump_data_.exception_thread_id)
+    pThreadContext = dump_data_.exception_thread_context;
   else
-    pThreadContext = m_DumpData.m_Threads[nThreadIndex].m_pThreadContext;
+    pThreadContext = dump_data_.threads_list[nThreadIndex].thread_context;
 
   if (pThreadContext == NULL)
     return 1;
@@ -473,7 +473,7 @@ int CMiniDumpReader::StackWalk(DWORD dwThreadId) {
   sf.AddrBStore.Mode = AddrModeFlat;
 
   DWORD dwMachineType = 0;
-  switch (m_DumpData.m_uProcessorArchitecture) {
+  switch (dump_data_.processor_architecture) {
 #ifdef _X86_
   case PROCESSOR_ARCHITECTURE_INTEL:
   dwMachineType = IMAGE_FILE_MACHINE_I386;
@@ -507,7 +507,7 @@ int CMiniDumpReader::StackWalk(DWORD dwThreadId) {
 
   for (;;) {
     BOOL bWalk = ::StackWalk64(dwMachineType, // machine type
-        m_DumpData.m_hProcess, // our process handle
+        dump_data_.hProcess, // our process handle
         (HANDLE) dwThreadId, // thread ID
         &sf, // stack frame
         dwMachineType == IMAGE_FILE_MACHINE_I386 ? NULL : (&Context), // used for non-I386 machines
@@ -520,17 +520,17 @@ int CMiniDumpReader::StackWalk(DWORD dwThreadId) {
     if (!bWalk)
       break;
 
-    MdmpStackFrame stack_frame;
-    stack_frame.m_dwAddrPCOffset = sf.AddrPC.Offset;
+    MinidumpStackFrame stack_frame;
+    stack_frame.address_PC_offset = sf.AddrPC.Offset;
 
     // Get module info
     IMAGEHLP_MODULE64 mi;
     memset(&mi, 0, sizeof(IMAGEHLP_MODULE64));
     mi.SizeOfStruct = sizeof(IMAGEHLP_MODULE64);
-    BOOL bGetModuleInfo = SymGetModuleInfo64(m_DumpData.m_hProcess,
+    BOOL bGetModuleInfo = SymGetModuleInfo64(dump_data_.hProcess,
         sf.AddrPC.Offset, &mi);
     if (bGetModuleInfo) {
-      stack_frame.m_nModuleRowID = GetModuleRowIdByBaseAddr(mi.BaseOfImage);
+      stack_frame.module_row_id = GetModuleRowIdByBaseAddr(mi.BaseOfImage);
     }
 
     // Get symbol info
@@ -539,34 +539,34 @@ int CMiniDumpReader::StackWalk(DWORD dwThreadId) {
     SYMBOL_INFO* sym_info = (SYMBOL_INFO*) buffer;
     sym_info->SizeOfStruct = sizeof(SYMBOL_INFO);
     sym_info->MaxNameLen = 4096 - sizeof(SYMBOL_INFO) - 1;
-    BOOL bGetSym = SymFromAddr(m_DumpData.m_hProcess, sf.AddrPC.Offset,
+    BOOL bGetSym = SymFromAddr(dump_data_.hProcess, sf.AddrPC.Offset,
         &dwDisp64, sym_info);
 
     if (bGetSym) {
-      stack_frame.m_sSymbolName = CString(sym_info->Name, sym_info->NameLen);
-      stack_frame.m_dw64OffsInSymbol = dwDisp64;
+      stack_frame.symbol_name = CString(sym_info->Name, sym_info->NameLen);
+      stack_frame.symbol_offset = dwDisp64;
     }
 
     // Get source filename and line
     DWORD dwDisplacement;
     IMAGEHLP_LINE64 line;
-    BOOL bGetLine = SymGetLineFromAddr64(m_DumpData.m_hProcess,
+    BOOL bGetLine = SymGetLineFromAddr64(dump_data_.hProcess,
         sf.AddrPC.Offset, &dwDisplacement, &line);
 
     if (bGetLine) {
-      stack_frame.m_sSrcFileName = line.FileName;
-      stack_frame.m_nSrcLineNumber = line.LineNumber;
+      stack_frame.source_file_name = line.FileName;
+      stack_frame.source_line_number = line.LineNumber;
     }
 
-    m_DumpData.m_Threads[nThreadIndex].m_StackTrace.push_back(stack_frame);
+    dump_data_.threads_list[nThreadIndex].stack_trace.push_back(stack_frame);
   }
 
   CString sStackTrace;
   UINT i;
-  for (i = 0; i < m_DumpData.m_Threads[nThreadIndex].m_StackTrace.size(); i++) {
-    MdmpStackFrame& frame = m_DumpData.m_Threads[nThreadIndex].m_StackTrace[i];
+  for (i = 0; i < dump_data_.threads_list[nThreadIndex].stack_trace.size(); i++) {
+    MinidumpStackFrame& frame = dump_data_.threads_list[nThreadIndex].stack_trace[i];
 
-    if (frame.m_sSymbolName.IsEmpty())
+    if (frame.symbol_name.IsEmpty())
       continue;
 
     CString sModuleName;
@@ -576,15 +576,15 @@ int CMiniDumpReader::StackWalk(DWORD dwThreadId) {
     CString sSourceFile;
     CString sSourceLine;
 
-    if (frame.m_nModuleRowID >= 0) {
-      sModuleName = m_DumpData.m_Modules[frame.m_nModuleRowID].m_sModuleName;
+    if (frame.module_row_id >= 0) {
+      sModuleName = dump_data_.modules_list[frame.module_row_id].module_name;
     }
 
-    sSymbolName = frame.m_sSymbolName;
-    sAddrPCOffset.Format(_T("0x%I64x"), frame.m_dwAddrPCOffset);
-    sSourceFile = frame.m_sSrcFileName;
-    sSourceLine.Format(_T("%d"), frame.m_nSrcLineNumber);
-    sOffsInSymbol.Format(_T("0x%I64x"), frame.m_dw64OffsInSymbol);
+    sSymbolName = frame.symbol_name;
+    sAddrPCOffset.Format(_T("0x%I64x"), frame.address_PC_offset);
+    sSourceFile = frame.source_file_name;
+    sSourceLine.Format(_T("%d"), frame.source_line_number);
+    sOffsInSymbol.Format(_T("0x%I64x"), frame.symbol_offset);
 
     CString str;
     str = sModuleName;
@@ -628,11 +628,11 @@ int CMiniDumpReader::StackWalk(DWORD dwThreadId) {
     for (i = 0; i < 16; i++) {
       CString number;
       number.Format(_T("%02x"), md5_hash[i]);
-      m_DumpData.m_Threads[nThreadIndex].m_sStackTraceMD5 += number;
+      dump_data_.threads_list[nThreadIndex].stack_trace_md5 += number;
     }
   }
 
-  m_DumpData.m_Threads[nThreadIndex].m_bStackWalk = TRUE;
+  dump_data_.threads_list[nThreadIndex].has_stack_walk = TRUE;
 
   return 0;
 }
@@ -644,29 +644,29 @@ BOOL CALLBACK ReadProcessMemoryProc64(HANDLE hProcess, DWORD64 lpBaseAddress,
   *lpNumberOfBytesRead = 0;
 
   // Validate input parameters
-  if (hProcess != g_pMiniDumpReader->m_DumpData.m_hProcess || lpBaseAddress
+  if (hProcess != g_pMiniDumpReader->dump_data().hProcess || lpBaseAddress
       == NULL || lpBuffer == NULL || nSize == 0) {
     // Invalid parameter
     return FALSE;
   }
 
   ULONG i;
-  for (i = 0; i < g_pMiniDumpReader->m_DumpData.m_MemRanges.size(); i++) {
-    MdmpMemRange& mr = g_pMiniDumpReader->m_DumpData.m_MemRanges[i];
-    if (lpBaseAddress >= mr.m_u64StartOfMemoryRange && lpBaseAddress
-        < mr.m_u64StartOfMemoryRange + mr.m_uDataSize) {
-      DWORD64 dwOffs = lpBaseAddress - mr.m_u64StartOfMemoryRange;
+  for (i = 0; i < g_pMiniDumpReader->dump_data().memory_ranges.size(); i++) {
+    const MinidumpMemRange& mr = g_pMiniDumpReader->dump_data().memory_ranges[i];
+    if (lpBaseAddress >= mr.start_address && lpBaseAddress
+        < mr.start_address + mr.data_size) {
+      DWORD64 dwOffs = lpBaseAddress - mr.start_address;
       LONG64 lBytesRead = 0;
-      if (mr.m_uDataSize - dwOffs > nSize) {
+      if (mr.data_size - dwOffs > nSize) {
         lBytesRead = nSize;
       } else {
-        lBytesRead = mr.m_uDataSize - dwOffs;
+        lBytesRead = mr.data_size - dwOffs;
       }
       if (lBytesRead <= 0 || nSize < lBytesRead) {
         return FALSE;
       }
       *lpNumberOfBytesRead = (DWORD) lBytesRead;
-      memcpy(lpBuffer, (LPBYTE) mr.m_pStartPtr + dwOffs, (size_t) lBytesRead);
+      memcpy(lpBuffer, (LPBYTE) mr.start_pointer + dwOffs, (size_t) lBytesRead);
       return TRUE;
     }
   }
