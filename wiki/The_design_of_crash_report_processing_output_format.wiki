@@ -1,4 +1,4 @@
-#summary crprober输出文件格式的设计
+#summary crash_report_analyzer输出文件格式的设计
 #labels plaintext,html,format,crprober
 
 = Introduction =
