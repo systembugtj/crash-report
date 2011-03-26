@@ -33,7 +33,7 @@
 #ifndef CRASH_THREAD_H_
 #define CRASH_THREAD_H_
 #include "stdafx.h"
-#include "crash_report.h"
+#include "crash_report_helper.h"
 
 struct CrashThreadInfo {
 	HANDLE m_hWakeUpEvent;

@@ -4,21 +4,27 @@
 //  demo how to use crash_report in a application
 //  FIXME(yesp) : debug 版本Install总是失败，而Release版本却可以。
 #include <stdio.h>
+#include <stdlib.h>
 #include <conio.h>
 #include <tchar.h>
 #include <assert.h>
 #include <process.h>
 #include <string>
-#include "crash_report.h"
+#include "crash_report_helper.h"
 #include "glog/logging.h"
+
+
+// crt_atexit.c
+#include <stdlib.h>
+#include <stdio.h>
 
 int main(int argc, char* argv[]) {
   if (argc == 2 && std::string(argv[1]) == "/restart") {
     printf("restart!\n");
     return -1;
   }
-
-  CrAutoInstallHelper helper;
+  //  atexit(crash_report::CallBackAtNormalExit);
+  crash_report::CrAutoInstallHelper helper;
   helper.set_application_name(_T("Test Application"));
   helper.set_application_version(_T("0.1.1"));
   helper.set_flags(CR_INST_ALL_EXCEPTION_HANDLERS | CR_INST_HTTP_BINARY_ENCODING |

@@ -34,7 +34,7 @@
 #include "stdafx.h"
 #include <shellapi.h>
 #include <atlctrlx.h>
-#include "crash_report.h"
+#include "crash_report_helper.h"
 
 class CAboutDlg: public CDialogImpl<CAboutDlg> {
 public:

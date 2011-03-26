@@ -75,7 +75,7 @@ void TestGenerateReport() {
 
 DWORD WINAPI CrashThread(LPVOID pParam) {
   CrashThreadInfo* pInfo = (CrashThreadInfo*) pParam;
-  CrThreadAutoInstallHelper cr_install_helper(0);
+  crash_report::CrThreadAutoInstallHelper cr_install_helper(0);
 
   for (;;) {
     WaitForSingleObject(pInfo->m_hWakeUpEvent, INFINITE);

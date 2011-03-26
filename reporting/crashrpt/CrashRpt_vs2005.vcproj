@@ -876,6 +876,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\crash_report_helper.h"
+				>
+			</File>
+			<File
 				RelativePath=".\critical_section.h"
 				>
 			</File>
