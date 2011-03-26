@@ -32,7 +32,7 @@
 
 #include "stdafx.h"
 #include "Tests.h"
-#include "crash_report.h"
+#include "crash_report_helper.h"
 #include "Utility.h"
 #include "strconv.h"
 
@@ -622,7 +622,7 @@ void Test_crGetLastErrorMsgW()
 REGISTER_TEST(Test_CrAutoInstallHelper);
 void Test_CrAutoInstallHelper()
 {   
-  CrAutoInstallHelper helper;
+  crash_report::CrAutoInstallHelper helper;
   helper.set_application_version(_T("1.0.0"));
   TEST_ASSERT(helper.Install()==0);
     
@@ -634,7 +634,7 @@ REGISTER_TEST(Test_CrThreadAutoInstallHelper);
 DWORD WINAPI ThreadProc1(LPVOID lpParam)
 {
   // Install thread exception handlers
-  CrThreadAutoInstallHelper cr_thread_install(0);
+  crash_report::CrThreadAutoInstallHelper cr_thread_install(0);
  
   int* pnResult = (int*)lpParam;
   *pnResult = cr_thread_install.result();
@@ -646,7 +646,7 @@ void Test_CrThreadAutoInstallHelper()
 {   
   // Install crash handler for the main thread
 
-  CrAutoInstallHelper helper;
+  crash_report::CrAutoInstallHelper helper;
   helper.set_application_version(_T("1.0.0"));
   TEST_ASSERT(helper.Install()==0);
   

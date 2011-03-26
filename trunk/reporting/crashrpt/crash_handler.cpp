@@ -933,9 +933,23 @@ int CCrashHandler::AddScreenshot(DWORD dwFlags, int nJpegQuality)
   return 0;
 }
 
+static void LogWhenUnNormalExit() {
+  FILE* fp = fopen(CR_CRASH_LOG_FILE, "a+");
+  if ( fp!= NULL) {
+    // 0 stands for fail 
+    fprintf(fp, "%d:0\n", time(NULL));
+  } else {
+    //  printf("fail to open file crash.log");
+    MessageBoxA(NULL, "fail to open file crash.log", "error", 0);
+  }
+  fclose(fp);
+}
+
+// write to log, telling that a crash happen this time
 int CCrashHandler::GenerateErrorReport(
   PCR_EXCEPTION_INFO pExceptionInfo)
-{  
+{
+  LogWhenUnNormalExit();
   crSetErrorMsg(_T("Unspecified error."));
 
   // Validate input parameters 
