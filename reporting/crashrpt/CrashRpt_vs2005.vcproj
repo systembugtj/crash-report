@@ -876,7 +876,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\crash_report_helper.h"
+				RelativePath="..\..\include\crash_report_helper.h"
 				>
 			</File>
 			<File

@@ -67,7 +67,7 @@ typedef BOOL (CALLBACK *LPGETLOGFILE) (__reserved LPVOID lpvState);
 //! Special priority constant that allows to skip certain delivery method.
 #define CR_NEGATIVE_PRIORITY ((UINT)-1)
 
-#define CR_CRASH_LOG_FILE "crash.log"
+#define CR_CRASH_LOG_FILE "crash_log.dat"
 
 // Flags for CR_INSTALL_INFO::falgs
 #define CR_INST_STRUCTURED_EXCEPTION_HANDLER   0x1    //   Install SEH handler (deprecated name, use \ref CR_INST_SEH_EXCEPTION_HANDLER instead).
