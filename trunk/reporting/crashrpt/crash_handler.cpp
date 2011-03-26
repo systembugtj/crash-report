@@ -934,10 +934,10 @@ int CCrashHandler::AddScreenshot(DWORD dwFlags, int nJpegQuality)
 }
 
 static void LogWhenUnNormalExit() {
-  FILE* fp = fopen(CR_CRASH_LOG_FILE, "a+");
+  FILE* fp = fopen(CR_CRASH_LOG_FILE, "ab+");
   if ( fp!= NULL) {
     // 0 stands for fail 
-    fprintf(fp, "%d:0\n", time(NULL));
+    fprintf(fp, "%d\t0\n", time(NULL));
   } else {
     //  printf("fail to open file crash.log");
     MessageBoxA(NULL, "fail to open file crash.log", "error", 0);
