@@ -35,9 +35,8 @@
 // Authors: mikecarruth, zexspectrum
 // Date: 
 
-#include "stdafx.h"
+//  #include "stdafx.h"
 #include "utility.h"
-#include "resource.h"
 #include "strconv.h"
 
 CString Utility::getAppName() {

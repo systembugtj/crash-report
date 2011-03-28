@@ -32,7 +32,7 @@
 
 #include "stdafx.h"
 #include "progress_dlg.h"
-#include "utility.h"
+#include "base/utility.h"
 #include "crash_info_reader.h"
 
 LRESULT CProgressDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/,

@@ -44,7 +44,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;..\thirdparty\wtl;..\reporting\crashrpt;..\reporting\CrashSender;..\thirdparty\tinyxml;..\thirdparty\zlib;..\thirdparty\minizip;..\thirdparty\libpng;..\thirdparty\dbghelp\include"
+				AdditionalIncludeDirectories="..\include;..\thirdparty\wtl;..\reporting\crashrpt;..\reporting\CrashSender;..\thirdparty\tinyxml;..\thirdparty\zlib;..\thirdparty\minizip;..\thirdparty\libpng;..\thirdparty\dbghelp\include;..\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -65,10 +65,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="crash_reportd.lib crash_report_readerd.lib Rpcrt4.lib version.lib psapi.lib zlibd.lib WS2_32.lib Dnsapi.lib wininet.lib Gdi32.lib shell32.lib Comdlg32.lib libpngd.lib minizipd.lib"
+				AdditionalDependencies="crash_reportd.lib crash_report_readerd.lib Rpcrt4.lib version.lib psapi.lib zlibd.lib WS2_32.lib Dnsapi.lib wininet.lib Gdi32.lib shell32.lib Comdlg32.lib libpngd.lib minizipd.lib base.lib"
 				OutputFile="$(OutDir)\Testsd.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\lib;..\thirdparty\lib"
+				AdditionalLibraryDirectories="..\lib;..\thirdparty\lib;..\dep_libs\Debug"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
@@ -124,7 +124,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				FavorSizeOrSpeed="2"
-				AdditionalIncludeDirectories="..\include;..\thirdparty\wtl;..\reporting\crashrpt;..\reporting\CrashSender;..\thirdparty\tinyxml;..\thirdparty\zlib;..\thirdparty\minizip;..\thirdparty\libpng;..\thirdparty\dbghelp\include"
+				AdditionalIncludeDirectories="..\include;..\thirdparty\wtl;..\reporting\crashrpt;..\reporting\CrashSender;..\thirdparty\tinyxml;..\thirdparty\zlib;..\thirdparty\minizip;..\thirdparty\libpng;..\thirdparty\dbghelp\include;..\"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -143,10 +143,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="crash_report.lib crash_report_reader.lib Rpcrt4.lib version.lib psapi.lib zlib.lib WS2_32.lib Dnsapi.lib wininet.lib Gdi32.lib shell32.lib Comdlg32.lib libpng.lib minizip.lib"
+				AdditionalDependencies="crash_report.lib crash_report_reader.lib Rpcrt4.lib version.lib psapi.lib zlib.lib WS2_32.lib Dnsapi.lib wininet.lib Gdi32.lib shell32.lib Comdlg32.lib libpng.lib minizip.lib base.lib"
 				OutputFile="$(OutDir)\Tests.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\thirdparty\lib;..\lib"
+				AdditionalLibraryDirectories="..\thirdparty\lib;..\lib;..\dep_libs\Release"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -591,10 +591,6 @@
 						UsePrecompiledHeader="2"
 					/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\reporting\crashrpt\utility.cpp"
-				>
 			</File>
 		</Filter>
 		<Filter

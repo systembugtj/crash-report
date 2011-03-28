@@ -32,7 +32,7 @@
 
 #include "stdafx.h"
 #include "screen_capure.h"
-#include "utility.h"
+#include "base/utility.h"
 
 // Disable warning C4611: interaction between '_setjmp' and C++ object destruction is non-portable
 #pragma warning(disable:4611)

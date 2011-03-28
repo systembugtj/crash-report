@@ -39,9 +39,9 @@
 #include <map>
 #include "crash_desc_reader.h"
 #include "minidump_reader.h"
-#include "md5.h"
-#include "utility.h"
-#include "strconv.h"
+#include "base/md5.h"
+#include "base/utility.h"
+#include "base/strconv.h"
 #include "unzip.h"
 
 CComAutoCriticalSection g_crp_cs; // Critical section for thread-safe accessing error messages

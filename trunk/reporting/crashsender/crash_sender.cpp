@@ -35,8 +35,8 @@
 #include "error_report_dlg.h"
 #include "resend_dlg.h"
 #include "crash_info_reader.h"
-#include "strconv.h"
-#include "utility.h"
+#include "base/strconv.h"
+#include "base/utility.h"
 
 CAppModule _Module;
 CErrorReportDlg dlgErrorReport;

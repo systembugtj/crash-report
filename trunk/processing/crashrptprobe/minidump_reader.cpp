@@ -34,9 +34,9 @@
 #include "stdafx.h"
 #include "minidump_reader.h"
 #include <assert.h>
-#include "utility.h"
-#include "strconv.h"
-#include "md5.h"
+#include "base/utility.h"
+#include "base/strconv.h"
+#include "base/md5.h"
 
 MiniDumpReader* g_pMiniDumpReader = NULL;
 

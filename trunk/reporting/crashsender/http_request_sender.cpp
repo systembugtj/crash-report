@@ -32,10 +32,10 @@
 
 #include "stdafx.h"
 #include "http_request_sender.h"
-#include "base64.h"
-#include "md5.h"
-#include "utility.h"
-#include "strconv.h"
+#include "base/base64.h"
+#include "base/md5.h"
+#include "base/utility.h"
+#include "base/strconv.h"
 
 #ifndef MIN
 #define MIN(a,b) ((a)<(b)?(a):(b))

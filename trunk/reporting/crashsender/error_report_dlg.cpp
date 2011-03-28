@@ -33,12 +33,12 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "error_report_dlg.h"
-#include "utility.h"
+#include "base/utility.h"
 #include "tinyxml.h"
 #include "zip.h"
 #include "unzip.h"
 #include "crash_info_reader.h"
-#include "strconv.h"
+#include "base/strconv.h"
 
 BOOL CErrorReportDlg::PreTranslateMessage(MSG* pMsg) {
   return CWindow::IsDialogMessage(pMsg);

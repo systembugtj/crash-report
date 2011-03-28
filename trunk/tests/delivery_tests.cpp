@@ -32,7 +32,7 @@
 
 #include "stdafx.h"
 #include "Tests.h"
-#include "Utility.h"
+#include "base/Utility.h"
 #include "crash_report.h"
 
 REGISTER_TEST_SUITE( DeliveryTests , "Error report delivery tests");

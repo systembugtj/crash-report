@@ -44,7 +44,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\include;..\..\thirdparty\tinyxml;..\..\thirdparty\wtl;..\..\thirdparty\zlib;..\..\thirdparty\minizip;..\..\reporting\crashrpt;..\..\reporting\crashsender;..\..\thirdparty\dbghelp\include"
+				AdditionalIncludeDirectories="..\..\include;..\..\thirdparty\tinyxml;..\..\thirdparty\wtl;..\..\thirdparty\zlib;..\..\thirdparty\minizip;..\..\reporting\crashrpt;..\..\reporting\crashsender;..\..\thirdparty\dbghelp\include;..\..\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;CRASHRPTPROBE_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -66,10 +66,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="tinyxmld.lib dbghelp.lib Rpcrt4.lib shell32.lib gdi32.lib version.lib minizipd.lib zlibd.lib psapi.lib"
+				AdditionalDependencies="tinyxmld.lib dbghelp.lib Rpcrt4.lib shell32.lib gdi32.lib version.lib minizipd.lib zlibd.lib psapi.lib base.lib"
 				OutputFile="$(OutDir)\crash_report_readerd.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\thirdparty\lib;..\..\thirdparty\dbghelp\lib"
+				AdditionalLibraryDirectories="..\..\thirdparty\lib;..\..\thirdparty\dbghelp\lib;..\..\dep_libs\Debug"
 				ModuleDefinitionFile="CrashRptProbed.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -127,7 +127,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				FavorSizeOrSpeed="2"
-				AdditionalIncludeDirectories="..\..\include;..\..\reporting\CrashRpt;..\..\reporting\CrashSender;..\..\thirdparty\tinyxml;..\..\thirdparty\wtl;..\..\thirdparty\minizip;..\..\thirdparty\zlib;..\..\thirdparty\dbghelp\include"
+				AdditionalIncludeDirectories="..\..\include;..\..\reporting\CrashRpt;..\..\reporting\CrashSender;..\..\thirdparty\tinyxml;..\..\thirdparty\wtl;..\..\thirdparty\minizip;..\..\thirdparty\zlib;..\..\thirdparty\dbghelp\include;..\..\"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;CRASHRPTPROBE_EXPORTS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -146,10 +146,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="tinyxml.lib dbghelp.lib Rpcrt4.lib shell32.lib gdi32.lib zlib.lib minizip.lib version.lib psapi.lib"
+				AdditionalDependencies="tinyxml.lib dbghelp.lib Rpcrt4.lib shell32.lib gdi32.lib zlib.lib minizip.lib version.lib psapi.lib base.lib"
 				OutputFile="$(OutDir)\crash_report_reader.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\thirdparty\lib;..\..\thirdparty\dbghelp\lib"
+				AdditionalLibraryDirectories="..\..\thirdparty\lib;..\..\thirdparty\dbghelp\lib;..\..\dep_libs\Release"
 				ModuleDefinitionFile="CrashRptProbe.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -498,58 +498,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\reporting\crashsender\md5.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release LIB|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release LIB|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\minidump_reader.cpp"
 				>
 			</File>
@@ -604,10 +552,6 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\reporting\crashrpt\utility.cpp"
-				>
 			</File>
 		</Filter>
 		<Filter

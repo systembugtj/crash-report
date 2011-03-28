@@ -53,7 +53,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\reporting\crashrpt\;..\..\thirdparty\tinyxml;..\..\thirdparty\zlib;..\..\thirdparty\minizip;..\..\include;..\..\thirdparty\libpng;..\..\thirdparty\wtl;..\..\thirdparty\dbghelp\include;..\..\thirdparty\jpeg"
+				AdditionalIncludeDirectories="..\..\reporting\crashrpt\;..\..\thirdparty\tinyxml;..\..\thirdparty\zlib;..\..\thirdparty\minizip;..\..\include;..\..\thirdparty\libpng;..\..\thirdparty\wtl;..\..\thirdparty\dbghelp\include;..\..\thirdparty\jpeg;..\..\"
 				PreprocessorDefinitions="WIN32;_WINDOWS;STRICT;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -77,10 +77,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="tinyxmld.lib jpegd.lib zlibd.lib WS2_32.lib Dnsapi.lib wininet.lib Rpcrt4.lib Gdi32.lib shell32.lib Comdlg32.lib version.lib libpngd.lib psapi.lib minizipd.lib"
+				AdditionalDependencies="tinyxmld.lib jpegd.lib zlibd.lib WS2_32.lib Dnsapi.lib wininet.lib Rpcrt4.lib Gdi32.lib shell32.lib Comdlg32.lib version.lib libpngd.lib psapi.lib minizipd.lib base.lib"
 				OutputFile="$(OutDir)\crash_senderd.exe"
 				LinkIncremental="0"
-				AdditionalLibraryDirectories="..\..\thirdparty\lib;..\..\thirdparty\dbghelp\lib"
+				AdditionalLibraryDirectories="..\..\thirdparty\lib;..\..\thirdparty\dbghelp\lib;..\..\dep_libs\Debug"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="..\..\bin\CrashSenderd.pdb"
 				SubSystem="2"
@@ -147,7 +147,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				FavorSizeOrSpeed="2"
-				AdditionalIncludeDirectories="..\..\reporting\crashrpt\;..\..\thirdparty\tinyxml;..\..\thirdparty\zlib;..\..\include;..\..\thirdparty\minizip;..\..\thirdparty\libpng;..\..\thirdparty\wtl;..\..\thirdparty\dbghelp\include;..\..\thirdparty\jpeg"
+				AdditionalIncludeDirectories="..\..\reporting\crashrpt\;..\..\thirdparty\tinyxml;..\..\thirdparty\zlib;..\..\include;..\..\thirdparty\minizip;..\..\thirdparty\libpng;..\..\thirdparty\wtl;..\..\thirdparty\dbghelp\include;..\..\thirdparty\jpeg;..\..\"
 				PreprocessorDefinitions="WIN32;_WINDOWS;STRICT;NDEBUG"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -170,10 +170,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="tinyxml.lib zlib.lib WS2_32.lib Dnsapi.lib wininet.lib Rpcrt4.lib Gdi32.lib shell32.lib Comdlg32.lib version.lib psapi.lib"
+				AdditionalDependencies="tinyxml.lib zlib.lib WS2_32.lib Dnsapi.lib wininet.lib Rpcrt4.lib Gdi32.lib shell32.lib Comdlg32.lib version.lib psapi.lib base.lib"
 				OutputFile="$(OutDir)\crash_sender.exe"
 				LinkIncremental="0"
-				AdditionalLibraryDirectories="..\..\thirdparty\lib"
+				AdditionalLibraryDirectories="..\..\thirdparty\lib;..\..\dep_libs\Release"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="..\..\bin\CrashSender.pdb"
 				SubSystem="2"
@@ -593,10 +593,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\base64.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\crash_info_reader.cpp"
 				>
 			</File>
@@ -614,10 +610,6 @@
 			</File>
 			<File
 				RelativePath=".\http_request_sender.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\md5.cpp"
 				>
 			</File>
 			<File
@@ -640,10 +632,6 @@
 				RelativePath=".\stdafx.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\crashrpt\utility.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -651,10 +639,6 @@
 			>
 			<File
 				RelativePath=".\assync_notification.h"
-				>
-			</File>
-			<File
-				RelativePath=".\base64.h"
 				>
 			</File>
 			<File
@@ -671,10 +655,6 @@
 			</File>
 			<File
 				RelativePath=".\http_request_sender.h"
-				>
-			</File>
-			<File
-				RelativePath=".\md5.h"
 				>
 			</File>
 			<File
