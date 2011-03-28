@@ -34,8 +34,8 @@
 #include "resource.h"
 #include "crash_info_reader.h"
 #include "resend_dlg.h"
-#include "utility.h"
-#include "strconv.h"
+#include "base/utility.h"
+#include "base/strconv.h"
 //#include "detail_dlg.h"
 #include "error_report_sender.h"
 

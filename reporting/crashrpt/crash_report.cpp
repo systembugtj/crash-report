@@ -38,8 +38,8 @@
 #include "stdafx.h"
 #include "crash_report.h"
 #include "crash_handler.h"
-#include "utility.h"
-#include "strconv.h"
+#include "base/utility.h"
+#include "base/strconv.h"
 
 HANDLE g_hModuleCrashRpt = NULL; // Handle to crash_report.dll module.
 CComAutoCriticalSection g_cs;    // Critical section for thread-safe accessing error messages.

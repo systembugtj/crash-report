@@ -33,8 +33,8 @@
 #include "stdafx.h"
 #include "Tests.h"
 #include "crash_report_helper.h"
-#include "Utility.h"
-#include "strconv.h"
+#include "base/Utility.h"
+#include "base/strconv.h"
 
 REGISTER_TEST_SUITE( CrashRptAPITests , "CrashRpt API function tests");
 

@@ -38,9 +38,9 @@
 #include "stdafx.h"
 #include "crash_report.h"
 #include "crash_info_reader.h"
-#include "strconv.h"
+#include "base/strconv.h"
 #include "tinyxml.h"
-#include "utility.h"
+#include "base/utility.h"
 #include "shared_memory.h"
 
 // Define global CCrashInfoReader object

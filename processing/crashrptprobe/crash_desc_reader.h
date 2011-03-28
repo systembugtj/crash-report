@@ -35,7 +35,7 @@
 #include "stdafx.h"
 #include <map>
 #include "tinyxml.h"
-#include "strconv.h"
+#include "base/strconv.h"
 
 struct CCrashDescReader {
  public:

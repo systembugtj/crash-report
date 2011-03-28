@@ -34,7 +34,7 @@
 #include "crash_report.h"
 #include "crash_desc_reader.h"
 #include "tinyxml.h"
-#include "utility.h"
+#include "base/utility.h"
 
 CCrashDescReader::CCrashDescReader() {
   loaded = false;

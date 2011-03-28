@@ -34,13 +34,13 @@
 #include "error_report_sender.h"
 #include "http_request_sender.h"
 #include "crash_report.h"
-#include "md5.h"
-#include "utility.h"
+#include "base/md5.h"
+#include "base/utility.h"
 #include "zip.h"
 #include "crash_info_reader.h"
-#include "strconv.h"
+#include "base/strconv.h"
 #include "screen_capure.h"
-#include "base64.h"
+#include "base/base64.h"
 #include <sys/stat.h>
 #include "dbghelp.h"
 

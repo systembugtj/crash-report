@@ -38,7 +38,29 @@
 #ifndef _UTILITY_H_
 #define _UTILITY_H_
 
-#include "stdafx.h"
+#include <errno.h>
+#include <atldef.h>
+#include <atlbase.h>
+#include <atlwin.h>
+#include <atlapp.h>
+#include <atlmisc.h>
+
+#include <string>
+#include <vector>
+#include <map>
+#include <set>
+
+#define _TCSCPY_S(strDestination, numberOfElements, strSource) _tcscpy_s(strDestination, numberOfElements, strSource)
+#define _TCSNCPY_S(strDest, sizeInBytes, strSource, count) _tcsncpy_s(strDest, sizeInBytes, strSource, count)
+#define STRCPY_S(strDestination, numberOfElements, strSource) strcpy_s(strDestination, numberOfElements, strSource)
+#define _TFOPEN_S(_File, _Filename, _Mode) _tfopen_s(&(_File), _Filename, _Mode);
+
+#include "dbghelp.h"
+#include <wininet.h>
+#include <shellapi.h>
+#include <time.h>
+#include <Psapi.h>
+#include <ShlObj.h>
 
 namespace Utility  
 {

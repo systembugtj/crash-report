@@ -54,7 +54,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				FavorSizeOrSpeed="2"
-				AdditionalIncludeDirectories="..\..\include;..\..\thirdparty\tinyxml;..\..\thirdparty\zlib;..\..\thirdparty\libpng;..\..\thirdparty\wtl"
+				AdditionalIncludeDirectories="..\..\include;..\..\thirdparty\tinyxml;..\..\thirdparty\zlib;..\..\thirdparty\libpng;..\..\thirdparty\wtl;..\..\"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;STRICT;CRASHRPT_EXPORTS"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -86,11 +86,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dbghelp.lib mapi32.lib Rpcrt4.lib version.lib shell32.lib Comdlg32.lib gdi32.lib psapi.lib"
+				AdditionalDependencies="dbghelp.lib mapi32.lib Rpcrt4.lib version.lib shell32.lib Comdlg32.lib gdi32.lib psapi.lib base.lib"
 				OutputFile="$(OutDir)\crash_report.dll"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../zlib/lib"
+				AdditionalLibraryDirectories="../../zlib/lib;..\..\dep_libs\Release"
 				ModuleDefinitionFile="CrashRpt.def"
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"
@@ -159,7 +159,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\include;..\..\thirdparty\wtl;..\..\dep_include"
+				AdditionalIncludeDirectories="..\..\include;..\..\thirdparty\wtl;..\..\dep_include;..\..\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;CRASHRPT_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -192,11 +192,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="mapi32.lib Rpcrt4.lib version.lib shell32.lib Comdlg32.lib gdi32.lib psapi.lib"
+				AdditionalDependencies="mapi32.lib Rpcrt4.lib version.lib shell32.lib Comdlg32.lib gdi32.lib psapi.lib base.lib"
 				OutputFile="$(OutDir)\crash_reportd.dll"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\thirdparty\lib"
+				AdditionalLibraryDirectories="..\..\thirdparty\lib;..\..\dep_libs\Debug"
 				ModuleDefinitionFile="CrashRptd.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="..\..\bin\crash_reportd.pdb"
@@ -810,58 +810,6 @@
 					/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath=".\utility.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release LIB|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release LIB|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -893,14 +841,6 @@
 			</File>
 			<File
 				RelativePath="StdAfx.h"
-				>
-			</File>
-			<File
-				RelativePath=".\strconv.h"
-				>
-			</File>
-			<File
-				RelativePath=".\utility.h"
 				>
 			</File>
 		</Filter>

@@ -37,11 +37,11 @@
 
 #include "stdafx.h"
 #include "crash_handler.h"
-#include "utility.h"
+#include "base/utility.h"
 #include "resource.h"
 #include <sys/stat.h>
 #include <psapi.h>
-#include "strconv.h"
+#include "base/strconv.h"
 #include <rtcapi.h>
 #include <Shellapi.h>
 
