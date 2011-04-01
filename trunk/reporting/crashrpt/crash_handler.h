@@ -91,7 +91,7 @@ public:
       LPCTSTR lpcszCrashSenderPath = NULL,
       LPGETLOGFILE lpfnCallback = NULL,           
       LPCTSTR lpcszUrl = NULL,
-      UINT (*puPriorities)[5] = NULL,
+      int send_method = 0,
       DWORD dwFlags = 0,
       LPCTSTR lpcszPrivacyPolicyURL = NULL,
       LPCTSTR lpcszDebugHelpDLLPath = NULL,
@@ -209,7 +209,7 @@ public:
   //BOOL m_bAppRestart;            // This is packed into dwFlags
   CString m_sRestartCmdLine;     // App restart command line.
   CString m_sUrl;                // Url to use when sending error report over HTTP.  
-  UINT m_uPriorities[3];         // Delivery priorities.
+  int send_method_;         // Delivery priorities.
   CString m_sPrivacyPolicyURL;   // Privacy policy URL.
   CString m_sPathToCrashSender;  // Path to crash_sender.exe
   CString m_sLangFileName;       // Language file.

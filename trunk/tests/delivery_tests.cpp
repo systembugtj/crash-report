@@ -58,7 +58,7 @@ void Test_HttpDelivery_legacy_encoding()
   info.application_version = _T("1.0.0"); // Specify app version, otherwise it will fail.
   info.flags = CR_INST_NO_GUI;
   info.crash_server_url = _T("localhost/crashrpt.php"); // Use HTTP address for delivery 
-  info.priorities[CR_HTTP] = 0;
+  info.send_method = CR_HTTP_Base64;
   info.save_dir = sTmpFolder;
   int nInstResult = crInstall(&info);
   TEST_ASSERT(nInstResult==0);
@@ -105,9 +105,9 @@ void Test_HttpDelivery_binary_encoding()
   memset(&info, 0, sizeof(CR_INSTALL_INFO));
   info.size = sizeof(CR_INSTALL_INFO);
   info.application_version = _T("1.0.0"); // Specify app version, otherwise it will fail.
-  info.flags = CR_INST_NO_GUI|CR_INST_HTTP_BINARY_ENCODING;
+  info.flags = CR_INST_NO_GUI;
   info.crash_server_url = _T("localhost/crashrpt.php"); // Use HTTP address for delivery 
-  info.priorities[CR_HTTP] = 0;
+  info.send_method = CR_HTTP_MutilPart;
   info.save_dir = sTmpFolder;
   int nInstResult = crInstall(&info);
   TEST_ASSERT(nInstResult==0);

@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
   helper.set_application_name(_T("Test Application"));
   helper.set_application_version(_T("0.1.1"));
   helper.set_flags(CR_INST_ALL_EXCEPTION_HANDLERS
-      | CR_INST_HTTP_BINARY_ENCODING | CR_INST_SEND_QUEUED_REPORTS
+      | CR_INST_SEND_QUEUED_REPORTS
       | CR_INST_APP_RESTART);
   helper.set_crash_server_url(_T("http://localhost:8080/crashrpt.php"));
   helper.set_restart_cmd(_T("/restart"));

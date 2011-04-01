@@ -38,9 +38,7 @@ public:
   CrAutoInstallHelper() {
     memset(&info_, 0, sizeof(CR_INSTALL_INFO));
     info_.size = sizeof(CR_INSTALL_INFO);
-    //  set some default value for CR_INSTALL_INFO
-    // only support HTTP now.delete SMTP and SMAPI
-    info_.priorities[CR_HTTP] = 3;
+    info_.send_method = CR_HTTP_MutilPart;
     atexit(CallBackAtNormalExit);
   }
   ~CrAutoInstallHelper() {
@@ -48,6 +46,9 @@ public:
   }
   //  还需要一个函数用于设置发送协议。这里最好修改为协议名称，
   //  而不是发送协议的优先级。
+  void set_send_method( SendMethod send_method) {
+    info_.send_method = send_method;
+  }
   void set_application_name( TCHAR* name) {
     info_.application_name = name;
   }

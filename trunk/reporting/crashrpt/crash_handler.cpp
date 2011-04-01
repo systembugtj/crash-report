@@ -69,7 +69,7 @@ CCrashHandler::CCrashHandler()
   m_dwFlags = 0;
   m_MinidumpType = MiniDumpNormal;
   //m_bAppRestart = FALSE;  
-  memset(&m_uPriorities, 0, 3*sizeof(UINT));    
+  send_method_ = 0;  
   m_lpfnCallback = NULL;
   m_bAddScreenshot = FALSE;
   m_dwScreenshotFlags = 0;    
@@ -91,7 +91,7 @@ int CCrashHandler::Init(
   LPCTSTR lpcszCrashSenderPath,
   LPGETLOGFILE lpfnCallback, 
   LPCTSTR lpcszUrl,
-  UINT (*puPriorities)[5],
+  int send_method,
   DWORD dwFlags,
   LPCTSTR lpcszPrivacyPolicyURL,
   LPCTSTR lpcszDebugHelpDLLPath,
@@ -190,10 +190,7 @@ int CCrashHandler::Init(
   m_sRestartCmdLine = lpcszRestartCmdLine;
   
   // Save report sending priorities
-  if(puPriorities!=NULL)
-    memcpy(&m_uPriorities, puPriorities, 3*sizeof(UINT));
-  else
-    memset(&m_uPriorities, 0, 3*sizeof(UINT));
+  send_method_ = send_method;
 
   // Save privacy policy URL (if exists)
   if(lpcszPrivacyPolicyURL!=NULL)
@@ -442,8 +439,8 @@ CRASH_DESCRIPTION* CCrashHandler::PackCrashInfoIntoSharedMem(CSharedMem* pShared
   m_pTmpCrashDesc->m_bAddScreenshot = m_bAddScreenshot;
   m_pTmpCrashDesc->m_dwScreenshotFlags = m_dwScreenshotFlags;  
   //m_pTmpCrashDesc->m_bAppRestart = m_bAppRestart;
-  memcpy(m_pTmpCrashDesc->m_uPriorities, m_uPriorities, sizeof(UINT)*3);
-
+  //  memcpy(m_pTmpCrashDesc->m_uPriorities, m_uPriorities, sizeof(UINT)*3);
+  m_pTmpCrashDesc->send_method = send_method_;
   m_pTmpCrashDesc->m_dwAppNameOffs = PackString(m_sAppName);
   m_pTmpCrashDesc->m_dwAppVersionOffs = PackString(m_sAppVersion);
   m_pTmpCrashDesc->m_dwCrashGUIDOffs = PackString(m_sCrashGUID);

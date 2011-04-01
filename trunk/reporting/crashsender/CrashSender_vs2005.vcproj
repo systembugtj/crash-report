@@ -638,6 +638,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
+				RelativePath=".\abstract_sender.h"
+				>
+			</File>
+			<File
 				RelativePath=".\assync_notification.h"
 				>
 			</File>
