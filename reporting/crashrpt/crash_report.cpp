@@ -151,7 +151,7 @@ CRASHRPTAPI(int) crInstallW(CR_INSTALL_INFOW* pInfo)
     ptszCrashSenderPath,
     pInfo->crash_callback,
     ptszUrl,
-    &pInfo->priorities,
+    pInfo->send_method,
     pInfo->flags,
     ptszPrivacyPolicyURL,
     ptszDebugHelpDLL_file,
@@ -203,7 +203,7 @@ CRASHRPTAPI(int) crInstallA(CR_INSTALL_INFOA* pInfo)
   ii.application_version = strconv.a2w(pInfo->application_version);
   ii.sender_path = strconv.a2w(pInfo->sender_path);
   ii.crash_server_url = strconv.a2w(pInfo->crash_server_url);
-  memcpy(&ii.priorities, pInfo->priorities, 3*sizeof(UINT));
+  ii.send_method = pInfo->send_method;
   ii.flags = pInfo->flags;
   ii.privacy_policy_url = strconv.a2w(pInfo->privacy_policy_url);
   ii.debug_help_dll = strconv.a2w(pInfo->debug_help_dll);

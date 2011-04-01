@@ -32,10 +32,13 @@
 
 #ifndef ERROR_REPORT_SENDER_H_
 #define ERROR_REPORT_SENDER_H_
+#include <string>
 #include "assync_notification.h"
 #include "http_request_sender.h"
 #include "tinyxml.h"
 #include "crash_info_reader.h"
+
+using std::string;
 
 enum ActionType {
   COLLECT_CRASH_INFO = 0x01,
@@ -85,7 +88,11 @@ public:
   void UnblockParentProcess();
 
   BOOL SendReport();
-  BOOL SendOverHTTP();
+  BOOL SendOverHTTPMutilpart(CString m_sZipName, string appname,string appversion,
+                    string crashguid,string description,string md5);
+  BOOL SendOverHTTPBase64(CString m_sZipName, string appname,string appversion,
+    string crashguid,string description,string md5);
+
   int Base64EncodeAttachment(CString sFileName, std::string& sEncodedFileData);
 
   int m_nGlobalStatus;

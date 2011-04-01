@@ -108,43 +108,33 @@ enum REMIND_POLICY {
 // Class responsible for reading the crash info.
 class CCrashInfoReader {
 public:
-  // TODO(yesp) : change public to private for these data members
-  // use std::string to replace CString
-  int m_nCrashRptVersion; // CrashRpt version sent through shared memory
-  CString m_sUnsentCrashReportsFolder; // Path to UnsentCrashReports folder for the application.
-  CString m_sLangFileName; // Path to language INI file.
-  CString m_sDbgHelpPath; // Path to dbghelp.dll.
-  CString m_sAppName; // Application name.
-  CString m_sCustomSenderIcon; // Custom icon resource for Error Report dialog.
-//  CString m_sEmailTo; // E-mail recipient address.
-  CString m_sEmailSubject; // E-mail subject.
-  CString m_sEmailText; // E-mail text.
-//  int m_nSmtpPort; // SMTP port.
-//  CString m_sSmtpProxyServer; // SMTP proxy server.
-//  int m_nSmtpProxyPort; // SMTP proxy port.
-  CString m_sUrl; // URL (used for HTTP connection).
-  BOOL m_bHttpBinaryEncoding; // Should we use binary transfer encoding (HTTP).
-  BOOL m_bSilentMode; // Should we show GUI?
-  BOOL m_bSendErrorReport; // Should we send error report now?
-  BOOL m_bStoreZIPArchives; // Should we store zipped error report files?
-  BOOL m_bSendRecentReports; // Should we send recent reports now?
-  BOOL m_bAppRestart; // Should we restart the application?
-  CString m_sRestartCmdLine; // Command line for app restart.
+  int m_nCrashRptVersion;
+  CString m_sUnsentCrashReportsFolder;
+  CString m_sLangFileName;
+  CString m_sDbgHelpPath;
+  CString m_sAppName;
+  CString m_sCustomSenderIcon;
+  CString m_sUrl;
+  BOOL m_bSilentMode;
+  BOOL m_bSendErrorReport;
+  BOOL m_bStoreZIPArchives;
+  BOOL m_bSendRecentReports;
+  BOOL m_bAppRestart;
+  CString m_sRestartCmdLine;
   // TODO(yesp) : remove Priorities for all protocol, but use worker to try all protocols,
-  UINT m_uPriorities[3]; // Delivery priorities.
-  CString m_sPrivacyPolicyURL; // Privacy policy URL.
-  BOOL m_bGenerateMinidump; // Should we generate crash minidump file?
-  MINIDUMP_TYPE m_MinidumpType; // Minidump type.
-  BOOL m_bAddScreenshot; // Should we add a desktop screenshot?
-  DWORD m_dwScreenshotFlags; // Screenshot options.
-  int m_nJpegQuality; // Jpeg image quality.
+  int send_method;
+  CString m_sPrivacyPolicyURL;
+  BOOL m_bGenerateMinidump;
+  MINIDUMP_TYPE m_MinidumpType;
+  BOOL m_bAddScreenshot;
+  DWORD m_dwScreenshotFlags;
+  int m_nJpegQuality;
   CPoint m_ptCursorPos; // Mouse cursor position on crash.
   CRect m_rcAppWnd; // Rectangle of the application's main window.
-  BOOL m_bQueueEnabled; // Can reports be send later or not (queue enabled)?
-
-  DWORD m_dwProcessId; // Parent process ID (used for minidump generation).
-  DWORD m_dwThreadId; // Parent thread ID (used for minidump generation).
-  PEXCEPTION_POINTERS m_pExInfo; // Address of exception info (used for minidump generation).
+  BOOL m_bQueueEnabled;
+  DWORD m_dwProcessId;
+  DWORD m_dwThreadId;
+  PEXCEPTION_POINTERS m_pExInfo;
   int m_nExceptionType;
   DWORD m_dwExceptionCode;
   UINT m_uFPESubcode;
@@ -152,9 +142,7 @@ public:
   CString m_sInvParamFunction;
   CString m_sInvParamFile;
   UINT m_uInvParamLine;
-
   /* Member functions */
-
   // Gets crash info from shared memory
   int Init(CString sFileMappingName);
   // Loads custom icon (if defined)

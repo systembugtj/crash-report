@@ -31,15 +31,12 @@
  ***************************************************************************************/
 
 #include "stdafx.h"
+#include <algorithm>
 #include "http_request_sender.h"
 #include "base/base64.h"
 #include "base/md5.h"
 #include "base/utility.h"
 #include "base/strconv.h"
-
-#ifndef MIN
-#define MIN(a,b) ((a)<(b)?(a):(b))
-#endif
 
 CHttpRequestSender::CHttpRequestSender() {
   m_sBoundary = _T("AaB03x5fs1045fcc7");
@@ -47,7 +44,9 @@ CHttpRequestSender::CHttpRequestSender() {
   m_sTextPartHeaderFmt = _T(
       "--%s\r\nContent-disposition: form-data; name=\"%s\"\r\n\r\n");
   m_sTextPartFooterFmt = _T("\r\n");
-  m_sFilePartHeaderFmt = _T("--%s\r\nContent-disposition: form-data; name=\"%s\"; filename=\"%s\"\r\nContent-Type: %s\r\nContent-Transfer-Encoding: binary\r\n\r\n");
+  m_sFilePartHeaderFmt = _T("--%s\r\nContent-disposition: form-data;"
+                      _T(" name=\"%s\"; filename=\"%s\"\r\nContent-Type: %s\r\n")
+                      _T("Content-Transfer-Encoding: binary\r\n\r\n"));
   m_sFilePartFooterFmt = _T("\r\n");
 }
 
@@ -237,7 +236,7 @@ BOOL CHttpRequestSender::WriteTextPart(HINTERNET hRequest, CString sName) {
       return FALSE;
     }
 
-    dwBytesRead = (DWORD)MIN(1024, nDataSize-pos);
+    dwBytesRead = (DWORD)min(1024, nDataSize-pos);
     if (dwBytesRead == 0)
       break; // EOF
 

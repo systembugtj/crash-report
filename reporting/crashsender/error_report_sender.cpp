@@ -31,6 +31,8 @@
  ***************************************************************************************/
 
 #include "stdafx.h"
+#include <string>
+
 #include "error_report_sender.h"
 #include "http_request_sender.h"
 #include "crash_report.h"
@@ -43,6 +45,8 @@
 #include "base/base64.h"
 #include <sys/stat.h>
 #include "dbghelp.h"
+
+using namespace std;
 
 // Globally accessible object
 CErrorReportSender g_ErrorReportSender;
@@ -1300,44 +1304,37 @@ BOOL CErrorReportSender::SendReport() {
   int status = 1;
 
   m_Assync.SetProgress(_T("[sending_report]"), 0);
+  BOOL bResult = FALSE;
+  strconv_t strconv;
+  string appname = strconv.t2a(
+    g_CrashInfo.GetReport(m_nCurReport).m_sAppName);
+  string appversion = strconv.t2a(
+    g_CrashInfo.GetReport(m_nCurReport).m_sAppVersion);
+  string crashguid = strconv.t2a(
+    g_CrashInfo.GetReport(m_nCurReport).m_sCrashGUID);
+  string description = strconv.t2a(
+    g_CrashInfo.GetReport(m_nCurReport).m_sDescription);
 
-  //  使用Map,因为map是有序的，因此这里是按照优先级大小顺序进行发送的。
-  // TODO(yesp) : 删除该方法，使用worker依次调用发送发送。
-  std::multimap<int, int> order;
-
-  std::pair<int, int> pair1(g_CrashInfo.m_uPriorities[CR_HTTP], CR_HTTP);
-  order.insert(pair1);
-
-  std::multimap<int, int>::reverse_iterator rit;
-
-  for (rit = order.rbegin(); rit != order.rend(); rit++) {
-    if (rit->first <= 0) {
-      continue;
+  CString sMD5Hash;
+  CalcFileMD5Hash(m_sZipName, sMD5Hash);
+  string md5 = strconv.t2a(sMD5Hash);
+  //  TODO(yesp) : 编写一个抽象类，每个发送方法是一个子类
+  if (!m_Assync.IsCancelled()) {
+    if (g_CrashInfo.send_method == CR_HTTP_MutilPart) {
+      bResult = SendOverHTTPMutilpart(m_sZipName, appname, appversion,
+        crashguid, description, md5);
+    } else if (g_CrashInfo.send_method == CR_HTTP_Base64) {
+      bResult = SendOverHTTPBase64(m_sZipName, appname, appversion,
+        crashguid, description, md5);
     }
-    m_Assync.SetProgress(_T("[sending_attempt]"), 0);
-    m_SendAttempt++;
 
-    if (m_Assync.IsCancelled()) {
-      break;
-    }
-
-    int id = rit->second;
-    BOOL bResult = FALSE;
-
-    if (id == CR_HTTP)
-      bResult = SendOverHTTP();
-    if (bResult == FALSE)
-      continue;
-
-    if (0 == m_Assync.WaitForCompletion()) {
-      status = 0;
-      break;
-    }
+  }
+  if (0 == m_Assync.WaitForCompletion()) {
+    status = 0;
   }
 
   // Remove compressed error report file
   Utility::RecycleFile(m_sZipName, true);
-
   if (status == 0) {
     m_Assync.SetProgress(_T("[status_success]"), 0);
     g_CrashInfo.GetReport(m_nCurReport).m_DeliveryStatus = DELIVERED;
@@ -1363,53 +1360,49 @@ BOOL CErrorReportSender::SendReport() {
 }
 
 // This method sends the report over HTTP request
-BOOL CErrorReportSender::SendOverHTTP() {
-  strconv_t strconv;
-
-  if (g_CrashInfo.m_uPriorities[CR_HTTP] == CR_NEGATIVE_PRIORITY) {
-    return FALSE;
-  }
-
+BOOL CErrorReportSender::SendOverHTTPMutilpart(CString filename, string appname,string appversion,
+                                      string crashguid,string description,string md5) {
   if (g_CrashInfo.m_sUrl.IsEmpty()) {
     return FALSE;
   }
 
   CHttpRequest request;
   request.m_sUrl = g_CrashInfo.m_sUrl;
+  request.m_aTextFields[_T("appname")] = appname;
+  request.m_aTextFields[_T("appversion")] = appversion;
+  request.m_aTextFields[_T("crashguid")] = crashguid;
+  request.m_aTextFields[_T("description")] = description;
+  request.m_aTextFields[_T("md5")] = md5;
+  CHttpRequestFile f;
+  f.m_sSrcFileName = filename;
+  f.m_sContentType = _T("application/zip");
+  request.m_aIncludedFiles[_T("crashrpt")] = f;
+  BOOL bSend = m_HttpSender.SendAssync(request, &m_Assync);
+  return bSend;
+}
 
-  request.m_aTextFields[_T("appname")] = strconv.t2a(
-                        g_CrashInfo.GetReport(m_nCurReport).m_sAppName);
-  request.m_aTextFields[_T("appversion")] = strconv.t2a(
-                        g_CrashInfo.GetReport(m_nCurReport).m_sAppVersion);
-  request.m_aTextFields[_T("crashguid")] = strconv.t2a(
-                        g_CrashInfo.GetReport(m_nCurReport).m_sCrashGUID);
-  request.m_aTextFields[_T("emailfrom")] = strconv.t2a(
-                        g_CrashInfo.GetReport(m_nCurReport).m_sEmailFrom);
-  request.m_aTextFields[_T("emailsubject")] = strconv.t2a(
-                        g_CrashInfo.m_sEmailSubject);
-  request.m_aTextFields[_T("description")] = strconv.t2a(
-                        g_CrashInfo.GetReport(m_nCurReport).m_sDescription);
-
-  CString sMD5Hash;
-  CalcFileMD5Hash(m_sZipName, sMD5Hash);
-  request.m_aTextFields[_T("md5")] = strconv.t2a(sMD5Hash);
-
-  if (g_CrashInfo.m_bHttpBinaryEncoding) {
-    CHttpRequestFile f;
-    f.m_sSrcFileName = m_sZipName;
-    f.m_sContentType = _T("application/zip");
-    request.m_aIncludedFiles[_T("crashrpt")] = f;
-  } else {
-    m_Assync.SetProgress(_T("Base-64 encoding file \
-                         attachment, please wait..."), 1);
-    std::string sEncodedData;
-    int nRet = Base64EncodeAttachment(m_sZipName, sEncodedData);
-    if (nRet != 0) {
-      return FALSE;
-    }
-    request.m_aTextFields[_T("crashrpt")] = sEncodedData;
+// This method sends the report over HTTP request
+BOOL CErrorReportSender::SendOverHTTPBase64(CString filename, string appname,string appversion,
+                                      string crashguid,string description,string md5) {
+  if (g_CrashInfo.m_sUrl.IsEmpty()) {
+    return FALSE;
   }
 
+  CHttpRequest request;
+  request.m_sUrl = g_CrashInfo.m_sUrl;
+  request.m_aTextFields[_T("appname")] = appname;
+  request.m_aTextFields[_T("appversion")] = appversion;
+  request.m_aTextFields[_T("crashguid")] = crashguid;
+  request.m_aTextFields[_T("description")] = description;
+  request.m_aTextFields[_T("md5")] = md5;
+  m_Assync.SetProgress(_T("Base-64 encoding file \
+                         attachment, please wait..."), 1);
+  std::string sEncodedData;
+  int nRet = Base64EncodeAttachment(filename, sEncodedData);
+  if (nRet != 0) {
+    return FALSE;
+  }
+  request.m_aTextFields[_T("crashrpt")] = sEncodedData;
   BOOL bSend = m_HttpSender.SendAssync(request, &m_Assync);
   return bSend;
 }

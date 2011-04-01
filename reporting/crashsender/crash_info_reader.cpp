@@ -140,7 +140,6 @@ int CCrashInfoReader::UnpackCrashDescription(ErrorReportInfo& eri) {
   UnpackString(m_pCrashDesc->m_dwImageNameOffs, eri.m_sImageName);
   // Unpack install flags
   DWORD dwInstallFlags = m_pCrashDesc->m_dwInstallFlags;
-  m_bHttpBinaryEncoding = (dwInstallFlags & CR_INST_HTTP_BINARY_ENCODING) != 0;
   m_bSilentMode = (dwInstallFlags & CR_INST_NO_GUI) != 0;
   m_bSendErrorReport = (dwInstallFlags & CR_INST_DONT_SEND_REPORT) == 0;
   m_bStoreZIPArchives = (dwInstallFlags & CR_INST_STORE_ZIP_ARCHIVES) != 0;
@@ -151,9 +150,9 @@ int CCrashInfoReader::UnpackCrashDescription(ErrorReportInfo& eri) {
   //m_bAppRestart = m_pCrashDesc->m_bAppRestart (unpacked from dwFlags);
   UnpackString(m_pCrashDesc->m_dwRestartCmdLineOffs, m_sRestartCmdLine);
   UnpackString(m_pCrashDesc->m_dwUrlOffs, m_sUrl);
-  UnpackString(m_pCrashDesc->m_dwEmailSubjectOffs, m_sEmailSubject);
-  UnpackString(m_pCrashDesc->m_dwEmailTextOffs, m_sEmailText);
-  memcpy(m_uPriorities, m_pCrashDesc->m_uPriorities, sizeof(UINT) * 3);
+  //UnpackString(m_pCrashDesc->m_dwEmailSubjectOffs, m_sEmailSubject);
+  //UnpackString(m_pCrashDesc->m_dwEmailTextOffs, m_sEmailText);
+  send_method = m_pCrashDesc->send_method;
   UnpackString(m_pCrashDesc->m_dwPrivacyPolicyURLOffs, m_sPrivacyPolicyURL);
   UnpackString(m_pCrashDesc->m_dwLangFileNameOffs, m_sLangFileName);
   UnpackString(m_pCrashDesc->m_dwPathToDebugHelpDllOffs, m_sDbgHelpPath);

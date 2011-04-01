@@ -62,11 +62,15 @@
 #define CRASHRPT_VER 1208
 typedef BOOL (CALLBACK *LPGETLOGFILE) (__reserved LPVOID lpvState);
 
-// Array indices for CR_INSTALL_INFO::priorities.
-#define CR_HTTP 0  //   Send error report via HTTP connection.
-//! Special priority constant that allows to skip certain delivery method.
-#define CR_NEGATIVE_PRIORITY ((UINT)-1)
+enum SendMethod {
+  CR_HTTP_MutilPart = 0,
+  CR_HTTP_Base64 = 1,
+  CR_TCP_Demo = 2,
+  CR_UDT = 3,
+  CR_FTP = 4,
+};
 
+#define CR_NEGATIVE_PRIORITY ((UINT)-1)
 #define CR_CRASH_LOG_FILE "crash_log.dat"
 
 // Flags for CR_INSTALL_INFO::falgs
@@ -87,207 +91,11 @@ typedef BOOL (CALLBACK *LPGETLOGFILE) (__reserved LPVOID lpvState);
 #define CR_INST_ALL_EXCEPTION_HANDLERS         0       //   Install all possible exception handlers.
 #define CR_INST_CRT_EXCEPTION_HANDLERS         0x1FFE  //   Install exception handlers for the linked CRT module.
 #define CR_INST_NO_GUI                         0x2000  //   Do not show GUI, send report silently (use for non-GUI apps only).
-#define CR_INST_HTTP_BINARY_ENCODING           0x4000  //   Use multi-part HTTP uploads with binary attachment encoding.
 #define CR_INST_DONT_SEND_REPORT               0x8000  //   Don't send error report immediately, just save it locally.
 #define CR_INST_APP_RESTART                    0x10000 //   Restart the application on crash.
 #define CR_INST_NO_MINIDUMP                    0x20000 //   Do not include minidump file to crash report.
 #define CR_INST_SEND_QUEUED_REPORTS            0x40000 //   CrashRpt should send error reports that are waiting to be delivered.
 #define CR_INST_STORE_ZIP_ARCHIVES             0x80000 //   CrashRpt should store both uncompressed error report files and ZIP archives.
-/*! \ingroup CrashRptStructs
- *  \struct CR_INSTALL_INFOW()
- *  \brief This structure defines the general information used by crInstall()
- *
- *  \remarks
- *
- *    \ref CR_INSTALL_INFOW and \ref CR_INSTALL_INFOA structures are wide-character and multi-byte character
- *    versions of \ref CR_INSTALL_INFO. \ref CR_INSTALL_INFO typedef defines character set independent mapping.
- *
- *    \b size [in, required]
- *
- *    This must contain the size of this structure in bytes.
- *
- *    \b application_name [in, optional]
- *
- *       This is the friendly name of the client application. The application name is
- *       displayed in the Error Report dialog. If this parameter is NULL, the name of EXE file
- *       that was used to start caller process becomes the application name.
- *
- *    \b application_version [in, optional]
- *
- *       Should be the application version. Example: "1.0.1".
- *
- *       If this equals to NULL, product version is extracted from the executable file which started
- *       the caller process, and this product version is used as application version. If the executable file
- *       doesn's have a version info resource, the \ref crInstall() function will fail.
- *
- *    \b email_address [in, optional]
- *
- *       This is the email address of the recipient of error reports, for example
- *       "name@example.com". If this equals to NULL, the crash report won't be sent using E-mail client.
- *
- *       Keep this NULL if you plan to use large error reports (more than several MB in size), because
- *       large emails may be rejected by the mail server.
- *
- *       To define a custom port for SMTP connection, use the following address format: "user@example.com:port",
- *       where \a port is the placeholder for the port number.
- *
- *    \b email_subject [in, optional]
- *
- *       This is the subject of the email message. If this parameter is NULL,
- *       the default subject of form '[app_name] [app_version] Error Report' is generated.
- *
- *    \a crash_server_url is the URL of a server-side script that would receive crash report data via HTTP or HTTPS
- *       connection. If this parmeter is NULL, HTTP(S) connection won't be used to send crash reports. For
- *       example of a server-side script that can receive crash reports, see \ref sending_error_reports.
- *
- *       HTTP(S) transport is the recommended way of sending large error reports (more than several MB in size).
- *       To define a custom port for HTTP(S) connection, use the following URL format: "http://example.com[:port]/crashrpt.php" or
- *       "https://example.com[:port]/crashrpt.php", where optional \a port is the placeholder for the port number.
- *
- *    \b sender_path [in, optional]
- *
- *       This is the absolute path to the directory where crash_sender.exe is located.
- *       The crash sender process is responsible for letting end user know about the crash and
- *       sending the error report. If this is NULL, it is assumed that crash_sender.exe is located in
- *       the same directory as crash_report.dll.
- *
- *    \b crash_callback [in, optional]
- *
- *       This can be a pointer to the \ref LPGETLOGFILE() crash callback function. The crash callback function is
- *       called by CrashRpt when crash occurs and allows user to be notified.
- *       If this is NULL, crash callback function is not called.
- *
- *    \b priorities [in, optional]
- *
- *       This is an array that defines the preferred methods of sending error reports.
- *       The available methods are: HTTP (or HTTPS) connection, SMTP connection or simple MAPI (default mail client).
- *
- *       A priority is a non-negative integer number or special constant \ref CR_NEGATIVE_PRIORITY.
- *       The greater positive number defines the greater priority.
- *       Specify the \ref CR_NEGATIVE_PRIORITY to skip the given way.
- *
- *       The element having index \ref CR_HTTP defines priority for using HTML connection.
- *       The element having index \ref CR_SMTP defines priority for using SMTP connection.
- *       The element having index \ref CR_SMAPI defines priority for using the default mail client.
- *
- *       The methods having greater priority will be tried first. If priorities are equal to each other, HTTP (or HTTPS)
- *       connection will be tried the first, SMTP connection will be tried the second and simple MAPI will be tried
- *       the last.
- *
- *    \b falgs [in, optional]
- *
- *    Since v1.1.2, \a falgs can be used to define behavior parameters. This can be a combination of the following values:
- *
- *    <table>
- *    <tr><td colspan="2"> <i>Use the combination of the following constants to specify what exception handlers to install:</i>
- *    <tr><td> \ref CR_INST_ALL_EXCEPTION_HANDLERS    <td> Install all available exception handlers.
- *    <tr><td> \ref CR_INST_SEH_EXCEPTION_HANDLER     <td> Install SEH exception handler.
- *    <tr><td> \ref CR_INST_PURE_CALL_HANDLER         <td> Install pure call handler (VS .NET and later).
- *    <tr><td> \ref CR_INST_NEW_OPERATOR_ERROR_HANDLER <td> Install new operator error handler (VS .NET and later).
- *    <tr><td> \ref CR_INST_SECURITY_ERROR_HANDLER     <td> Install security errror handler (VS .NET and later).
- *    <tr><td> \ref CR_INST_INVALID_PARAMETER_HANDLER  <td> Install invalid parameter handler (VS 2005 and later).
- *    <tr><td> \ref CR_INST_SIGABRT_HANDLER            <td> Install SIGABRT signal handler.
- *    <tr><td> \ref CR_INST_SIGINT_HANDLER             <td> Install SIGINT signal handler.
- *    <tr><td> \ref CR_INST_SIGTERM_HANDLER            <td> Install SIGTERM signal handler.
- *    <tr><td colspan="2"> <i>Use the combination of the following constants to define behavior parameters:</i>
- *    <tr><td> \ref CR_INST_NO_GUI
- *        <td> <b>Available since v.1.2.2</b> Do not show GUI.
- *
- *             It is not recommended to use this flag for regular GUI-based applications.
- *             Use this only for services that have no GUI.
- *    <tr><td> \ref CR_INST_HTTP_BINARY_ENCODING
- *        <td> <b>Available since v.1.2.2</b> This affects the way of sending reports over HTTP.
- *             By specifying this flag, you enable usage of multi-part HTTP uploads with binary encoding instead
- *             of the legacy way (Base64-encoded form data).
- *
- *             It is recommended to always specify this flag, because it is more suitable for large error reports. The legacy way
- *             is supported for backwards compatibility and not recommended to use.
- *             For additional information, see \ref sending_error_reports.
- *    <tr><td> \ref CR_INST_DONT_SEND_REPORT
- *        <td> <b>Available since v.1.2.2</b> This parameter means 'do not send error report immediately on crash, just save it locally'.
- *             Use this if you have direct access to the machine where crash happens and do not need
- *             to send report over the Internet. You can use this in couple with \ref CR_INST_STORE_ZIP_ARCHIVES flag to store zipped error reports
- *             along with uncompressed error report files.
- *    <tr><td> \ref CR_INST_APP_RESTART
- *        <td> <b>Available since v.1.2.4</b> This parameter allows to automatically restart the application on crash. The command line
- *             for the application is taken from \a restart_cmd parameter. To avoid cyclic restarts of an application which crashes on startup,
- *             the application is restarted only if at least 60 seconds elapsed since its start.
- *    <tr><td> \ref CR_INST_NO_MINIDUMP
- *        <td> <b>Available since v.1.2.4</b> Specify this parameter if you want minidump file not to be included into crash report. The default
- *             behavior is to include the minidump file.
- *
- *    <tr><td> \ref CR_INST_SEND_QUEUED_REPORTS
- *        <td> <b>Available since v.1.2.5</b> Specify this parameter to send all queued reports. Those
- *             report files are by default stored in <i>%LOCAL_APPDATA%\\CrashRpt\\UnsentCrashReports\\%AppName%_%AppVersion%</i> folder.
- *             If this is specified, CrashRpt checks if it's time to remind user about recent errors in the application and offers to send
- *             all queued error reports.
- *
- *    <tr><td> \ref CR_INST_STORE_ZIP_ARCHIVES
- *        <td> <b>Available since v.1.2.7</b> This parameter can be used in couple with \ref CR_INST_DONT_SEND_REPORT flag to store not only uncompressed
- *             error report files, but also ZIP archives. By default (if this flag omitted) CrashRpt stores all error report files
- *             in uncompressed state.
- *
- *   </table>
- *
- *   \b privacy_policy_url [in, optional]
- *
- *     Since v1.1.2, this defines the URL for the Privacy Policy hyperlink of the
- *     Error Report dialog. If this parameter is NULL, the link is not displayed. For information on
- *     the Privacy Policy, see \ref error_report.
- *
- *   \b debug_help_dll [in, optional]
- *
- *     Since v1.2.1, this parameter defines the location of the dbghelp.dll to load.
- *     If this parameter is NULL, the dbghelp.dll is searched using the default search sequence.
- *
- *   \b minidump_type [in, optional]
- *
- *     Since v.1.2.1, this parameter defines the minidump type. For the list of available minidump
- *     types, see the documentation for the MiniDumpWriteDump() function in MSDN.
-
- *     It is recommended to set this
- *     parameter with zero (equivalent of MiniDumpNormal constant). Other values may increase the minidump size significantly.
- *     If you plan to use values other than zero, also specify the \ref CR_INST_HTTP_BINARY_ENCODING flag for \a falgs parameter.
- *
- *   \b save_dir [in, optional]
- *
- *     Since v.1.2.2, this parameter defines the directory where to save the error reports.
- *     If this is NULL, the default directory is used (%%LOCAL_APP_DATA%\\CrashRpt\\UnsentCrashReports\\%%AppName%%_%%AppVersion%).
- *
- *   \b restart_cmd [in, optional]
- *
- *     Since v.1.2.4, parameter defines the string that specifies the
- *     command-line arguments for the application when it is restarted (when using \ref CR_INST_APP_RESTART flag). Do not include the name of
- *     the executable in the command line; it is added automatically. This parameter can be NULL.
- *
- *   \b langpack_path [in, optional]
- *
- *     Since v.1.2.4, this parameter defines the absolute path (including file name) for language file.
- *     If this is NULL, the lang file is assumed to be located in the same dir as crash_sender.exe file and have the name crashrpt_lang.ini.
- *
- *   \b email_text [in, optional]
- *
- *     Since v.1.2.4, this parameter defines the custom E-mail text that is used when deliverying error report
- *     as E-mail. If this is NULL, the default E-mail text is used. It is recommended to set this parameter with NULL.
- *
- *   \b smtp_proxy [in, optional]
- *
- *     Since v.1.2.4, this parameter defines the network address and port formatted as "IP:port" to use as SMTP proxy. Example: "192.168.1.1:2525".
- *     If this is NULL, the SMTP server address is resolved using the MX record of sender's or recipient's mailbox. You should typically set this parameter with NULL, except in the
- *     case when your software is a server and custom SMTP configuration is required.
- *
- *   \b custom_sender_icon [in, optional]
- *
- *   Since v.1.2.8, this parameter can be used to define a custom icon for <i>Error Report</i> dialog.
- *   The value of this parameter should be absolute address to the image containing the icon resource, followed by resource identifier separated by comma.
- *   You can set this parameter with NULL to use the default icon.
- *
- *   The resource identifier is a zero-based index of the icon to retrieve. For example, if this value is 0, the first icon in the specified file is used.
- *   If the identifier is a negative number not equal to -1, the icon in the specified file whose resource identifier is equal to the absolute value of the resource identifier is used.
- *   Example: "D:\MyApp\Resources.dll, -128".
- *
- *
- */
 
 typedef struct tagCR_INSTALL_INFOW {
 	WORD size;
@@ -296,7 +104,7 @@ typedef struct tagCR_INSTALL_INFOW {
 	const wchar_t* crash_server_url;
 	const wchar_t* sender_path;
 	LPGETLOGFILE crash_callback;
-	UINT priorities[5];
+	SendMethod send_method;
 	DWORD flags;
 	const wchar_t* privacy_policy_url;
 	//   File name or folder of Debug help DLL.
@@ -318,7 +126,7 @@ typedef struct tagCR_INSTALL_INFOA {
 	const char* crash_server_url;
 	const char* sender_path;
 	LPGETLOGFILE crash_callback;
-	UINT priorities[3];
+  SendMethod send_method;
 	DWORD flags;
 	const char* privacy_policy_url;
 	const char* debug_help_dll;
