@@ -1,0 +1,7 @@
+#summary how to write self define sender method
+
+= Introduction =
+
+为了能够支持自定义的发送方法，将Http方式发送崩溃报告的相关代码进行了重构，这样应用程序开发者可以方便地设计自己的发送方法，并集成到崩溃报告系统中,而修改的代码量最小化。
+
+= Details =
