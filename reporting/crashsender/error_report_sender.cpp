@@ -34,7 +34,7 @@
 #include <string>
 
 #include "error_report_sender.h"
-#include "http_request_sender.h"
+#include "abstract_sender.h"
 #include "crash_report.h"
 #include "base/md5.h"
 #include "base/utility.h"
@@ -1306,28 +1306,30 @@ BOOL CErrorReportSender::SendReport() {
   m_Assync.SetProgress(_T("[sending_report]"), 0);
   BOOL bResult = FALSE;
   strconv_t strconv;
-  string appname = strconv.t2a(
+  SendData senddata;
+  senddata.appname = strconv.t2a(
     g_CrashInfo.GetReport(m_nCurReport).m_sAppName);
-  string appversion = strconv.t2a(
+  senddata.appversion = strconv.t2a(
     g_CrashInfo.GetReport(m_nCurReport).m_sAppVersion);
-  string crashguid = strconv.t2a(
+  senddata.crashguid = strconv.t2a(
     g_CrashInfo.GetReport(m_nCurReport).m_sCrashGUID);
-  string description = strconv.t2a(
+  senddata.description = strconv.t2a(
     g_CrashInfo.GetReport(m_nCurReport).m_sDescription);
+  senddata.url = g_CrashInfo.m_sUrl;
 
   CString sMD5Hash;
   CalcFileMD5Hash(m_sZipName, sMD5Hash);
-  string md5 = strconv.t2a(sMD5Hash);
-  //  TODO(yesp) : 编写一个抽象类，每个发送方法是一个子类
+  senddata.md5 = strconv.t2a(sMD5Hash);
+  senddata.filename = m_sZipName;
   if (!m_Assync.IsCancelled()) {
-    if (g_CrashInfo.send_method == CR_HTTP_MutilPart) {
-      bResult = SendOverHTTPMutilpart(m_sZipName, appname, appversion,
-        crashguid, description, md5);
-    } else if (g_CrashInfo.send_method == CR_HTTP_Base64) {
-      bResult = SendOverHTTPBase64(m_sZipName, appname, appversion,
-        crashguid, description, md5);
+    AbstractSender* sender = NULL;
+    sender = AbstractSender::GenerateSender(g_CrashInfo.send_method,
+                                            &senddata, &m_Assync);
+    if (sender != NULL) {
+      bResult = sender->Send();
+    } else {
+      //  没有对应的方法，也就是SendMethod枚举值错误
     }
-
   }
   if (0 == m_Assync.WaitForCompletion()) {
     status = 0;
@@ -1342,7 +1344,7 @@ BOOL CErrorReportSender::SendReport() {
     Utility::RecycleFile(
         g_CrashInfo.GetReport(m_nCurReport).m_sErrorReportDirName, true);
   } else {
-    //  已经发送失败，这时候应该主动关闭窗口，而不应该让用户点击close进行关闭。
+    // TODO(yesp) : 已经发送失败，这时候应该主动关闭窗口，而不应该让用户点击close进行关闭。
     g_CrashInfo.GetReport(m_nCurReport).m_DeliveryStatus = FAILED;
     m_Assync.SetProgress(_T("[status_failed]"), 0);
 
@@ -1358,92 +1360,3 @@ BOOL CErrorReportSender::SendReport() {
   m_Assync.SetCompleted(status);
   return 0;
 }
-
-// This method sends the report over HTTP request
-BOOL CErrorReportSender::SendOverHTTPMutilpart(CString filename, string appname,string appversion,
-                                      string crashguid,string description,string md5) {
-  if (g_CrashInfo.m_sUrl.IsEmpty()) {
-    return FALSE;
-  }
-
-  CHttpRequest request;
-  request.m_sUrl = g_CrashInfo.m_sUrl;
-  request.m_aTextFields[_T("appname")] = appname;
-  request.m_aTextFields[_T("appversion")] = appversion;
-  request.m_aTextFields[_T("crashguid")] = crashguid;
-  request.m_aTextFields[_T("description")] = description;
-  request.m_aTextFields[_T("md5")] = md5;
-  CHttpRequestFile f;
-  f.m_sSrcFileName = filename;
-  f.m_sContentType = _T("application/zip");
-  request.m_aIncludedFiles[_T("crashrpt")] = f;
-  BOOL bSend = m_HttpSender.SendAssync(request, &m_Assync);
-  return bSend;
-}
-
-// This method sends the report over HTTP request
-BOOL CErrorReportSender::SendOverHTTPBase64(CString filename, string appname,string appversion,
-                                      string crashguid,string description,string md5) {
-  if (g_CrashInfo.m_sUrl.IsEmpty()) {
-    return FALSE;
-  }
-
-  CHttpRequest request;
-  request.m_sUrl = g_CrashInfo.m_sUrl;
-  request.m_aTextFields[_T("appname")] = appname;
-  request.m_aTextFields[_T("appversion")] = appversion;
-  request.m_aTextFields[_T("crashguid")] = crashguid;
-  request.m_aTextFields[_T("description")] = description;
-  request.m_aTextFields[_T("md5")] = md5;
-  m_Assync.SetProgress(_T("Base-64 encoding file \
-                         attachment, please wait..."), 1);
-  std::string sEncodedData;
-  int nRet = Base64EncodeAttachment(filename, sEncodedData);
-  if (nRet != 0) {
-    return FALSE;
-  }
-  request.m_aTextFields[_T("crashrpt")] = sEncodedData;
-  BOOL bSend = m_HttpSender.SendAssync(request, &m_Assync);
-  return bSend;
-}
-
-int CErrorReportSender::Base64EncodeAttachment(CString sFileName,
-    std::string& sEncodedFileData) {
-  strconv_t strconv;
-
-  int uFileSize = 0;
-  BYTE* uchFileData = NULL;
-  struct _stat st;
-
-  int nResult = _tstat(sFileName, &st);
-  if (nResult != 0)
-    return 1; // File not found.
-
-  // Allocate buffer of file size
-  uFileSize = st.st_size;
-  uchFileData = new BYTE[uFileSize];
-
-  // Read file data to buffer.
-  FILE* f = NULL;
-#if _MSC_VER<1400
-  f = _tfopen(sFileName, _T("rb"));
-#else
-  /*errno_t err = */_tfopen_s(&f, sFileName, _T("rb"));
-#endif 
-
-  if (!f || fread(uchFileData, uFileSize, 1, f) != 1) {
-    delete[] uchFileData;
-    uchFileData = NULL;
-    return 2; // Coudln't read file data.
-  }
-
-  fclose(f);
-
-  sEncodedFileData = base64_encode(uchFileData, uFileSize);
-
-  delete[] uchFileData;
-
-  // OK.
-  return 0;
-}
-
