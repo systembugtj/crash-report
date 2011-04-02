@@ -34,10 +34,10 @@
 #define ERROR_REPORT_SENDER_H_
 #include <string>
 #include "assync_notification.h"
-#include "http_request_sender.h"
 #include "tinyxml.h"
 #include "crash_info_reader.h"
 
+// TODO(yesp) : 该类应该进行较大幅度的重构
 using std::string;
 
 enum ActionType {
@@ -93,14 +93,14 @@ public:
   BOOL SendOverHTTPBase64(CString m_sZipName, string appname,string appversion,
     string crashguid,string description,string md5);
 
-  int Base64EncodeAttachment(CString sFileName, std::string& sEncodedFileData);
+  //int Base64EncodeAttachment(CString sFileName, std::string& sEncodedFileData);
 
   int m_nGlobalStatus;
   int m_nCurReport;
   HANDLE m_hThread; // Handle to the worker thread
   int m_SendAttempt; // Number of current sending attempt
   AssyncNotification m_Assync; // Used for communication with the main thread
-  CHttpRequestSender m_HttpSender; // Used to send report over HTTP
+  //CHttpRequestSender m_HttpSender; // Used to send report over HTTP
   CString m_sZipName; // Name of the ZIP archive to send
   int m_Action; // Current action
   BOOL m_bExport;

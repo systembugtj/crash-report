@@ -589,6 +589,10 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
+				RelativePath=".\abstract_sender.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\assync_notification.cpp"
 				>
 			</File>
