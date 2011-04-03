@@ -51,8 +51,6 @@ bool SimpleTcpSender::ConnectToServer() {
 
   host = ascii_url.substr(0, index);
   port_str = ascii_url.substr(index + 1);
-  MessageBoxA(NULL, host.c_str(), "host", 0);
-  MessageBoxA(NULL, port_str.c_str(), "port", 0);
   int port = atoi(port_str.c_str());
 
   servAddr.sin_port = htons(port);
