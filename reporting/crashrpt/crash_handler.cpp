@@ -439,7 +439,6 @@ CRASH_DESCRIPTION* CCrashHandler::PackCrashInfoIntoSharedMem(CSharedMem* pShared
   m_pTmpCrashDesc->m_bAddScreenshot = m_bAddScreenshot;
   m_pTmpCrashDesc->m_dwScreenshotFlags = m_dwScreenshotFlags;  
   //m_pTmpCrashDesc->m_bAppRestart = m_bAppRestart;
-  //  memcpy(m_pTmpCrashDesc->m_uPriorities, m_uPriorities, sizeof(UINT)*3);
   m_pTmpCrashDesc->send_method = send_method_;
   m_pTmpCrashDesc->m_dwAppNameOffs = PackString(m_sAppName);
   m_pTmpCrashDesc->m_dwAppVersionOffs = PackString(m_sAppVersion);
@@ -451,7 +450,7 @@ CRASH_DESCRIPTION* CCrashHandler::PackCrashInfoIntoSharedMem(CSharedMem* pShared
   m_pTmpCrashDesc->m_dwPrivacyPolicyURLOffs = PackString(m_sPrivacyPolicyURL);
   m_pTmpCrashDesc->m_dwUnsentCrashReportsFolderOffs = PackString(m_sUnsentCrashReportsFolder);  
   m_pTmpCrashDesc->m_dwCustomSenderIconOffs = PackString(m_sCustomSenderIcon);
-  m_pTmpCrashDesc->m_dwUrlOffs = PackString(m_sUrl);    
+  m_pTmpCrashDesc->m_dwUrlOffs = PackString(m_sUrl); 
   return m_pTmpCrashDesc;
 }
 
@@ -968,6 +967,7 @@ int CCrashHandler::GenerateErrorReport(
   m_pCrashDesc->m_pExceptionPtrs = pExceptionInfo->pexcptrs;  
   m_pCrashDesc->m_bSendRecentReports = FALSE;
   m_pCrashDesc->m_nExceptionType = pExceptionInfo->exctype;
+
   if(pExceptionInfo->exctype==CR_SEH_EXCEPTION)
   {
     m_pCrashDesc->m_dwExceptionCode = pExceptionInfo->code;

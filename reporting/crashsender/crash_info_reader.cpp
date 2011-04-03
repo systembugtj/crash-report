@@ -150,8 +150,7 @@ int CCrashInfoReader::UnpackCrashDescription(ErrorReportInfo& eri) {
   //m_bAppRestart = m_pCrashDesc->m_bAppRestart (unpacked from dwFlags);
   UnpackString(m_pCrashDesc->m_dwRestartCmdLineOffs, m_sRestartCmdLine);
   UnpackString(m_pCrashDesc->m_dwUrlOffs, m_sUrl);
-  //UnpackString(m_pCrashDesc->m_dwEmailSubjectOffs, m_sEmailSubject);
-  //UnpackString(m_pCrashDesc->m_dwEmailTextOffs, m_sEmailText);
+  UnpackString(m_pCrashDesc->m_dwUrlOffs, m_sUrl);
   send_method = m_pCrashDesc->send_method;
   UnpackString(m_pCrashDesc->m_dwPrivacyPolicyURLOffs, m_sPrivacyPolicyURL);
   UnpackString(m_pCrashDesc->m_dwLangFileNameOffs, m_sLangFileName);

@@ -115,6 +115,8 @@ public:
   CString m_sAppName;
   CString m_sCustomSenderIcon;
   CString m_sUrl;
+  CString server_host;
+  int server_port;
   BOOL m_bSilentMode;
   BOOL m_bSendErrorReport;
   BOOL m_bStoreZIPArchives;

@@ -209,6 +209,9 @@ public:
   //BOOL m_bAppRestart;            // This is packed into dwFlags
   CString m_sRestartCmdLine;     // App restart command line.
   CString m_sUrl;                // Url to use when sending error report over HTTP.  
+  //  added by yesp
+  CString server_host;
+  int server_port;
   int send_method_;         // Delivery priorities.
   CString m_sPrivacyPolicyURL;   // Privacy policy URL.
   CString m_sPathToCrashSender;  // Path to crash_sender.exe

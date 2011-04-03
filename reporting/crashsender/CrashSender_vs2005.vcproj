@@ -589,10 +589,6 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
-				RelativePath=".\abstract_sender.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\assync_notification.cpp"
 				>
 			</File>
@@ -610,10 +606,6 @@
 			</File>
 			<File
 				RelativePath=".\error_report_sender.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\http_request_sender.cpp"
 				>
 			</File>
 			<File
@@ -636,15 +628,39 @@
 				RelativePath=".\stdafx.cpp"
 				>
 			</File>
+			<Filter
+				Name="sender"
+				>
+				<File
+					RelativePath=".\sender\abstract_sender.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\sender\http_base64_sender.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\sender\http_mutilpart_sender.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\sender\http_request_sender.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\sender\tcp_simple_sender.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\sender\udt_sender.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
-			<File
-				RelativePath=".\abstract_sender.h"
-				>
-			</File>
 			<File
 				RelativePath=".\assync_notification.h"
 				>
@@ -659,10 +675,6 @@
 			</File>
 			<File
 				RelativePath=".\error_report_sender.h"
-				>
-			</File>
-			<File
-				RelativePath=".\http_request_sender.h"
 				>
 			</File>
 			<File
@@ -685,6 +697,34 @@
 				RelativePath=".\stdafx.h"
 				>
 			</File>
+			<Filter
+				Name="sender"
+				>
+				<File
+					RelativePath=".\sender\abstract_sender.h"
+					>
+				</File>
+				<File
+					RelativePath=".\sender\http_base64_sender.h"
+					>
+				</File>
+				<File
+					RelativePath=".\sender\http_mutilpart_sender.h"
+					>
+				</File>
+				<File
+					RelativePath=".\sender\http_request_sender.h"
+					>
+				</File>
+				<File
+					RelativePath=".\sender\tcp_simple_sender.h"
+					>
+				</File>
+				<File
+					RelativePath=".\sender\udt_sender.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"

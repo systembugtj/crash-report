@@ -102,6 +102,8 @@ typedef struct tagCR_INSTALL_INFOW {
 	const wchar_t* application_name;
 	const wchar_t* application_version;
 	const wchar_t* crash_server_url;
+  const wchar_t* crash_server_host;
+  int crash_server_port;
 	const wchar_t* sender_path;
 	LPGETLOGFILE crash_callback;
 	SendMethod send_method;
@@ -124,6 +126,8 @@ typedef struct tagCR_INSTALL_INFOA {
 	const char* application_name;
 	const char* application_version;
 	const char* crash_server_url;
+  const char* crash_server_host;
+  int crash_server_port;
 	const char* sender_path;
 	LPGETLOGFILE crash_callback;
   SendMethod send_method;

@@ -48,7 +48,11 @@ int main(int argc, char* argv[]) {
   helper.set_flags(CR_INST_ALL_EXCEPTION_HANDLERS
       | CR_INST_SEND_QUEUED_REPORTS
       | CR_INST_APP_RESTART);
-  helper.set_crash_server_url(_T("http://localhost:8080/crashrpt.php"));
+  //helper.set_crash_server_url(_T("http://localhost:8080/crashrpt.php"));
+  //  use tcp_simple_sender to send crash report. its server is simple ,and 
+  //  it is easy to start the server. apache & php is harder
+  helper.set_send_method(CR_TCP_Demo);
+  helper.set_crash_server_url(_T("127.0.0.1:8080"));
   helper.set_restart_cmd(_T("/restart"));
 
   if (helper.Install() != 0) {

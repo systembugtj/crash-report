@@ -83,8 +83,6 @@ struct CRASH_DESCRIPTION {
   UINT m_uRegKeyEntries; // Count of registry key entries.
   UINT m_uCustomProps; // Count of user-defined properties.
   DWORD m_dwInstallFlags; // Flags passed to crInstall() function.
-  //int m_nSmtpPort; // Smtp port.
-  //int m_nSmtpProxyPort; // Smtp proxy port.
   int send_method; // Delivery priorities.
   MINIDUMP_TYPE m_MinidumpType; // Minidump type.
   //BOOL m_bAppRestart;            // Packed into flags
@@ -96,13 +94,9 @@ struct CRASH_DESCRIPTION {
   DWORD m_dwAppVersionOffs; // Offset of app version.
   DWORD m_dwLangFileNameOffs; // Offset of language INI file name.
   DWORD m_dwRestartCmdLineOffs; // Offset of app restart command line.
-  //DWORD m_dwEmailToOffs; // Offset to E-mail recipient.
   DWORD m_dwCrashGUIDOffs; // Offset to crash GUID.
   DWORD m_dwUnsentCrashReportsFolderOffs; // Offset of folder name where error reports are stored.
   DWORD m_dwPrivacyPolicyURLOffs; // Offset of privacy policy URL.
-  //DWORD m_dwEmailSubjectOffs; // Offset of E-mail subject.
-  //DWORD m_dwEmailTextOffs; // Offset of E-mail text.
-  //DWORD m_dwSmtpProxyServerOffs; // Offset of SMTP proxy server name.
   DWORD m_dwPathToDebugHelpDllOffs; // Offset of dbghelp path.
   DWORD m_dwCustomSenderIconOffs; // Offset of custom Error Report dialog icon resource name.
   DWORD m_dwImageNameOffs; // Offset to image name.
