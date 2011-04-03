@@ -33,15 +33,15 @@
 #include "stdafx.h"
 #include <string>
 
-#include "error_report_sender.h"
-#include "abstract_sender.h"
-#include "crash_report.h"
+#include "reporting/crashsender/error_report_sender.h"
+#include "reporting/crashsender/sender/abstract_sender.h"
+#include "include/crash_report.h"
 #include "base/md5.h"
 #include "base/utility.h"
 #include "zip.h"
-#include "crash_info_reader.h"
+#include "reporting/crashsender/crash_info_reader.h"
 #include "base/strconv.h"
-#include "screen_capure.h"
+#include "reporting/crashsender/screen_capure.h"
 #include "base/base64.h"
 #include <sys/stat.h>
 #include "dbghelp.h"

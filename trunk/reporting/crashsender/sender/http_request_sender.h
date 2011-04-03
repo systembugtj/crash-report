@@ -38,7 +38,7 @@
 #ifndef HTTP_REQUEST_SENDER_H_
 #define HTTP_REQUEST_SENDER_H_
 #include "stdafx.h"
-#include "assync_notification.h"
+#include "reporting/crashsender/assync_notification.h"
 
 struct CHttpRequestFile {
   CString m_sSrcFileName; // Name of the file attachment.

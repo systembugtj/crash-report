@@ -58,6 +58,14 @@ public:
   void set_crash_server_url( TCHAR* crash_server_url) {
     info_.crash_server_url = crash_server_url;
   }
+  //  if use non http method to send data, set the ip and port.
+  //  note that if you use http protocol,then you only need to set url
+  void set_crash_server_ip( TCHAR* host) {
+    info_.crash_server_host = host;
+  }
+  void set_crash_server_port( int port) {
+    info_.crash_server_port = port;
+  }
   void set_sender_path( TCHAR* sender_path) {
     info_.sender_path = sender_path;
   }
