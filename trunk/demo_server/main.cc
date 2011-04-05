@@ -8,7 +8,8 @@
 CInitSock initSock;
 using namespace std;
 
-int main() {
+int main(int argc, char** argv) {
+  google::ParseCommandLineFlags(&argc, &argv, false);
   CrashReportServer server;
   server.Run();
   return 0;
