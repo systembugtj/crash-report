@@ -9,24 +9,33 @@
 = Details =
 在运行时库中，最早调用的函数为
 _DllMainCRTStartup
+
 或者
 _mainCRTStartup
+
 之类，两个函数的源代码可以参考vc++自带的crt库源代码。
 或者可以访问以下地址：
 _DllMainCRTStartup
+
 http://hi.baidu.com/%D0%C2%D2%B0%BB%A8%D7%D4%B7%BC/blog/item/618ba677c0884b0eb051b9d3.html
 
 _mainCRTStartup
+
 http://hi.baidu.com/%D0%C2%D2%B0%BB%A8%D7%D4%B7%BC/blog/item/ae38be3593627a9ea61e12d0.html
 
 分析代码可以看出，两个函数分别注册了一个SEH异常处理器。他们分别为：
  _CppXcptFilter
+
 _XcptFilter
+
 
 这两个函数的实现分别为：
  _CppXcptFilter：
+
 http://hi.baidu.com/%D0%C2%D2%B0%BB%A8%D7%D4%B7%BC/blog/item/c3157cf06297a2baa40f52d5.html
+
 _XcptFilter：
+
 http://hi.baidu.com/%D0%C2%D2%B0%BB%A8%D7%D4%B7%BC/blog/item/bd57fcde371b744194ee37d4.html
 
 可以看出，这里的实现中并没有调用任何用户可以注册的回调函数。也就是说目前的crt实现，并不支持对main函数之前的异常的回调处理。
